@@ -1,0 +1,165 @@
+﻿GomiMon: Game Design Document
+Version: 0.1
+Concept: A virtual pet browser extension that "eats" AI-generated "slop" (or "gomi" - Japanese for "trash") from the user's social media feed, gamifying the act of cleaning up their digital space.
+1. Game Outline & Core Concept
+The "Elevator Pitch":
+GomiMon is a TamaMon-like virtual pet that lives in your browser toolbar. Its only food source is the low-quality, AI-generated "slop" we all see online. The player's job is to feed their GomiMon by finding this "slop" on social media.
+The Core Loop:
+1. Browse: The user scrolls their social media feeds (X, Facebook, Reddit, etc.).
+2. Spot: The user identifies a post, image, or comment they believe is AI "slop."
+3. Feed: The user right-clicks the element and selects "Feed to GomiMon."
+4. Purge: The post immediately "glitches" and disappears from their feed.
+5. Nurture: The GomiMon's stats change, it becomes less hungry, and it grows over time.
+2. Core Features
+The GomiMon Pet
+The pet is the heart of the game and lives in the browser's toolbar popup.
+* Popup UI: A simple "room" showing the GomiMon, its name, and its primary stats.
+* Core Stats:
+   * Hunger: Depletes slowly over time (e.g., 1 point every 15 minutes). Feeding the pet "slop" fills this bar. If it hits 0, the pet enters a sad, "starved" state and stops growing.
+   * Gomi-Meter (Glitch Level): This is the game's unique mechanic. Feeding the pet increases this bar. It represents the "indigestion" from eating junk.
+* Consequences:
+   * Starvation (Hunger = 0): The pet becomes a "Null-Sprite" (a sad, low-resolution, or glitched-out version) and its icon becomes grey.
+   * Crash (Glitch = 100): The pet "crashes." The popup shows a Blue-Screen-of-Death-style error. The user must click a "Reboot" button to reset the Glitch meter to 0 and revive the pet. This adds a risk/reward balance to feeding.
+The Feeding & Purging Mechanism
+This is the core player action.
+* Right-Click Menu: The extension adds a single item to the browser's context (right-click) menu: "Feed to GomiMon 👾".
+* Element Targeting: The script will be smart enough to identify the "parent" post. If the user right-clicks an image within a post, the entire post (text, image, and all) will be targeted.
+* The "Purge" Animation: When fed, the targeted element will not just vanish. It will play a satisfying 0.5-second animation:
+   * "Glitch-Out": The post rapidly dissolves into digital static.
+   * "Collapse": The post's height and opacity animate to zero.
+   * "Slurp": (Advanced) The post scales down into a single point and "flies" toward the GomiMon toolbar icon.
+* Feedback:
+   * Audio: A quick "gulp" or "static" sound effect plays.
+   * Visual: The toolbar icon wiggles or animates briefly.
+Evolution & Growth
+The GomiMon grows and changes based on its diet, providing a long-term incentive.
+* Food Types: The extension will (simply) detect what kind of "slop" was eaten:
+   * Text-Slop: (User highlighted text)
+   * Image-Slop: (User right-clicked an <img> tag)
+   * Post-Slop: (User right-clicked a generic <div>, representing a whole post)
+* Evolution Paths: After a certain number of feedings (e.g., 50), the GomiMon evolves from its "Egg" or "Baby" form.
+   * "Typo-ling" (Text-heavy diet): Evolves into a creature made of glitched-out typography and symbols.
+   * "Muta-Pixel" (Image-heavy diet): Evolves into a surreal creature with extra limbs and mismatched textures, mimicking bad AI art.
+   * "Classic-Gomi" (Balanced diet): Evolves into the "true" form of the monster.
+   * "Null-Sprite" (Neglect): If the pet is left at 0 Hunger for too long, it "devolves" into this sad state.
+3. How It Works (User Experience Flow)
+1. Install: User installs the extension. The GomiMon icon appears. They click it and see a small "Egg" with the "Hunger" and "Glitch" bars.
+2. Browse: User goes to a social media site.
+3. Nudge: After an hour, the "Hunger" bar has depleted. The toolbar icon might show a small "!" badge.
+4. Hunt & Feed: User sees a generic, low-effort AI post. They right-click the post's text, select "Feed to GomiMon 👾".
+5. Reward: The post glitches and disappears. The icon wiggles.
+6. Checkup: The user clicks the icon. The "Egg" is gone, and a "Baby-Gomi" is in its place. The "Hunger" bar is full, and the "Gomi-Meter" (Glitch) is at 10%.
+7. Risk: The user goes on a "feeding frenzy," purging 10 posts in a row. They click the icon and see the "Gomi-Meter" is at 100%. The pet is "Crashed."
+8. Reboot: The user clicks the "Reboot" button. The pet is revived, but the "Gomi-Meter" reset to 0 may have a small (future) consequence.
+9. Growth: After two days and 50 feedings (mostly images), the user is notified that their GomiMon is evolving. It becomes a "Muta-Pixel."
+4. Technical Details
+This will be a standard Manifest V3 Chrome Extension.
+manifest.json (The Blueprint)
+{
+ "manifest_version": 3,
+ "name": "GomiMon",
+ "version": "0.1.0",
+ "description": "A virtual pet that eats AI slop from your feed.",
+ "permissions": [
+   "storage",       // To save pet stats
+   "alarms",        // To run the "hunger" timer
+   "contextMenus",  // For the right-click action
+   "scripting"      // To inject the "purge" script
+ ],
+ "host_permissions": [
+   "*://*[.twitter.com/](https://.twitter.com/)*",
+   "*://*[.facebook.com/](https://.facebook.com/)*",
+   "*://*[.reddit.com/](https://.reddit.com/)*"
+   // We will add more sites as we test
+ ],
+ "background": {
+   "service_worker": "background.js"
+ },
+ "action": {
+   "default_popup": "popup.html",
+   "default_icon": {
+     "16": "icons/icon16.png",
+     "48": "icons/icon48.png",
+     "128": "icons/icon128.png"
+   }
+ },
+ "icons": {
+   "16": "icons/icon16.png",
+   "48": "icons/icon48.png",
+   "128": "icons/icon128.png"
+ }
+}
+
+background.js (The Brain / Service Worker)
+* onInstalled:
+   * Initializes chrome.storage.local with default stats:
+{ hunger: 100, glitch: 0, level: 1, evolution: "egg", feedCount: 0 }
+   * Creates the chrome.contextMenus item.
+   * Creates the chrome.alarms "hungerTick" to fire every 15 minutes.
+   * onAlarm("hungerTick"):
+   * Gets stats from storage.
+   * Decrements hunger.
+   * If hunger < 0, sets hunger = 0 and pet state to "starved."
+   * Saves stats back to storage.
+   * Updates the toolbar icon/badge if hungry.
+   * onContextMenuItemClicked:
+   * This is the "Feed" event.
+   * Gets stats from storage.
+   * Increments hunger (e.g., +20), glitch (e.g., +5), and feedCount.
+   * Checks for evolution (feedCount > 50, etc.).
+   * Crucially: Executes the content.js script on the active tab using chrome.scripting.executeScript() to "purge" the element.
+   * Plays the "gulp" sound effect.
+popup.html & popup.js (The Pet's Home)
+   * popup.html: Simple HTML with <div> for the pet sprite, and two <progress> bars for Hunger and Glitch. A "Reboot" button, hidden by default.
+   * popup.js:
+   * On DOMContentLoaded, fires chrome.storage.local.get().
+   * Uses the returned stats to update the progress bars' values.
+   * Renders the correct pet sprite (e.g., egg.png, baby-gomi.png, muta-pixel.png).
+   * If glitch === 100, shows the "Crashed" UI and the "Reboot" button.
+   * Adds a click listener to "Reboot" which resets glitch to 0.
+content.js & content.css (The "Purge" Action)
+   * This is the most complex part. This script is injected into the page on a "Feed" action.
+   * content.js:
+   * Receives the right-clicked element from the background.js event.
+   * Traverses up the DOM from that element to find the "parent post" (e.g., on X, it's an <article> tag; on Reddit, a div with a specific data-testid).
+   * Once the correct parent element is found, it adds a CSS class (e.g., .gomi-purged).
+   * content.css:
+   * This file is also injected. It contains the animation:
+.gomi-purged {
+ animation: gomi-glitch-out 0.5s ease-out forwards;
+}
+@keyframes gomi-glitch-out {
+ 0% { opacity: 1; transform: scale(1); }
+ 50% { opacity: 0; transform: scale(1.05) skew(-5deg, 5deg); }
+ 100% { opacity: 0; transform: scale(0.5); height: 0px; margin: 0; padding: 0; }
+}
+
+5. Implementation Plan & Checklist
+Milestone 1: The Core Pet (MVP)
+   * [ ] Project: Set up the basic manifest.json file.
+   * [ ] Art: Create placeholder icons (16, 48, 128px).
+   * [ ] Popup: Create popup.html with two static progress bars (Hunger, Glitch).
+   * [ ] Storage: Use background.js onInstalled to set default stats in chrome.storage.
+   * [ ] Popup Logic: Make popup.js read the stats from storage and display them.
+   * [ ] Timer: Implement chrome.alarms to make "Hunger" go down every 15 minutes.
+   * Goal: The pet "lives." You can watch its Hunger deplete in the popup.
+Milestone 2: The "Feed & Purge" Loop
+   * [ ] Context Menu: Use background.js to create the right-click menu item.
+   * [ ] Feed Logic: Make the onContextMenuItemClicked listener update "Hunger" and "Glitch" in storage.
+   * [ ] Purge Script: Create content.js that can find the parent post element (Start with one site, e.g., Twitter/X).
+   * [ ] Purge Style: Create content.css with the "glitch-out" animation.
+   * [ ] Wire-Up: Use chrome.scripting.executeScript to inject the CSS and JS on the "Feed" action.
+   * Goal: The user can right-click a post on Twitter, make it disappear, and see the pet's stats change in the popup.
+Milestone 3: Polish & Consequences
+   * [ ] Art: Create the first set of pet sprites: Egg.png, BabyGomi.png, StarvedGomi.png, CrashedGomi.png.
+   * [ ] Popup Logic: Update popup.js to show the correct sprite based on pet's state.
+   * [ ] Crash State: Implement the "Glitch = 100" logic (show "Reboot" button, etc.).
+   * [ ] Starve State: Implement the "Hunger = 0" logic (show "StarvedGomi" sprite).
+   * [ ] Feedback: Add a "gulp" sound effect on feed. Add a toolbar icon animation (e.g., "wiggle").
+Milestone 4: Evolution & Release
+   * [ ] Feed Logic: Update the "Feed" listener to detect what was clicked (text vs. image).
+   * [ ] Storage: Add diet: { text: 0, image: 0 } to chrome.storage.
+   * [ ] Art: Create the first evolution sprites: Typo-ling.png and Muta-Pixel.png.
+   * [ ] Evolution Logic: Add a check in background.js (e.g., if (feedCount > 50)) to evolve the pet based on its diet stats.
+   * [ ] Testing: Refine the content.js selectors to work on 2-3 major social media sites.
+   * [ ] Release: Polish all art, create store marketing, and publish!
