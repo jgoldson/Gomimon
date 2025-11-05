@@ -1,0 +1,28 @@
+<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Crashed sprite - BSOD style -->
+  <defs>
+    <filter id="glitchEffect">
+      <feTurbulence baseFrequency="0.1" numOctaves="3" result="turbulence"/>
+      <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="5"/>
+    </filter>
+  </defs>
+
+  <!-- Blue screen background -->
+  <rect x="25" y="30" width="50" height="50" fill="#0000aa" stroke="#000" stroke-width="2"/>
+
+  <!-- Sad computer face -->
+  <text x="50" y="55" font-family="monospace" font-size="32" fill="#ffffff" text-anchor="middle">:(</text>
+
+  <!-- Error text -->
+  <text x="50" y="70" font-family="monospace" font-size="8" fill="#ffffff" text-anchor="middle">ERROR</text>
+
+  <!-- Glitch lines -->
+  <line x1="25" y1="45" x2="75" y2="45" stroke="#00ffff" stroke-width="1" opacity="0.7"/>
+  <line x1="25" y1="65" x2="75" y2="65" stroke="#ff00ff" stroke-width="1" opacity="0.7"/>
+
+  <!-- Static noise effect -->
+  <rect x="30" y="35" width="2" height="2" fill="#fff" opacity="0.5"/>
+  <rect x="45" y="40" width="2" height="2" fill="#fff" opacity="0.5"/>
+  <rect x="65" y="50" width="2" height="2" fill="#fff" opacity="0.5"/>
+  <rect x="35" y="72" width="2" height="2" fill="#fff" opacity="0.5"/>
+</svg>
