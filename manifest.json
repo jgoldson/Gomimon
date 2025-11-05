@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "GomiMon",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A virtual pet that eats AI slop from your feed.",
   "permissions": [
     "storage",
@@ -18,7 +18,8 @@
     "*://*.reddit.com/*"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "action": {
     "default_popup": "popup.html",
@@ -32,5 +33,16 @@
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [{
+    "resources": [
+      "sprites/*.svg",
+      "sounds/*.wav",
+      "constants.js"
+    ],
+    "matches": ["<all_urls>"]
+  }],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
   }
 }

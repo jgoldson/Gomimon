@@ -1,185 +1,514 @@
-// GomiMon Background Service Worker
-// Handles pet state, timers, and feeding logic
+// GomiMon Background Service Worker (Refactored)
+// Handles pet state, timers, feeding logic with proper error handling
 
-// Initialize the extension on install
-chrome.runtime.onInstalled.addListener(async () => {
-  console.log('GomiMon installed!');
+import {
+  HUNGER_DECREASE_RATE,
+  HUNGER_INCREASE_PER_FEED,
+  GLITCH_INCREASE_PER_FEED,
+  HUNGER_TICK_MINUTES,
+  LOW_HUNGER_THRESHOLD,
+  HIGH_GLITCH_THRESHOLD,
+  GLITCH_CRASH_THRESHOLD,
+  EGG_TO_BABY_FEEDS,
+  BABY_TO_ADULT_FEEDS,
+  DIET_DOMINANCE_THRESHOLD,
+  MAX_FEEDS_PER_MINUTE,
+  FEED_COOLDOWN_MS,
+  EVOLUTION_NAMES,
+  DEFAULT_STATS,
+  FOOD_TYPES,
+  ANIMATION_DURATION,
+  VALIDATION_LIMITS,
+  debugLog,
+  sanitizeStats
+} from './constants.js';
 
-  // Set default pet stats
-  const defaultStats = {
-    hunger: 100,
-    glitch: 0,
-    level: 1,
-    evolution: 'egg',
-    feedCount: 0,
-    diet: {
-      text: 0,
-      image: 0,
-      post: 0
-    },
-    lastUpdate: Date.now()
-  };
+// State management
+let offscreenDocumentPromise = null;
+const injectedTabs = new Set();
+const feedTimestamps = [];
+let lastFeedTime = 0;
 
-  await chrome.storage.local.set(defaultStats);
+// Storage lock to prevent concurrent updates
+const storageLock = {
+  locked: false,
+  queue: []
+};
 
-  // Create the context menu item
-  chrome.contextMenus.create({
-    id: 'feedGomiMon',
-    title: 'Feed to GomiMon 👾',
-    contexts: ['all']
-  });
+// Error reporting
+function reportError(context, error) {
+  console.error(`[GomiMon ${context}]`, error);
 
-  // Create the hunger timer alarm (every 15 minutes)
-  chrome.alarms.create('hungerTick', {
-    periodInMinutes: 15
-  });
-
-  console.log('GomiMon initialized with stats:', defaultStats);
-});
-
-// Handle the hunger timer
-chrome.alarms.onAlarm.addListener(async (alarm) => {
-  if (alarm.name === 'hungerTick') {
-    const stats = await chrome.storage.local.get();
-
-    // Decrease hunger by 1
-    let newHunger = Math.max(0, stats.hunger - 1);
-
-    // Update stats
-    await chrome.storage.local.set({
-      hunger: newHunger,
-      lastUpdate: Date.now()
+  // Store recent errors for debugging
+  chrome.storage.local.get(['recentErrors']).then(({ recentErrors = [] }) => {
+    recentErrors.push({
+      context,
+      message: error.message,
+      stack: error.stack,
+      timestamp: Date.now()
     });
 
-    console.log('Hunger tick - New hunger level:', newHunger);
+    // Keep only last 10 errors
+    if (recentErrors.length > VALIDATION_LIMITS.MAX_STORED_ERRORS) {
+      recentErrors = recentErrors.slice(-VALIDATION_LIMITS.MAX_STORED_ERRORS);
+    }
 
-    // Update badge if hungry
-    if (newHunger < 30) {
+    chrome.storage.local.set({ recentErrors }).catch(e =>
+      console.error('Failed to store error:', e)
+    );
+  }).catch(e => console.error('Failed to get errors:', e));
+}
+
+// Safe storage operations with locking
+async function withStorageLock(operation) {
+  return new Promise((resolve, reject) => {
+    const execute = async () => {
+      if (storageLock.locked) {
+        storageLock.queue.push({ resolve, reject, operation });
+        return;
+      }
+
+      storageLock.locked = true;
+      try {
+        const result = await operation();
+        resolve(result);
+      } catch (error) {
+        reject(error);
+      } finally {
+        storageLock.locked = false;
+
+        // Process queue
+        if (storageLock.queue.length > 0) {
+          const next = storageLock.queue.shift();
+          execute.call(null);
+          withStorageLock(next.operation).then(next.resolve).catch(next.reject);
+        }
+      }
+    };
+
+    execute();
+  });
+}
+
+// Get stats with defaults and validation
+async function getStats() {
+  try {
+    const stats = await chrome.storage.local.get(DEFAULT_STATS);
+    return sanitizeStats(stats);
+  } catch (error) {
+    reportError('getStats', error);
+    return { ...DEFAULT_STATS };
+  }
+}
+
+// Update stats safely
+async function updateStats(updates) {
+  return withStorageLock(async () => {
+    const current = await getStats();
+    const newStats = sanitizeStats({ ...current, ...updates, lastUpdate: Date.now() });
+    await chrome.storage.local.set(newStats);
+    return newStats;
+  });
+}
+
+// Rate limiting for feeds
+function checkRateLimit() {
+  const now = Date.now();
+
+  // Check cooldown
+  if (now - lastFeedTime < FEED_COOLDOWN_MS) {
+    debugLog('Feed cooldown active');
+    return false;
+  }
+
+  // Check rate limit
+  const oneMinuteAgo = now - 60000;
+
+  // Remove old timestamps
+  while (feedTimestamps.length > 0 && feedTimestamps[0] < oneMinuteAgo) {
+    feedTimestamps.shift();
+  }
+
+  if (feedTimestamps.length >= MAX_FEEDS_PER_MINUTE) {
+    debugLog('Rate limit exceeded');
+    return false;
+  }
+
+  feedTimestamps.push(now);
+  lastFeedTime = now;
+  return true;
+}
+
+// Initialize extension
+chrome.runtime.onInstalled.addListener(async ({ reason }) => {
+  try {
+    debugLog('Extension installed, reason:', reason);
+
+    if (reason === 'install') {
+      // First install
+      await chrome.storage.local.set(DEFAULT_STATS);
+      debugLog('Initialized with default stats:', DEFAULT_STATS);
+    } else if (reason === 'update') {
+      // Handle updates/migrations
+      await migrateStorage();
+    }
+
+    // Create context menu
+    await chrome.contextMenus.create({
+      id: 'feedGomiMon',
+      title: 'Feed to GomiMon 👾',
+      contexts: ['all']
+    });
+
+    // Create hunger timer alarm
+    await chrome.alarms.create('hungerTick', {
+      periodInMinutes: HUNGER_TICK_MINUTES
+    });
+
+    debugLog('Extension initialized successfully');
+  } catch (error) {
+    reportError('onInstalled', error);
+  }
+});
+
+// Handle browser startup - catch up on missed ticks
+chrome.runtime.onStartup.addListener(async () => {
+  try {
+    debugLog('Browser startup detected');
+
+    const stats = await getStats();
+    const timeSinceUpdate = Date.now() - stats.lastUpdate;
+    const missedTicks = Math.floor(timeSinceUpdate / (HUNGER_TICK_MINUTES * 60000));
+
+    if (missedTicks > 0) {
+      debugLog(`Catching up on ${missedTicks} missed hunger ticks`);
+      const newHunger = Math.max(0, stats.hunger - (missedTicks * HUNGER_DECREASE_RATE));
+      await updateStats({ hunger: newHunger });
+
+      // Update badge if needed
+      updateHungerBadge(newHunger);
+    }
+  } catch (error) {
+    reportError('onStartup', error);
+  }
+});
+
+// Storage migration
+async function migrateStorage() {
+  try {
+    const data = await chrome.storage.local.get();
+    const version = data.schemaVersion || 0;
+
+    debugLog('Current schema version:', version);
+
+    if (version < 1) {
+      // Migration from version 0 to 1
+      debugLog('Migrating from version 0 to 1');
+
+      // Ensure all required fields exist
+      const migrated = {
+        ...DEFAULT_STATS,
+        ...data,
+        schemaVersion: 1
+      };
+
+      await chrome.storage.local.set(sanitizeStats(migrated));
+      debugLog('Migration complete');
+    }
+  } catch (error) {
+    reportError('migrateStorage', error);
+  }
+}
+
+// Update hunger badge
+function updateHungerBadge(hunger) {
+  try {
+    if (hunger < LOW_HUNGER_THRESHOLD) {
       chrome.action.setBadgeText({ text: '!' });
       chrome.action.setBadgeBackgroundColor({ color: '#FF0000' });
     } else {
       chrome.action.setBadgeText({ text: '' });
     }
+  } catch (error) {
+    reportError('updateHungerBadge', error);
+  }
+}
 
-    // If starved, could trigger notification here
-    if (newHunger === 0) {
-      console.log('GomiMon is starving!');
+// Handle hunger timer
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name === 'hungerTick') {
+    try {
+      debugLog('Hunger tick triggered');
+
+      const stats = await getStats();
+      const newHunger = Math.max(0, stats.hunger - HUNGER_DECREASE_RATE);
+
+      await updateStats({ hunger: newHunger });
+
+      debugLog('Hunger decreased to:', newHunger);
+
+      // Update badge
+      updateHungerBadge(newHunger);
+
+      // Notify if starving
+      if (newHunger === 0) {
+        debugLog('Pet is starving!');
+        // Could show notification here
+      }
+    } catch (error) {
+      reportError('hungerTick', error);
     }
   }
+});
+
+// Validate and sanitize context menu info
+function validateContextInfo(info) {
+  return {
+    x: typeof info.x === 'number'
+      ? Math.max(0, Math.min(info.x, VALIDATION_LIMITS.MAX_COORDINATE))
+      : undefined,
+    y: typeof info.y === 'number'
+      ? Math.max(0, Math.min(info.y, VALIDATION_LIMITS.MAX_COORDINATE))
+      : undefined,
+    srcUrl: typeof info.srcUrl === 'string'
+      ? info.srcUrl.substring(0, VALIDATION_LIMITS.MAX_URL_LENGTH)
+      : undefined,
+    selectionText: typeof info.selectionText === 'string'
+      ? info.selectionText.substring(0, VALIDATION_LIMITS.MAX_SELECTION_TEXT)
+      : undefined,
+    frameId: info.frameId
+  };
+}
+
+// Determine food type from context
+function determineFoodType(info) {
+  if (info.srcUrl) {
+    return FOOD_TYPES.IMAGE;
+  } else if (info.selectionText) {
+    return FOOD_TYPES.TEXT;
+  }
+  return FOOD_TYPES.POST;
+}
+
+// Calculate evolution based on diet
+function calculateEvolution(feedCount, currentEvolution, diet) {
+  // Egg to Baby at 10 feeds
+  if (feedCount >= EGG_TO_BABY_FEEDS && currentEvolution === 'egg') {
+    return { evolution: 'baby', justEvolved: true };
+  }
+
+  // Baby to Adult at 50 feeds
+  if (feedCount >= BABY_TO_ADULT_FEEDS && currentEvolution === 'baby') {
+    const total = diet.text + diet.image + diet.post;
+
+    // Prevent division by zero
+    if (total === 0) {
+      debugLog('No diet data, defaulting to classic-gomi');
+      return { evolution: 'classic-gomi', justEvolved: true };
+    }
+
+    // Determine evolution based on dominant food type
+    const textRatio = diet.text / total;
+    const imageRatio = diet.image / total;
+
+    if (textRatio > DIET_DOMINANCE_THRESHOLD) {
+      return { evolution: 'typo-ling', justEvolved: true };
+    } else if (imageRatio > DIET_DOMINANCE_THRESHOLD) {
+      return { evolution: 'muta-pixel', justEvolved: true };
+    } else {
+      return { evolution: 'classic-gomi', justEvolved: true };
+    }
+  }
+
+  return { evolution: currentEvolution, justEvolved: false };
+}
+
+// Show evolution notification
+async function showEvolutionNotification(evolution) {
+  try {
+    // Check if notifications permission is available
+    const hasPermission = await chrome.permissions.contains({
+      permissions: ['notifications']
+    });
+
+    if (!hasPermission) {
+      debugLog('Notification permission not granted');
+      return;
+    }
+
+    await chrome.notifications.create({
+      type: 'basic',
+      iconUrl: 'icons/icon128.png',
+      title: '🎉 GomiMon Evolved!',
+      message: `Your GomiMon evolved into ${EVOLUTION_NAMES[evolution]}!`,
+      priority: 2
+    });
+
+    playSound('evolve');
+  } catch (error) {
+    reportError('showEvolutionNotification', error);
+  }
+}
+
+// Validate tab before injection
+async function validateTab(tabId) {
+  try {
+    const tab = await chrome.tabs.get(tabId);
+
+    if (!tab) {
+      debugLog('Tab not found:', tabId);
+      return false;
+    }
+
+    if (tab.status !== 'complete') {
+      debugLog('Tab not ready:', tabId);
+      return false;
+    }
+
+    // Don't inject into chrome:// or extension pages
+    if (tab.url && (tab.url.startsWith('chrome://') || tab.url.startsWith('chrome-extension://'))) {
+      debugLog('Cannot inject into chrome page:', tab.url);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    if (error.message && error.message.includes('No tab with id')) {
+      debugLog('Tab was closed:', tabId);
+    } else {
+      reportError('validateTab', error);
+    }
+    return false;
+  }
+}
+
+// Inject CSS into tab (only once per tab)
+async function injectCSS(tabId) {
+  if (injectedTabs.has(tabId)) {
+    return true; // Already injected
+  }
+
+  try {
+    await chrome.scripting.insertCSS({
+      target: { tabId },
+      files: ['content.css']
+    });
+
+    injectedTabs.add(tabId);
+    debugLog('CSS injected into tab:', tabId);
+    return true;
+  } catch (error) {
+    reportError('injectCSS', error);
+    return false;
+  }
+}
+
+// Clean up closed tabs
+chrome.tabs.onRemoved.addListener((tabId) => {
+  injectedTabs.delete(tabId);
+  debugLog('Tab removed from tracking:', tabId);
 });
 
 // Handle context menu clicks (feeding)
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (info.menuItemId === 'feedGomiMon') {
-    const stats = await chrome.storage.local.get();
+  if (info.menuItemId !== 'feedGomiMon') {
+    return;
+  }
 
-    // Determine food type based on what was clicked
-    let foodType = 'post';
-    if (info.srcUrl) {
-      foodType = 'image';
-    } else if (info.selectionText) {
-      foodType = 'text';
+  try {
+    debugLog('Feed action triggered', { tab: tab.id, info });
+
+    // Validate tab
+    if (!tab || !tab.id || tab.id < 0) {
+      throw new Error('Invalid tab');
     }
 
-    // Update stats
-    const hungerIncrease = 20;
-    const glitchIncrease = 5;
+    if (!await validateTab(tab.id)) {
+      return;
+    }
 
-    const newHunger = Math.min(100, stats.hunger + hungerIncrease);
-    const newGlitch = Math.min(100, stats.glitch + glitchIncrease);
+    // Check rate limit
+    if (!checkRateLimit()) {
+      debugLog('Feed rejected due to rate limit');
+      return;
+    }
+
+    // Validate input
+    const safeInfo = validateContextInfo(info);
+    const foodType = determineFoodType(safeInfo);
+
+    debugLog('Food type:', foodType);
+
+    // Get current stats
+    const stats = await getStats();
+
+    // Calculate new stats
+    const newHunger = Math.min(100, stats.hunger + HUNGER_INCREASE_PER_FEED);
+    const newGlitch = Math.min(100, stats.glitch + GLITCH_INCREASE_PER_FEED);
     const newFeedCount = stats.feedCount + 1;
 
-    // Update diet tracking
+    // Update diet
     const newDiet = { ...stats.diet };
     newDiet[foodType] = (newDiet[foodType] || 0) + 1;
 
-    // Check for evolution
-    let evolution = stats.evolution || 'egg';
-    let justEvolved = false;
+    // Calculate evolution
+    const { evolution, justEvolved } = calculateEvolution(
+      newFeedCount,
+      stats.evolution,
+      newDiet
+    );
 
-    if (newFeedCount === 10 && evolution === 'egg') {
-      evolution = 'baby';
-      justEvolved = true;
-    } else if (newFeedCount === 50 && evolution === 'baby') {
-      const total = newDiet.text + newDiet.image + newDiet.post;
-      if (newDiet.text / total > 0.5) {
-        evolution = 'typo-ling';
-      } else if (newDiet.image / total > 0.5) {
-        evolution = 'muta-pixel';
-      } else {
-        evolution = 'classic-gomi';
-      }
-      justEvolved = true;
-    }
-
-    await chrome.storage.local.set({
+    // Update stats
+    await updateStats({
       hunger: newHunger,
       glitch: newGlitch,
       feedCount: newFeedCount,
       diet: newDiet,
-      evolution: evolution,
-      lastUpdate: Date.now()
+      evolution
     });
 
-    console.log(`Fed GomiMon ${foodType}! Hunger: ${newHunger}, Glitch: ${newGlitch}, Total feeds: ${newFeedCount}`);
+    debugLog('Stats updated:', {
+      hunger: newHunger,
+      glitch: newGlitch,
+      feeds: newFeedCount,
+      evolution
+    });
 
     // Show evolution notification
     if (justEvolved) {
-      const evolutionNames = {
-        baby: 'Baby-Gomi',
-        'typo-ling': 'Typo-ling',
-        'muta-pixel': 'Muta-Pixel',
-        'classic-gomi': 'Classic-Gomi'
-      };
-      chrome.notifications.create({
-        type: 'basic',
-        iconUrl: 'icons/icon128.png',
-        title: '🎉 GomiMon Evolved!',
-        message: `Your GomiMon evolved into ${evolutionNames[evolution]}!`
-      });
-      playSound('evolve');
+      await showEvolutionNotification(evolution);
     }
 
     // Clear hungry badge
-    if (newHunger >= 30) {
-      chrome.action.setBadgeText({ text: '' });
-    }
+    updateHungerBadge(newHunger);
 
-    // Inject CSS first (if not already injected)
-    try {
-      await chrome.scripting.insertCSS({
-        target: { tabId: tab.id },
-        files: ['content.css']
-      });
-    } catch (error) {
-      // CSS might already be injected, that's okay
-    }
+    // Inject CSS if needed
+    await injectCSS(tab.id);
 
-    // Inject the purge script with click coordinates
-    try {
-      await chrome.scripting.executeScript({
-        target: { tabId: tab.id, frameIds: info.frameId ? [info.frameId] : undefined },
-        func: purgeAtCoordinates,
-        args: [{ x: info.x, y: info.y, srcUrl: info.srcUrl, selectionText: info.selectionText }]
-      });
+    // Execute purge script
+    await chrome.scripting.executeScript({
+      target: {
+        tabId: tab.id,
+        frameIds: safeInfo.frameId ? [safeInfo.frameId] : undefined
+      },
+      func: purgeAtCoordinates,
+      args: [safeInfo]
+    });
 
-      console.log('Purge script executed');
+    debugLog('Purge script executed');
 
-      // Play gulp sound effect
-      playSound('gulp');
+    // Play sound and animate icon
+    playSound('gulp');
+    animateIcon();
 
-      // Animate toolbar icon
-      animateIcon();
-
-    } catch (error) {
-      console.error('Failed to inject purge script:', error);
-    }
+  } catch (error) {
+    reportError('feedGomiMon', error);
   }
 });
 
-// Function to be injected into the page
+// Function injected into page to purge element
 function purgeAtCoordinates(info) {
-  console.log('GomiMon: Purging at coordinates', info);
+  console.log('[GomiMon] Purging at coordinates', info);
 
   // Find element at click coordinates
   let targetElement = null;
@@ -189,16 +518,15 @@ function purgeAtCoordinates(info) {
   }
 
   if (!targetElement) {
-    // Fallback: find the most recently interacted element
     targetElement = document.activeElement;
   }
 
   if (!targetElement || targetElement === document.body) {
-    console.warn('GomiMon: Could not find target element');
+    console.warn('[GomiMon] Could not find target element');
     return;
   }
 
-  // Find the parent post container
+  // Find parent post container
   function findParentPost(element) {
     if (!element) return null;
 
@@ -207,7 +535,7 @@ function purgeAtCoordinates(info) {
     let depth = 0;
 
     while (current && depth < maxDepth) {
-      // Twitter/X - article elements or main post divs
+      // Twitter/X - article elements
       if (current.tagName === 'ARTICLE') {
         return current;
       }
@@ -215,9 +543,9 @@ function purgeAtCoordinates(info) {
       // Reddit - post containers
       if (current.hasAttribute('data-testid')) {
         const testId = current.getAttribute('data-testid');
-        if (testId.includes('post-container') ||
+        if (testId && (testId.includes('post-container') ||
             testId.includes('post_') ||
-            testId === 'post-content') {
+            testId === 'post-content')) {
           return current;
         }
       }
@@ -228,16 +556,14 @@ function purgeAtCoordinates(info) {
       }
 
       // Facebook - story containers
-      if (current.hasAttribute('data-ad-preview') ||
-          current.hasAttribute('data-pagelet')) {
-        if (current.getAttribute('role') === 'article') {
-          return current;
-        }
+      if ((current.hasAttribute('data-ad-preview') ||
+          current.hasAttribute('data-pagelet')) &&
+          current.getAttribute('role') === 'article') {
+        return current;
       }
 
       // Generic post patterns
       const classList = Array.from(current.classList || []);
-      const classString = classList.join(' ');
 
       if (classList.some(c =>
         c.includes('post') ||
@@ -246,7 +572,7 @@ function purgeAtCoordinates(info) {
         c.includes('timeline-item') ||
         c.includes('card')
       )) {
-        // Make sure it's substantial enough
+        // Make sure it's substantial
         if (current.offsetHeight > 50) {
           return current;
         }
@@ -261,7 +587,7 @@ function purgeAtCoordinates(info) {
       depth++;
     }
 
-    // If we can't find a post, use a reasonable sized parent
+    // Fallback: find reasonably-sized parent
     current = element;
     depth = 0;
     while (current && depth < 10) {
@@ -278,65 +604,147 @@ function purgeAtCoordinates(info) {
   const postElement = findParentPost(targetElement);
 
   if (!postElement) {
-    console.warn('GomiMon: Could not find post element');
+    console.warn('[GomiMon] Could not find post element');
     return;
   }
 
-  console.log('GomiMon: Purging element', postElement);
+  console.log('[GomiMon] Purging element', postElement);
 
   // Add purge animation class
   postElement.classList.add('gomi-purged');
 
   // Remove element after animation
   setTimeout(() => {
-    postElement.remove();
-    console.log('GomiMon: Element removed');
+    try {
+      postElement.remove();
+      console.log('[GomiMon] Element removed');
+    } catch (e) {
+      console.error('[GomiMon] Failed to remove element:', e);
+    }
   }, 500);
 }
 
-// Animate the toolbar icon
+// Animate toolbar icon with badge
 function animateIcon() {
-  let count = 0;
-  const interval = setInterval(() => {
-    const offset = count % 2 === 0 ? [0, -2] : [0, 2];
-    chrome.action.setIcon({
-      path: {
-        16: 'icons/icon16.png',
-        48: 'icons/icon48.png',
-        128: 'icons/icon128.png'
+  try {
+    let count = 0;
+    const interval = setInterval(() => {
+      const badge = count % 2 === 0 ? '◉' : '◎';
+      chrome.action.setBadgeText({ text: badge });
+      chrome.action.setBadgeBackgroundColor({ color: '#667eea' });
+
+      count++;
+      if (count >= 6) {
+        clearInterval(interval);
+        // Restore hunger badge if needed
+        getStats().then(stats => {
+          if (stats.hunger < LOW_HUNGER_THRESHOLD) {
+            chrome.action.setBadgeText({ text: '!' });
+            chrome.action.setBadgeBackgroundColor({ color: '#FF0000' });
+          } else {
+            chrome.action.setBadgeText({ text: '' });
+          }
+        }).catch(err => reportError('animateIcon-restore', err));
       }
-    });
-    count++;
-    if (count >= 6) {
-      clearInterval(interval);
-    }
-  }, 50);
+    }, 100);
+  } catch (error) {
+    reportError('animateIcon', error);
+  }
 }
 
-// Play sound effect using offscreen document
-async function playSound(soundName) {
+// Ensure offscreen document exists
+async function ensureOffscreenDocument() {
+  // Check if API is available
+  if (!chrome.offscreen) {
+    debugLog('Offscreen API not available');
+    return false;
+  }
+
+  // Return existing promise if already creating
+  if (offscreenDocumentPromise) {
+    return offscreenDocumentPromise;
+  }
+
   try {
-    // Create offscreen document if it doesn't exist
     const existingContexts = await chrome.runtime.getContexts({
       contextTypes: ['OFFSCREEN_DOCUMENT']
     });
 
-    if (existingContexts.length === 0) {
-      await chrome.offscreen.createDocument({
-        url: 'offscreen.html',
-        reasons: ['AUDIO_PLAYBACK'],
-        justification: 'Playing sound effects for user feedback'
-      });
+    if (existingContexts.length > 0) {
+      debugLog('Offscreen document already exists');
+      return true;
+    }
+
+    debugLog('Creating offscreen document');
+    offscreenDocumentPromise = chrome.offscreen.createDocument({
+      url: 'offscreen.html',
+      reasons: ['AUDIO_PLAYBACK'],
+      justification: 'Playing sound effects for user feedback'
+    });
+
+    await offscreenDocumentPromise;
+    debugLog('Offscreen document created');
+
+    return true;
+  } catch (error) {
+    offscreenDocumentPromise = null;
+    reportError('ensureOffscreenDocument', error);
+    return false;
+  }
+}
+
+// Close offscreen document after delay
+async function closeOffscreenDocument() {
+  if (!chrome.offscreen) {
+    return;
+  }
+
+  try {
+    await chrome.offscreen.closeDocument();
+    offscreenDocumentPromise = null;
+    debugLog('Offscreen document closed');
+  } catch (error) {
+    // Document might already be closed or never opened
+    offscreenDocumentPromise = null;
+    debugLog('Offscreen document close failed (might already be closed)');
+  }
+}
+
+// Play sound effect
+async function playSound(soundName) {
+  try {
+    const created = await ensureOffscreenDocument();
+
+    if (!created) {
+      debugLog('Could not create offscreen document for sound');
+      return;
     }
 
     // Send message to play sound
+    await chrome.runtime.sendMessage({
+      action: 'playSound',
+      sound: soundName
+    });
+
+    debugLog('Sound played:', soundName);
+
+    // Close document after delay to free resources
     setTimeout(() => {
-      chrome.runtime.sendMessage({
-        action: 'playSound',
-        sound: soundName
-      }).catch(err => console.log('Sound playback error:', err));
-    }, 100);
+      closeOffscreenDocument();
+    }, ANIMATION_DURATION.OFFSCREEN_CLOSE_DELAY);
+
   } catch (error) {
-    console.log('Sound not available:', error);
+    reportError('playSound', error);
   }
 }
+
+// Global error handlers
+self.addEventListener('error', (event) => {
+  reportError('global-error', event.error || new Error(event.message));
+});
+
+self.addEventListener('unhandledrejection', (event) => {
+  reportError('unhandled-rejection', event.reason || new Error('Unhandled promise rejection'));
+});
+
+debugLog('Background service worker initialized');

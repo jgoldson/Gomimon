@@ -1,106 +1,180 @@
-// GomiMon Popup Script
-// Displays the pet and its stats
+// GomiMon Popup Script (Refactored)
+// Displays the pet and its stats with proper error handling
 
-// Pet sprites - SVG files
-const petSprites = {
-  egg: 'sprites/egg.svg',
-  baby: 'sprites/baby.svg',
-  'typo-ling': 'sprites/typo-ling.svg',
-  'muta-pixel': 'sprites/muta-pixel.svg',
-  'classic-gomi': 'sprites/classic-gomi.svg',
-  'null-sprite': 'sprites/starved.svg',
-  crashed: 'sprites/crashed.svg'
-};
+import {
+  LOW_HUNGER_THRESHOLD,
+  HIGH_GLITCH_THRESHOLD,
+  GLITCH_CRASH_THRESHOLD,
+  EVOLUTION_NAMES,
+  PET_SPRITES,
+  DEFAULT_STATS,
+  sanitizeStats
+} from './constants.js';
+
+// Cached stats to prevent unnecessary updates
+let cachedStats = null;
+
+// Cached DOM elements
+const elements = {};
+
+// Cache DOM elements on load
+function cacheElements() {
+  elements.hungerBar = document.getElementById('hungerBar');
+  elements.hungerValue = document.getElementById('hungerValue');
+  elements.glitchBar = document.getElementById('glitchBar');
+  elements.glitchValue = document.getElementById('glitchValue');
+  elements.petSprite = document.getElementById('petSprite');
+  elements.petContainer = document.getElementById('petContainer');
+  elements.rebootButton = document.getElementById('rebootButton');
+  elements.infoText = document.getElementById('infoText');
+  elements.petName = document.getElementById('petName');
+}
 
 // Update the UI with current stats
 async function updateUI() {
-  const stats = await chrome.storage.local.get();
+  try {
+    // Get stats with defaults
+    const rawStats = await chrome.storage.local.get(DEFAULT_STATS);
+    const stats = sanitizeStats(rawStats);
 
-  const hungerBar = document.getElementById('hungerBar');
-  const hungerValue = document.getElementById('hungerValue');
-  const glitchBar = document.getElementById('glitchBar');
-  const glitchValue = document.getElementById('glitchValue');
-  const petSprite = document.getElementById('petSprite');
-  const petContainer = document.getElementById('petContainer');
-  const rebootButton = document.getElementById('rebootButton');
-  const infoText = document.getElementById('infoText');
-  const petName = document.getElementById('petName');
+    // Check if stats changed (avoid unnecessary DOM updates)
+    const statsString = JSON.stringify(stats);
+    if (statsString === cachedStats) {
+      return; // No changes
+    }
+    cachedStats = statsString;
 
-  // Update hunger bar
-  hungerBar.style.width = `${stats.hunger}%`;
-  hungerValue.textContent = stats.hunger;
+    // Update hunger bar
+    elements.hungerBar.style.width = `${stats.hunger}%`;
+    elements.hungerBar.setAttribute('aria-valuenow', stats.hunger);
+    elements.hungerValue.textContent = stats.hunger;
 
-  // Update glitch bar
-  glitchBar.style.width = `${stats.glitch}%`;
-  glitchValue.textContent = stats.glitch;
+    // Update glitch bar
+    elements.glitchBar.style.width = `${stats.glitch}%`;
+    elements.glitchBar.setAttribute('aria-valuenow', stats.glitch);
+    elements.glitchValue.textContent = stats.glitch;
 
-  // Check for crashed state
-  if (stats.glitch >= 100) {
-    petContainer.classList.add('crashed');
-    petSprite.innerHTML = `<img src="${petSprites.crashed}" alt="Crashed" />`;
-    rebootButton.style.display = 'block';
-    infoText.textContent = '⚠️ SYSTEM ERROR: GomiMon has crashed!';
-    petName.textContent = 'ERROR.exe';
-  }
-  // Check for starved state
-  else if (stats.hunger === 0) {
-    petContainer.classList.remove('crashed');
-    petSprite.innerHTML = `<img src="${petSprites['null-sprite']}" alt="Starved" />`;
-    rebootButton.style.display = 'none';
-    infoText.textContent = '💀 Your GomiMon is starving! Feed it some slop!';
-    petName.textContent = 'Null-Sprite';
-  }
-  // Normal state
-  else {
-    petContainer.classList.remove('crashed');
-    rebootButton.style.display = 'none';
+    // Check for crashed state
+    if (stats.glitch >= GLITCH_CRASH_THRESHOLD) {
+      elements.petContainer.classList.add('crashed');
+      elements.petSprite.innerHTML = `<img src="${PET_SPRITES.crashed}" alt="Crashed pet" />`;
+      elements.rebootButton.style.display = 'block';
+      elements.infoText.textContent = '⚠️ SYSTEM ERROR: GomiMon has crashed!';
+      elements.petName.textContent = 'ERROR.exe';
+    }
+    // Check for starved state
+    else if (stats.hunger === 0) {
+      elements.petContainer.classList.remove('crashed');
+      elements.petSprite.innerHTML = `<img src="${PET_SPRITES['null-sprite']}" alt="Starved pet" />`;
+      elements.rebootButton.style.display = 'none';
+      elements.infoText.textContent = '💀 Your GomiMon is starving! Feed it some slop!';
+      elements.petName.textContent = 'Null-Sprite';
+    }
+    // Normal state
+    else {
+      elements.petContainer.classList.remove('crashed');
+      elements.rebootButton.style.display = 'none';
 
-    // Determine evolution
-    let evolution = stats.evolution || 'egg';
+      // Determine evolution
+      const evolution = stats.evolution || 'egg';
 
-    // Evolution is now handled in background.js, just display current state
-    petSprite.innerHTML = `<img src="${petSprites[evolution] || petSprites.baby}" alt="${evolution}" />`;
+      // Update sprite (with fallback)
+      const spriteUrl = PET_SPRITES[evolution] || PET_SPRITES.baby;
+      const spriteName = EVOLUTION_NAMES[evolution] || 'GomiMon';
+      elements.petSprite.innerHTML = `<img src="${spriteUrl}" alt="${spriteName}" />`;
 
-    // Update pet name based on evolution
-    const evolutionNames = {
-      egg: 'Egg',
-      baby: 'Baby-Gomi',
-      'typo-ling': 'Typo-ling',
-      'muta-pixel': 'Muta-Pixel',
-      'classic-gomi': 'Classic-Gomi'
-    };
-    petName.textContent = evolutionNames[evolution] || 'GomiMon';
+      // Update pet name
+      elements.petName.textContent = spriteName;
 
-    // Update info text with diet breakdown
-    const diet = stats.diet || { text: 0, image: 0, post: 0 };
+      // Update info text with diet breakdown
+      const diet = stats.diet || { text: 0, image: 0, post: 0 };
 
-    if (stats.hunger < 30) {
-      infoText.innerHTML = '😰 Getting hungry! Find some AI slop!';
-    } else if (stats.glitch > 80) {
-      infoText.innerHTML = '⚠️ High glitch level! Slow down!';
-    } else {
-      infoText.innerHTML = `
-        <div>Total Feeds: ${stats.feedCount}</div>
-        <div style="font-size: 10px; margin-top: 3px; opacity: 0.8;">
-          📝 ${diet.text} | 🖼️ ${diet.image} | 📄 ${diet.post}
-        </div>
-      `;
+      if (stats.hunger < LOW_HUNGER_THRESHOLD) {
+        elements.infoText.innerHTML = '😰 Getting hungry! Find some AI slop!';
+      } else if (stats.glitch > HIGH_GLITCH_THRESHOLD) {
+        elements.infoText.innerHTML = '⚠️ High glitch level! Slow down!';
+      } else {
+        // Use textContent for diet numbers to prevent XSS
+        elements.infoText.innerHTML = `
+          <div>Total Feeds: <span class="feed-count">${stats.feedCount || 0}</span></div>
+          <div class="diet-breakdown">
+            📝 <span class="diet-value">${diet.text || 0}</span> |
+            🖼️ <span class="diet-value">${diet.image || 0}</span> |
+            📄 <span class="diet-value">${diet.post || 0}</span>
+          </div>
+        `;
+      }
+    }
+  } catch (error) {
+    console.error('[GomiMon Popup] Error updating UI:', error);
+
+    // Show error state
+    if (elements.infoText) {
+      elements.infoText.textContent = 'Error loading pet data';
     }
   }
 }
 
 // Handle reboot button click
-document.getElementById('rebootButton').addEventListener('click', async () => {
-  await chrome.storage.local.set({
-    glitch: 0,
-    lastUpdate: Date.now()
-  });
+async function handleReboot() {
+  try {
+    // Get current stats
+    const stats = await chrome.storage.local.get(DEFAULT_STATS);
 
-  updateUI();
-});
+    // Reset glitch to 0
+    await chrome.storage.local.set({
+      ...stats,
+      glitch: 0,
+      lastUpdate: Date.now()
+    });
 
-// Initialize UI when popup opens
-document.addEventListener('DOMContentLoaded', updateUI);
+    // Force cache invalidation
+    cachedStats = null;
 
-// Update UI every second while popup is open
-setInterval(updateUI, 1000);
+    // Update UI immediately
+    await updateUI();
+  } catch (error) {
+    console.error('[GomiMon Popup] Error rebooting:', error);
+  }
+}
+
+// Initialize popup
+function initialize() {
+  try {
+    // Cache DOM elements
+    cacheElements();
+
+    // Set up reboot button listener
+    elements.rebootButton.addEventListener('click', handleReboot);
+
+    // Initial update
+    updateUI();
+
+    // Listen for storage changes instead of polling
+    chrome.storage.onChanged.addListener((changes, namespace) => {
+      if (namespace === 'local') {
+        // Force cache invalidation when storage changes
+        cachedStats = null;
+        updateUI();
+      }
+    });
+
+    // Fallback: Update every 5 seconds (less aggressive than before)
+    setInterval(() => {
+      // Only update if popup is visible
+      if (document.visibilityState === 'visible') {
+        updateUI();
+      }
+    }, 5000);
+
+  } catch (error) {
+    console.error('[GomiMon Popup] Initialization error:', error);
+  }
+}
+
+// Wait for DOM to be ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initialize);
+} else {
+  initialize();
+}
