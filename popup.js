@@ -1,15 +1,15 @@
 // GomiMon Popup Script
 // Displays the pet and its stats
 
-// Pet sprites for different evolutions
+// Pet sprites - SVG files
 const petSprites = {
-  egg: '🥚',
-  baby: '👾',
-  'typo-ling': '📝',
-  'muta-pixel': '🎨',
-  'classic-gomi': '🗑️',
-  'null-sprite': '💀',
-  crashed: '❌'
+  egg: 'sprites/egg.svg',
+  baby: 'sprites/baby.svg',
+  'typo-ling': 'sprites/typo-ling.svg',
+  'muta-pixel': 'sprites/muta-pixel.svg',
+  'classic-gomi': 'sprites/classic-gomi.svg',
+  'null-sprite': 'sprites/starved.svg',
+  crashed: 'sprites/crashed.svg'
 };
 
 // Update the UI with current stats
@@ -37,7 +37,7 @@ async function updateUI() {
   // Check for crashed state
   if (stats.glitch >= 100) {
     petContainer.classList.add('crashed');
-    petSprite.textContent = petSprites.crashed;
+    petSprite.innerHTML = `<img src="${petSprites.crashed}" alt="Crashed" />`;
     rebootButton.style.display = 'block';
     infoText.textContent = '⚠️ SYSTEM ERROR: GomiMon has crashed!';
     petName.textContent = 'ERROR.exe';
@@ -45,7 +45,7 @@ async function updateUI() {
   // Check for starved state
   else if (stats.hunger === 0) {
     petContainer.classList.remove('crashed');
-    petSprite.textContent = petSprites['null-sprite'];
+    petSprite.innerHTML = `<img src="${petSprites['null-sprite']}" alt="Starved" />`;
     rebootButton.style.display = 'none';
     infoText.textContent = '💀 Your GomiMon is starving! Feed it some slop!';
     petName.textContent = 'Null-Sprite';
@@ -58,29 +58,8 @@ async function updateUI() {
     // Determine evolution
     let evolution = stats.evolution || 'egg';
 
-    // Check if ready to evolve from egg
-    if (stats.feedCount >= 10 && evolution === 'egg') {
-      evolution = 'baby';
-      await chrome.storage.local.set({ evolution: 'baby' });
-    }
-
-    // Check for further evolution at 50 feeds
-    if (stats.feedCount >= 50 && evolution === 'baby') {
-      const diet = stats.diet || { text: 0, image: 0, post: 0 };
-      const total = diet.text + diet.image + diet.post;
-
-      if (diet.text / total > 0.5) {
-        evolution = 'typo-ling';
-      } else if (diet.image / total > 0.5) {
-        evolution = 'muta-pixel';
-      } else {
-        evolution = 'classic-gomi';
-      }
-
-      await chrome.storage.local.set({ evolution });
-    }
-
-    petSprite.textContent = petSprites[evolution] || petSprites.baby;
+    // Evolution is now handled in background.js, just display current state
+    petSprite.innerHTML = `<img src="${petSprites[evolution] || petSprites.baby}" alt="${evolution}" />`;
 
     // Update pet name based on evolution
     const evolutionNames = {
@@ -92,13 +71,20 @@ async function updateUI() {
     };
     petName.textContent = evolutionNames[evolution] || 'GomiMon';
 
-    // Update info text
+    // Update info text with diet breakdown
+    const diet = stats.diet || { text: 0, image: 0, post: 0 };
+
     if (stats.hunger < 30) {
-      infoText.textContent = '😰 Getting hungry! Find some AI slop!';
+      infoText.innerHTML = '😰 Getting hungry! Find some AI slop!';
     } else if (stats.glitch > 80) {
-      infoText.textContent = '⚠️ High glitch level! Slow down!';
+      infoText.innerHTML = '⚠️ High glitch level! Slow down!';
     } else {
-      infoText.textContent = `Feeds: ${stats.feedCount} | Level: ${stats.level}`;
+      infoText.innerHTML = `
+        <div>Total Feeds: ${stats.feedCount}</div>
+        <div style="font-size: 10px; margin-top: 3px; opacity: 0.8;">
+          📝 ${diet.text} | 🖼️ ${diet.image} | 📄 ${diet.post}
+        </div>
+      `;
     }
   }
 }

@@ -1,0 +1,27 @@
+<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Typo-ling sprite - made of glitched text -->
+  <defs>
+    <filter id="glitch">
+      <feTurbulence baseFrequency="0.05" numOctaves="2" result="turbulence"/>
+      <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="3"/>
+    </filter>
+  </defs>
+
+  <!-- Body made of text characters -->
+  <rect x="25" y="35" width="50" height="50" fill="#4facfe" stroke="#333" stroke-width="2" rx="8"/>
+
+  <!-- Glitchy text pattern -->
+  <text x="50" y="50" font-family="monospace" font-size="12" fill="#333" text-anchor="middle">@#$</text>
+  <text x="50" y="65" font-family="monospace" font-size="12" fill="#333" text-anchor="middle">abc</text>
+  <text x="50" y="80" font-family="monospace" font-size="12" fill="#333" text-anchor="middle">!?&amp;</text>
+
+  <!-- Eyes -->
+  <rect x="35" y="40" width="8" height="8" fill="#333"/>
+  <rect x="57" y="40" width="8" height="8" fill="#333"/>
+  <rect x="37" y="42" width="3" height="3" fill="#fff"/>
+  <rect x="59" y="42" width="3" height="3" fill="#fff"/>
+
+  <!-- Glitch lines -->
+  <line x1="20" y1="50" x2="35" y2="50" stroke="#00f2fe" stroke-width="2"/>
+  <line x1="65" y1="70" x2="80" y2="70" stroke="#00f2fe" stroke-width="2"/>
+</svg>

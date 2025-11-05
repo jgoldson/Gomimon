@@ -7,7 +7,9 @@
     "storage",
     "alarms",
     "contextMenus",
-    "scripting"
+    "scripting",
+    "notifications",
+    "offscreen"
   ],
   "host_permissions": [
     "*://*.twitter.com/*",

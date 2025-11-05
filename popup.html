@@ -34,8 +34,18 @@
     }
 
     .pet-sprite {
-      font-size: 100px;
-      text-align: center;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pet-sprite img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
     }
 
     .pet-name {
@@ -111,21 +121,38 @@
     }
 
     .crashed {
-      background: #000;
-      color: #00ff00;
+      background: #000080;
+      color: #ffffff;
+      border-color: #0000ff;
+      animation: bsod-flicker 0.5s ease-in-out;
     }
 
-    .crashed .pet-sprite {
+    .crashed .pet-sprite img {
       animation: glitch 0.3s infinite;
+      filter: hue-rotate(180deg) contrast(200%);
     }
 
     @keyframes glitch {
-      0% { transform: translate(0); }
-      20% { transform: translate(-2px, 2px); }
-      40% { transform: translate(-2px, -2px); }
-      60% { transform: translate(2px, 2px); }
-      80% { transform: translate(2px, -2px); }
-      100% { transform: translate(0); }
+      0% { transform: translate(0) skew(0deg); }
+      20% { transform: translate(-3px, 2px) skew(-2deg); filter: hue-rotate(90deg); }
+      40% { transform: translate(-2px, -3px) skew(2deg); filter: hue-rotate(-90deg); }
+      60% { transform: translate(3px, 2px) skew(-3deg); filter: hue-rotate(180deg); }
+      80% { transform: translate(2px, -2px) skew(3deg); filter: hue-rotate(-180deg); }
+      100% { transform: translate(0) skew(0deg); }
+    }
+
+    @keyframes bsod-flicker {
+      0%, 100% { opacity: 1; }
+      20%, 80% { opacity: 0.8; }
+      40%, 60% { opacity: 0.9; }
+    }
+
+    .pet-sprite img {
+      transition: transform 0.3s ease;
+    }
+
+    .pet-sprite:hover img {
+      transform: scale(1.05);
     }
   </style>
 </head>
@@ -134,7 +161,9 @@
     <div class="pet-name" id="petName">GomiMon</div>
 
     <div class="pet-container" id="petContainer">
-      <div class="pet-sprite" id="petSprite">🥚</div>
+      <div class="pet-sprite" id="petSprite">
+        <img src="sprites/egg.svg" alt="Egg" />
+      </div>
     </div>
 
     <div class="stats">
