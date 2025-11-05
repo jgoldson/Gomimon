@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "GomiMon",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A virtual pet that eats AI slop from your feed.",
   "permissions": [
     "storage",
@@ -37,6 +37,7 @@
   "web_accessible_resources": [{
     "resources": [
       "sprites/*.svg",
+      "sprites/*.gif",
       "sounds/*.wav",
       "constants.js"
     ],

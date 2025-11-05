@@ -139,8 +139,16 @@ async function handleReboot() {
 }
 
 // Initialize popup
-function initialize() {
+async function initialize() {
   try {
+    // Check if user has chosen an egg
+    const stats = await chrome.storage.local.get(DEFAULT_STATS);
+    if (!stats.eggType) {
+      // Redirect to egg selection screen
+      window.location.href = 'egg-selection.html';
+      return;
+    }
+
     // Cache DOM elements
     cacheElements();
 

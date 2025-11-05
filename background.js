@@ -15,6 +15,7 @@ import {
   MAX_FEEDS_PER_MINUTE,
   FEED_COOLDOWN_MS,
   EVOLUTION_NAMES,
+  EVOLUTION_TREES,
   DEFAULT_STATS,
   FOOD_TYPES,
   ANIMATION_DURATION,
@@ -213,7 +214,46 @@ async function migrateStorage() {
       };
 
       await chrome.storage.local.set(sanitizeStats(migrated));
-      debugLog('Migration complete');
+      debugLog('Migration to version 1 complete');
+    }
+
+    if (version < 2) {
+      // Migration from version 1 to 2 (egg type support)
+      debugLog('Migrating from version 1 to 2');
+
+      const currentData = await chrome.storage.local.get();
+
+      // If they have an existing 'egg' or 'baby' or adult evolution,
+      // default to egg1 type and update evolution accordingly
+      let eggType = null;
+      let evolution = currentData.evolution;
+
+      if (currentData.evolution === 'egg') {
+        eggType = 'egg1';
+        evolution = 'egg1';
+      } else if (currentData.evolution === 'baby') {
+        eggType = 'egg1';
+        evolution = 'baby1';
+      } else if (currentData.evolution === 'typo-ling') {
+        eggType = 'egg1';
+        evolution = 'typo-ling1';
+      } else if (currentData.evolution === 'muta-pixel') {
+        eggType = 'egg1';
+        evolution = 'muta-pixel1';
+      } else if (currentData.evolution === 'classic-gomi') {
+        eggType = 'egg1';
+        evolution = 'classic-gomi1';
+      }
+
+      const migrated = {
+        ...currentData,
+        eggType,
+        evolution,
+        schemaVersion: 2
+      };
+
+      await chrome.storage.local.set(sanitizeStats(migrated));
+      debugLog('Migration to version 2 complete');
     }
   } catch (error) {
     reportError('migrateStorage', error);
@@ -290,21 +330,29 @@ function determineFoodType(info) {
   return FOOD_TYPES.POST;
 }
 
-// Calculate evolution based on diet
-function calculateEvolution(feedCount, currentEvolution, diet) {
+// Calculate evolution based on diet and egg type
+function calculateEvolution(feedCount, currentEvolution, diet, eggType) {
+  // Check if egg type is valid
+  if (!eggType || !EVOLUTION_TREES[eggType]) {
+    debugLog('Invalid egg type:', eggType);
+    return { evolution: currentEvolution, justEvolved: false };
+  }
+
+  const evolutionTree = EVOLUTION_TREES[eggType];
+
   // Egg to Baby at 10 feeds
-  if (feedCount >= EGG_TO_BABY_FEEDS && currentEvolution === 'egg') {
-    return { evolution: 'baby', justEvolved: true };
+  if (feedCount >= EGG_TO_BABY_FEEDS && (currentEvolution === 'egg1' || currentEvolution === 'egg2' || currentEvolution === 'egg3')) {
+    return { evolution: evolutionTree.baby, justEvolved: true };
   }
 
   // Baby to Adult at 50 feeds
-  if (feedCount >= BABY_TO_ADULT_FEEDS && currentEvolution === 'baby') {
+  if (feedCount >= BABY_TO_ADULT_FEEDS && (currentEvolution === 'baby1' || currentEvolution === 'baby2' || currentEvolution === 'baby3')) {
     const total = diet.text + diet.image + diet.post;
 
     // Prevent division by zero
     if (total === 0) {
-      debugLog('No diet data, defaulting to classic-gomi');
-      return { evolution: 'classic-gomi', justEvolved: true };
+      debugLog('No diet data, defaulting to balanced evolution');
+      return { evolution: evolutionTree.balanced, justEvolved: true };
     }
 
     // Determine evolution based on dominant food type
@@ -312,11 +360,11 @@ function calculateEvolution(feedCount, currentEvolution, diet) {
     const imageRatio = diet.image / total;
 
     if (textRatio > DIET_DOMINANCE_THRESHOLD) {
-      return { evolution: 'typo-ling', justEvolved: true };
+      return { evolution: evolutionTree.textHeavy, justEvolved: true };
     } else if (imageRatio > DIET_DOMINANCE_THRESHOLD) {
-      return { evolution: 'muta-pixel', justEvolved: true };
+      return { evolution: evolutionTree.imageHeavy, justEvolved: true };
     } else {
-      return { evolution: 'classic-gomi', justEvolved: true };
+      return { evolution: evolutionTree.balanced, justEvolved: true };
     }
   }
 
@@ -455,7 +503,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     const { evolution, justEvolved } = calculateEvolution(
       newFeedCount,
       stats.evolution,
-      newDiet
+      newDiet,
+      stats.eggType
     );
 
     // Update stats

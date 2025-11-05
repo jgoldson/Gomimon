@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choose Your GomiMon</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 400px;
+      min-height: 500px;
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #e0e0e0;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: #00ff88;
+      text-align: center;
+      text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #a0a0a0;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .egg-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+    }
+
+    .egg-option {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .egg-option:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: currentColor;
+      transform: translateX(5px);
+    }
+
+    .egg-option:active {
+      transform: translateX(5px) scale(0.98);
+    }
+
+    .egg-sprite {
+      width: 80px;
+      height: 80px;
+      flex-shrink: 0;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 0 8px currentColor);
+    }
+
+    .egg-info {
+      flex: 1;
+    }
+
+    .egg-name {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: inherit;
+    }
+
+    .egg-description {
+      font-size: 12px;
+      color: #c0c0c0;
+      line-height: 1.4;
+    }
+
+    /* Color themes for each egg */
+    .egg-option[data-egg="egg1"] {
+      color: #667eea;
+    }
+
+    .egg-option[data-egg="egg2"] {
+      color: #f093fb;
+    }
+
+    .egg-option[data-egg="egg3"] {
+      color: #4facfe;
+    }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      color: #00ff88;
+      font-size: 14px;
+      margin-top: 20px;
+    }
+
+    /* Accessibility */
+    .egg-option:focus {
+      outline: 2px solid #00ff88;
+      outline-offset: 2px;
+    }
+
+    /* Animation for entrance */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .egg-option {
+      animation: fadeInUp 0.5s ease backwards;
+    }
+
+    .egg-option:nth-child(1) { animation-delay: 0.1s; }
+    .egg-option:nth-child(2) { animation-delay: 0.2s; }
+    .egg-option:nth-child(3) { animation-delay: 0.3s; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Choose Your GomiMon</h1>
+    <p class="subtitle">Select an egg to begin your journey</p>
+
+    <div class="egg-grid" id="eggGrid">
+      <div class="egg-option" data-egg="egg1" tabindex="0" role="button" aria-label="Choose Tech Egg">
+        <img src="sprites/egg1.gif" alt="Tech Egg" class="egg-sprite">
+        <div class="egg-info">
+          <div class="egg-name">Tech Egg</div>
+          <div class="egg-description">A digital egg crackling with data</div>
+        </div>
+      </div>
+
+      <div class="egg-option" data-egg="egg2" tabindex="0" role="button" aria-label="Choose Trash Egg">
+        <img src="sprites/egg2.gif" alt="Trash Egg" class="egg-sprite">
+        <div class="egg-info">
+          <div class="egg-name">Trash Egg</div>
+          <div class="egg-description">A grimy egg found in the junk heap</div>
+        </div>
+      </div>
+
+      <div class="egg-option" data-egg="egg3" tabindex="0" role="button" aria-label="Choose Glitch Egg">
+        <img src="sprites/egg3.gif" alt="Glitch Egg" class="egg-sprite">
+        <div class="egg-info">
+          <div class="egg-name">Glitch Egg</div>
+          <div class="egg-description">A corrupted egg from the void</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="egg-selection.js" type="module"></script>
+</body>
+</html>
