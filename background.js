@@ -485,14 +485,14 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     // Inject CSS if needed
     await injectCSS(tab.id);
 
-    // Execute purge script
+    // Execute purge script with pet sprite
     await chrome.scripting.executeScript({
       target: {
         tabId: tab.id,
         frameIds: safeInfo.frameId ? [safeInfo.frameId] : undefined
       },
       func: purgeAtCoordinates,
-      args: [safeInfo]
+      args: [safeInfo, evolution]
     });
 
     debugLog('Purge script executed');
@@ -507,8 +507,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 });
 
 // Function injected into page to purge element
-function purgeAtCoordinates(info) {
-  console.log('[GomiMon] Purging at coordinates', info);
+function purgeAtCoordinates(info, evolution) {
+  console.log('[GomiMon] Purging at coordinates', info, 'Evolution:', evolution);
 
   // Find element at click coordinates
   let targetElement = null;
@@ -610,10 +610,85 @@ function purgeAtCoordinates(info) {
 
   console.log('[GomiMon] Purging element', postElement);
 
-  // Add purge animation class
-  postElement.classList.add('gomi-purged');
+  // Get the post's position for pet animation
+  const postRect = postElement.getBoundingClientRect();
+  const postCenterX = postRect.left + postRect.width / 2;
+  const postCenterY = postRect.top + postRect.height / 2;
 
-  // Remove element after animation
+  // Map evolution to sprite - use eat animation
+  const spriteMap = {
+    'egg': {
+      idle: 'sprites/animated/egg.gif',
+      eat: 'sprites/animated/egg.gif'
+    },
+    'baby': {
+      idle: 'sprites/animated/baby1_idle.gif',
+      eat: 'sprites/animated/baby1_eat.gif'
+    },
+    'typo-ling': {
+      idle: 'sprites/animated/typo-ling.gif',
+      eat: 'sprites/animated/typo-ling.gif'
+    },
+    'muta-pixel': {
+      idle: 'sprites/animated/muta-pixel.gif',
+      eat: 'sprites/animated/muta-pixel.gif'
+    },
+    'classic-gomi': {
+      idle: 'sprites/animated/classic-gomi.gif',
+      eat: 'sprites/animated/classic-gomi.gif'
+    },
+    'null-sprite': {
+      idle: 'sprites/animated/starved.gif',
+      eat: 'sprites/animated/starved.gif'
+    }
+  };
+
+  const evolutionSprites = spriteMap[evolution] || spriteMap['baby'];
+  const eatSpriteUrl = chrome.runtime.getURL(evolutionSprites.eat);
+
+  // Create pet overlay
+  const petOverlay = document.createElement('div');
+  petOverlay.id = 'gomimon-pet-overlay';
+  petOverlay.innerHTML = `<img src="${eatSpriteUrl}" alt="GomiMon" />`;
+  document.body.appendChild(petOverlay);
+
+  // Start from bottom-right corner
+  const startX = window.innerWidth + 60;
+  const startY = window.innerHeight + 60;
+
+  petOverlay.style.left = `${startX}px`;
+  petOverlay.style.top = `${startY}px`;
+
+  // Fly in animation
+  setTimeout(() => {
+    petOverlay.style.transition = 'left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    petOverlay.style.left = `${postCenterX}px`;
+    petOverlay.style.top = `${postCenterY}px`;
+    petOverlay.style.animation = 'gomimon-fly-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
+  }, 50);
+
+  // Start eating animation after flying in
+  setTimeout(() => {
+    petOverlay.style.animation = 'gomimon-eat 0.4s ease-in-out 3';
+
+    // Add purge animation to post while eating
+    postElement.classList.add('gomi-purged');
+  }, 650);
+
+  // Fly away after eating
+  setTimeout(() => {
+    petOverlay.style.transition = 'left 0.5s ease-in, top 0.5s ease-in';
+    petOverlay.style.animation = 'gomimon-fly-away 0.5s ease-in forwards';
+    petOverlay.style.left = `${startX}px`;
+    petOverlay.style.top = `${startY}px`;
+  }, 1850);
+
+  // Remove pet overlay
+  setTimeout(() => {
+    petOverlay.remove();
+  }, 2400);
+
+  // Remove post element after full animation
   setTimeout(() => {
     try {
       postElement.remove();
@@ -621,7 +696,7 @@ function purgeAtCoordinates(info) {
     } catch (e) {
       console.error('[GomiMon] Failed to remove element:', e);
     }
-  }, 500);
+  }, 2500);
 }
 
 // Animate toolbar icon with badge

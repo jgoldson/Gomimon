@@ -8,7 +8,8 @@ import {
   EVOLUTION_NAMES,
   PET_SPRITES,
   DEFAULT_STATS,
-  sanitizeStats
+  sanitizeStats,
+  getPetSprite
 } from './constants.js';
 
 // Cached stats to prevent unnecessary updates
@@ -57,7 +58,9 @@ async function updateUI() {
     // Check for crashed state
     if (stats.glitch >= GLITCH_CRASH_THRESHOLD) {
       elements.petContainer.classList.add('crashed');
-      elements.petSprite.innerHTML = `<img src="${PET_SPRITES.crashed}" alt="Crashed pet" />`;
+      const evolution = stats.evolution || 'egg';
+      const spriteUrl = getPetSprite(evolution, 'crashed');
+      elements.petSprite.innerHTML = `<img src="${spriteUrl}" alt="Crashed pet" />`;
       elements.rebootButton.style.display = 'block';
       elements.infoText.textContent = '⚠️ SYSTEM ERROR: GomiMon has crashed!';
       elements.petName.textContent = 'ERROR.exe';
@@ -65,7 +68,9 @@ async function updateUI() {
     // Check for starved state
     else if (stats.hunger === 0) {
       elements.petContainer.classList.remove('crashed');
-      elements.petSprite.innerHTML = `<img src="${PET_SPRITES['null-sprite']}" alt="Starved pet" />`;
+      const evolution = stats.evolution || 'egg';
+      const spriteUrl = getPetSprite(evolution, 'starved');
+      elements.petSprite.innerHTML = `<img src="${spriteUrl}" alt="Starved pet" />`;
       elements.rebootButton.style.display = 'none';
       elements.infoText.textContent = '💀 Your GomiMon is starving! Feed it some slop!';
       elements.petName.textContent = 'Null-Sprite';
@@ -78,8 +83,8 @@ async function updateUI() {
       // Determine evolution
       const evolution = stats.evolution || 'egg';
 
-      // Update sprite (with fallback)
-      const spriteUrl = PET_SPRITES[evolution] || PET_SPRITES.baby;
+      // Update sprite (with fallback) - use idle animation
+      const spriteUrl = getPetSprite(evolution, 'idle');
       const spriteName = EVOLUTION_NAMES[evolution] || 'GomiMon';
       elements.petSprite.innerHTML = `<img src="${spriteUrl}" alt="${spriteName}" />`;
 

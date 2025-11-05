@@ -37,6 +37,7 @@
   "web_accessible_resources": [{
     "resources": [
       "sprites/*.svg",
+      "sprites/animated/*.gif",
       "sounds/*.wav",
       "constants.js"
     ],

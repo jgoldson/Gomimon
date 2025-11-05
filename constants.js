@@ -42,16 +42,58 @@ export const VALID_EVOLUTIONS = [
   'null-sprite'
 ];
 
-// Pet Sprite Paths
+// Pet Sprite Paths - now with multiple animations per evolution
 export const PET_SPRITES = {
-  egg: 'sprites/egg.svg',
-  baby: 'sprites/baby.svg',
-  'typo-ling': 'sprites/typo-ling.svg',
-  'muta-pixel': 'sprites/muta-pixel.svg',
-  'classic-gomi': 'sprites/classic-gomi.svg',
-  'null-sprite': 'sprites/starved.svg',
-  crashed: 'sprites/crashed.svg'
+  egg: {
+    idle: 'sprites/animated/egg.gif',
+    eat: 'sprites/animated/egg.gif',  // Can add egg_eat.gif later
+    crashed: 'sprites/animated/crashed.gif',
+    starved: 'sprites/animated/starved.gif'
+  },
+  baby: {
+    idle: 'sprites/animated/baby1_idle.gif',
+    eat: 'sprites/animated/baby1_eat.gif',
+    crashed: 'sprites/animated/baby1_crashed.gif',
+    starved: 'sprites/animated/baby1_starved.gif'
+  },
+  'typo-ling': {
+    idle: 'sprites/animated/typo-ling.gif',
+    eat: 'sprites/animated/typo-ling.gif',  // Can add specific animations later
+    crashed: 'sprites/animated/crashed.gif',
+    starved: 'sprites/animated/starved.gif'
+  },
+  'muta-pixel': {
+    idle: 'sprites/animated/muta-pixel.gif',
+    eat: 'sprites/animated/muta-pixel.gif',
+    crashed: 'sprites/animated/crashed.gif',
+    starved: 'sprites/animated/starved.gif'
+  },
+  'classic-gomi': {
+    idle: 'sprites/animated/classic-gomi.gif',
+    eat: 'sprites/animated/classic-gomi.gif',
+    crashed: 'sprites/animated/crashed.gif',
+    starved: 'sprites/animated/starved.gif'
+  },
+  'null-sprite': {
+    idle: 'sprites/animated/starved.gif',
+    eat: 'sprites/animated/starved.gif',
+    crashed: 'sprites/animated/crashed.gif',
+    starved: 'sprites/animated/starved.gif'
+  }
 };
+
+// Helper function to get sprite for a given evolution and state
+export function getPetSprite(evolution, state = 'idle') {
+  const evolutionSprites = PET_SPRITES[evolution] || PET_SPRITES['baby'];
+
+  // If the evolution sprites are an object with states
+  if (typeof evolutionSprites === 'object' && !Array.isArray(evolutionSprites)) {
+    return evolutionSprites[state] || evolutionSprites.idle;
+  }
+
+  // Fallback for old single-sprite format
+  return evolutionSprites;
+}
 
 // Default Stats Object
 export const DEFAULT_STATS = {
