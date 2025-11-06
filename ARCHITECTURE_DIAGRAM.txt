@@ -1,0 +1,318 @@
+================================================================================
+                    GOMIMON ARCHITECTURE DIAGRAM
+================================================================================
+
+                         CHROME EXTENSION SYSTEM
+                         =====================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          MANIFEST V3 PERMISSIONS                            │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │ storage | alarms | contextMenus | scripting | notifications | offscreen   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+                                    │
+                ┌───────────────────┼───────────────────┐
+                │                   │                   │
+                ▼                   ▼                   ▼
+
+         ┌─────────────┐      ┌──────────────┐    ┌──────────────┐
+         │   POPUP     │      │  BACKGROUND  │    │  CONTENT &   │
+         │   300x400px │      │  SERVICE     │    │  WEBSITES    │
+         │             │      │  WORKER      │    │              │
+         └─────────────┘      └──────────────┘    └──────────────┘
+
+                ▼                   ▼                   ▼
+
+         ┌──────────────┐    ┌────────────────┐  ┌─────────────────┐
+         │ popup.html   │    │ background.js  │  │ Post on X, FB,  │
+         │ popup.js     │    │ 750 lines      │  │ Reddit, etc.    │
+         │ popup.css    │    │                │  │                 │
+         │              │    │ • Timers       │  │ Right-click:    │
+         │ Shows:       │    │ • Storage      │  │ "Feed GomiMon" ─┼─┐
+         │ • Pet sprite │    │ • Feeding      │  │                 │ │
+         │ • Hunger bar │    │ • Evolution    │  │ Detects:        │ │
+         │ • Glitch bar │    │ • Rewards      │  │ • Text          │ │
+         │              │    │ • Animations   │  │ • Images        │ │
+         │ Listens to:  │    │ • Sounds       │  │ • Posts         │ │
+         │ • Storage    │    │                │  │                 │ │
+         │ • UI events  │    │ Manages:       │  │ Injects:        │ │
+         │              │    │ • chrome.      │  │ • CSS animation │ │
+         │              │    │   storage      │  │ • Pet animation │ │
+         │              │    │ • chrome.      │  │ • Removal       │ │
+         │              │    │   alarms       │  │                 │ │
+         │              │    │ • chrome.      │  └─────────────────┘ │
+         │              │    │   contextMenus│                       │
+         │              │    │ • Sound play   │                       │
+         └──────────────┘    └────────────────┘                       │
+                │                    │◄──────────────────────────────┘
+                │                    │
+                │            Fires event every 15 min
+                │            (HUNGER TICK)
+                │                    │
+                │                    ▼
+                │            ┌─────────────────┐
+                │            │  HUNGER METER   │
+                │            │  Decreases by 1 │
+                │            │  Updates stats  │
+                │            │  Shows badge    │
+                │            └─────────────────┘
+                │                    │
+                │                    │ Updates storage
+                │                    ▼
+                │            ┌─────────────────┐
+                └───────────▶│ CHROME.STORAGE  │
+                             │ LOCAL           │
+                             │                 │
+                             │ Stored Stats:   │
+                             │ • hunger (0-100)│
+                             │ • glitch (0-100)│
+                             │ • evolution     │
+                             │ • feedCount     │
+                             │ • diet {}       │
+                             │ • timestamps    │
+                             └─────────────────┘
+
+================================================================================
+                         PET STATE FLOW
+================================================================================
+
+     EGG (feedCount: 0-9)
+          │
+          ├─ Right-click & feed ──▶ feedCount++, hunger++, glitch++
+          │
+          ▼ (feedCount >= 10)
+     
+     BABY-GOMI (feedCount: 10-49)
+          │
+          ├─ Right-click & feed ──▶ feedCount++, hunger++, glitch++
+          │
+          ▼ (feedCount >= 50)
+     
+     ┌────────────────────────────────────────────┐
+     │ FINAL FORM EVOLUTION (Diet-based)          │
+     │                                             │
+     │  50%+ Text  ──▶  TYPO-LING                 │
+     │  50%+ Image ──▶  MUTA-PIXEL                │
+     │  Balanced   ──▶  CLASSIC-GOMI              │
+     │                                             │
+     └────────────────────────────────────────────┘
+
+     ALT PATH 1: Starvation
+     ┌──▶ Hunger = 0 ──▶ NULL-SPRITE (sad state)
+
+     ALT PATH 2: Crash
+     ┌──▶ Glitch = 100 ──▶ CRASHED (BSOD effect)
+         └─▶ User clicks REBOOT ──▶ glitch = 0 (returns to normal)
+
+================================================================================
+                      FEEDING ANIMATION SEQUENCE
+================================================================================
+
+     User Right-clicks          background.js                Website
+          │                          │                         │
+          │ Context Menu Click       │                         │
+          ├─────────────────────────▶│                         │
+          │                          │ Validates rate limit    │
+          │                          │ Checks pet state        │
+          │                          │ Updates stats           │
+          │                          │                         │
+          │                          │ Injects CSS/Script     │
+          │                          ├────────────────────────▶│
+          │                          │                         │
+          │                          │              ┌──────────▼─────────┐
+          │                          │              │ PET FLIES IN       │
+          │                          │              │ (0-600ms)          │
+          │                          │              │ From corner→post   │
+          │                          │              └────────────────────┘
+          │                          │                         │
+          │                          │              ┌──────────▼─────────┐
+          │                          │              │ PET EATS           │
+          │                          │              │ (600-1050ms)       │
+          │                          │              │ Chomping motion    │
+          │                          │              │ Post gets glitch   │
+          │                          │              └────────────────────┘
+          │                          │                         │
+          │                          │              ┌──────────▼─────────┐
+          │                          │              │ POST GLITCHES OUT  │
+          │                          │              │ (650-2500ms)       │
+          │                          │              │ Opacity fade       │
+          │                          │              │ Scale down         │
+          │                          │              │ Then removed       │
+          │                          │              └────────────────────┘
+          │                          │                         │
+          │                          │              ┌──────────▼─────────┐
+          │                          │              │ PET FLIES AWAY     │
+          │                          │              │ (1850-2400ms)      │
+          │                          │              │ Back to corner     │
+          │                          │              └────────────────────┘
+          │                          │                         │
+          │ ◄─ Popup updates         │ Sound plays: "gulp"     │
+          │   (Storage changed)      │ Icon wiggles            │
+          │                          │ Toast/notification      │
+          ▼                          ▼                         ▼
+
+================================================================================
+                    MINI-GAME ARCHITECTURE (Proposed)
+================================================================================
+
+     Popup with "Play Slop Scholar" button
+                    │
+                    ▼
+     background.js receives message
+                    │
+                    ├─ Validate pet state (not crashed/starved)
+                    ├─ Create new window
+                    └─▶ minigame-scholar.html
+                            │
+                            ▼
+                    ┌─────────────────────┐
+                    │ SLOP SCHOLAR GAME   │
+                    │                     │
+                    │ • Question display  │
+                    │ • Multiple choice   │
+                    │ • Score tracking    │
+                    │ • Accuracy meter    │
+                    └─────────────────────┘
+                            │
+                    ┌───────┴────────┐
+                    │                │
+                    ▼ On Complete    ▼ On Quit
+           chrome.runtime.sendMessage("endGame", {results})
+                    │
+                    ▼
+           background.js validates & applies rewards
+                    │
+                    ├─ hunger += points
+                    ├─ glitch += penalty (optional)
+                    ├─ miniGames.slopScholar.stats++
+                    └─▶ chrome.storage.local.set()
+                            │
+                            ▼
+                   popup.js listens to storage.onChanged
+                            │
+                            ▼
+                    Popup updates with new stats
+                            │
+                            ▼
+                    Mini-game window closes
+
+================================================================================
+                      KEY DATA STRUCTURES
+================================================================================
+
+PET STATS (chrome.storage.local)
+═══════════════════════════════════════════════════════════════════════════════
+{
+  hunger: 50,                    // 0-100
+  glitch: 25,                    // 0-100
+  level: 1,                      // Future use
+  evolution: 'baby',             // egg|baby|typo-ling|muta-pixel|classic-gomi|null-sprite
+  feedCount: 25,                 // Lifetime feeds
+  diet: {
+    text: 10,                    // Count of text feeds
+    image: 8,                    // Count of image feeds
+    post: 7                      // Count of post feeds
+  },
+  lastUpdate: 1699282828173,     // Timestamp
+  schemaVersion: 1,              // For migrations
+  miniGames: {                   // NEW (for mini-games)
+    slopScholar: {
+      highScore: 150,
+      gamesPlayed: 5,
+      bestAccuracy: 92,
+      lastPlayed: 1699282828173,
+      totalPointsEarned: 450
+    }
+  }
+}
+
+FOOD TYPES
+═══════════════════════════════════════════════════════════════════════════════
+TEXT   → User right-clicked selected text
+IMAGE  → User right-clicked an <img> element
+POST   → User right-clicked generic post container
+
+GAME BALANCE CONSTANTS
+═══════════════════════════════════════════════════════════════════════════════
+HUNGER_DECREASE_RATE          = 1 point per 15 minutes
+HUNGER_INCREASE_PER_FEED      = 20 points
+GLITCH_INCREASE_PER_FEED      = 5 points
+LOW_HUNGER_THRESHOLD          = 30 (show badge)
+HIGH_GLITCH_THRESHOLD         = 80 (show warning)
+GLITCH_CRASH_THRESHOLD        = 100 (crash state)
+FEED_COOLDOWN_MS              = 500ms (min between feeds)
+MAX_FEEDS_PER_MINUTE          = 20
+
+EVOLUTION THRESHOLDS
+═══════════════════════════════════════════════════════════════════════════════
+EGG_TO_BABY_FEEDS             = 10 feeds
+BABY_TO_ADULT_FEEDS           = 50 feeds
+DIET_DOMINANCE_THRESHOLD      = 0.5 (50%)
+
+================================================================================
+                        CODE INTERACTION FLOW
+================================================================================
+
+┌─────────────┐
+│  User opens │
+│   browser   │
+└──────┬──────┘
+       │
+       ▼
+┌────────────────────────┐
+│ background.js onStartup│
+│ listener activated     │
+└──────┬─────────────────┘
+       │
+       ├─ Check missed hunger ticks since last run
+       │
+       ▼
+┌────────────────────────┐
+│ Hunger tick timer      │
+│ scheduled (15 min)     │
+└──────┬─────────────────┘
+       │
+       ├─ Repeats every 15 minutes
+       │
+       ▼
+┌────────────────────────┐
+│ onAlarm("hungerTick")  │
+│ listener fires         │
+└──────┬─────────────────┘
+       │
+       ├─ getStats() from storage
+       ├─ hunger = max(0, hunger - 1)
+       ├─ updateStats() with new hunger
+       ├─ updateHungerBadge() if hunger < 30
+       │
+       ▼
+┌────────────────────────┐
+│ popup.js listening to: │
+│ storage.onChanged      │
+└──────┬─────────────────┘
+       │
+       ├─ cachedStats = null (invalidate cache)
+       ├─ Call updateUI()
+       │
+       ▼
+┌────────────────────────┐
+│ updateUI() in popup.js │
+└──────┬─────────────────┘
+       │
+       ├─ getStats() from storage
+       ├─ Compare with cached stats
+       ├─ If different, update DOM:
+       │  ├─ hungerBar.style.width
+       │  ├─ glitchBar.style.width
+       │  ├─ petSprite.innerHTML
+       │  ├─ petName.textContent
+       │
+       ▼
+┌────────────────────────┐
+│ Popup shows updated    │
+│ pet and stats          │
+└────────────────────────┘
+
+================================================================================
