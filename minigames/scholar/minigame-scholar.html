@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slop Scholar 🎓</title>
+  <link rel="stylesheet" href="minigame-scholar.css">
+</head>
+<body>
+  <div id="game-container">
+    <!-- Start Screen -->
+    <div id="start-screen" class="screen active">
+      <div class="title-wrapper">
+        <h1 class="game-title">SLOP SCHOLAR 🎓</h1>
+        <p class="subtitle">Can you spot the AI slop?</p>
+      </div>
+
+      <div class="instructions">
+        <h2>How to Play:</h2>
+        <ul>
+          <li>Read each quote carefully</li>
+          <li>Decide if it's human-made or AI-generated</li>
+          <li>Watch for generic "motivational" language</li>
+          <li>AI loves words like "journey," "unlock," "tapestry"</li>
+        </ul>
+        <div class="difficulty-select">
+          <label>Difficulty:</label>
+          <select id="difficulty">
+            <option value="easy">Easy (5 quotes)</option>
+            <option value="medium" selected>Medium (10 quotes)</option>
+            <option value="hard">Hard (15 quotes)</option>
+          </select>
+        </div>
+      </div>
+
+      <button id="start-btn" class="btn btn-primary">Start Game</button>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+      <div class="game-header">
+        <div class="score-display">
+          <span class="label">Score:</span>
+          <span id="score">0</span>/<span id="total">10</span>
+        </div>
+        <div class="question-counter">
+          <span class="label">Question:</span>
+          <span id="current-question">1</span>/<span id="total-questions">10</span>
+        </div>
+      </div>
+
+      <div class="quote-container">
+        <div class="quote-card">
+          <div class="quote-text" id="quote-text">
+            <!-- Quote text will be inserted here -->
+          </div>
+          <div class="quote-attribution" id="quote-attribution">
+            <!-- Attribution will be inserted here -->
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-buttons">
+        <button id="btn-human" class="btn btn-answer">
+          <span class="btn-icon">👤</span>
+          <span class="btn-label">Human-Made</span>
+        </button>
+        <button id="btn-ai" class="btn btn-answer">
+          <span class="btn-icon">🤖</span>
+          <span class="btn-label">AI-Generated</span>
+        </button>
+      </div>
+
+      <div id="feedback" class="feedback hidden">
+        <!-- Feedback will be shown here -->
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-screen" class="screen">
+      <div class="results-wrapper">
+        <h1 class="results-title">Game Over!</h1>
+
+        <div class="final-score">
+          <div class="score-big" id="final-score">0</div>
+          <div class="score-label">Correct Answers</div>
+        </div>
+
+        <div class="grade-container">
+          <div class="grade" id="grade">C</div>
+          <div class="grade-text" id="grade-text">Not bad!</div>
+        </div>
+
+        <div class="stats">
+          <div class="stat-item">
+            <span class="stat-label">Accuracy:</span>
+            <span class="stat-value" id="accuracy">0%</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Time:</span>
+            <span class="stat-value" id="time-taken">0:00</span>
+          </div>
+        </div>
+
+        <div class="rewards">
+          <h3>Pet Rewards:</h3>
+          <div class="reward-list" id="reward-list">
+            <!-- Rewards will be inserted here -->
+          </div>
+        </div>
+
+        <div class="results-buttons">
+          <button id="play-again-btn" class="btn btn-primary">Play Again</button>
+          <button id="close-btn" class="btn btn-secondary">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="minigame-scholar.js"></script>
+</body>
+</html>

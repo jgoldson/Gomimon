@@ -409,6 +409,125 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   debugLog('Tab removed from tracking:', tabId);
 });
 
+// Handle messages from popup and minigames
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'LAUNCH_MINIGAME') {
+    handleLaunchMinigame(message.game)
+      .then(result => sendResponse({ success: true, ...result }))
+      .catch(error => {
+        reportError('LAUNCH_MINIGAME', error);
+        sendResponse({ success: false, error: error.message });
+      });
+    return true; // Keep channel open for async response
+  }
+
+  if (message.type === 'MINIGAME_COMPLETE') {
+    handleMinigameComplete(message)
+      .then(result => sendResponse({ success: true, ...result }))
+      .catch(error => {
+        reportError('MINIGAME_COMPLETE', error);
+        sendResponse({ success: false, error: error.message });
+      });
+    return true; // Keep channel open for async response
+  }
+
+  // Offscreen document sound handling
+  if (message.action === 'playSound') {
+    // This is handled by offscreen.js, not background
+    return false;
+  }
+});
+
+// Launch a minigame in a new window
+async function handleLaunchMinigame(gameName) {
+  try {
+    debugLog('Launching minigame:', gameName);
+
+    // Validate game name
+    const validGames = ['scholar'];
+    if (!validGames.includes(gameName)) {
+      throw new Error(`Invalid game name: ${gameName}`);
+    }
+
+    // Check pet state
+    const stats = await getStats();
+
+    // Don't allow playing if crashed or starved
+    if (stats.glitch >= GLITCH_CRASH_THRESHOLD) {
+      throw new Error('Pet is crashed! Reboot first.');
+    }
+
+    if (stats.hunger === 0) {
+      throw new Error('Pet is starving! Feed it first.');
+    }
+
+    // Get game URL
+    const gameUrl = chrome.runtime.getURL(`minigames/${gameName}/minigame-${gameName}.html`);
+
+    // Create window
+    const window = await chrome.windows.create({
+      url: gameUrl,
+      type: 'popup',
+      width: 650,
+      height: 750,
+      focused: true
+    });
+
+    debugLog('Minigame window created:', window.id);
+
+    return { windowId: window.id };
+  } catch (error) {
+    reportError('handleLaunchMinigame', error);
+    throw error;
+  }
+}
+
+// Handle minigame completion and apply rewards
+async function handleMinigameComplete(message) {
+  try {
+    debugLog('Minigame complete:', message);
+
+    const { game, rewards, score, total } = message;
+
+    // Validate rewards
+    if (!rewards || typeof rewards.hunger !== 'number' || typeof rewards.glitch !== 'number') {
+      throw new Error('Invalid rewards format');
+    }
+
+    // Get current stats
+    const stats = await getStats();
+
+    // Apply rewards
+    const newHunger = Math.min(100, Math.max(0, stats.hunger + rewards.hunger));
+    const newGlitch = Math.min(100, Math.max(0, stats.glitch + rewards.glitch));
+
+    // Update stats
+    await updateStats({
+      hunger: newHunger,
+      glitch: newGlitch
+    });
+
+    debugLog('Rewards applied:', { hunger: rewards.hunger, glitch: rewards.glitch });
+    debugLog('New stats:', { hunger: newHunger, glitch: newGlitch });
+
+    // Update badge if needed
+    updateHungerBadge(newHunger);
+
+    // Play success sound
+    if (score >= total * 0.7) {
+      playSound('feed'); // Good performance
+    }
+
+    return {
+      appliedRewards: rewards,
+      newStats: { hunger: newHunger, glitch: newGlitch }
+    };
+  } catch (error) {
+    reportError('handleMinigameComplete', error);
+    throw error;
+  }
+}
+
 // Handle context menu clicks (feeding)
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId !== 'feedGomiMon') {
