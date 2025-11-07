@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slop Swap 🎮</title>
+  <link rel="stylesheet" href="minigame-swap.css">
+</head>
+<body>
+  <div id="game-container">
+    <!-- Start Screen -->
+    <div id="start-screen" class="screen active">
+      <div class="title-wrapper">
+        <h1 class="game-title">SLOP SWAP 🎮</h1>
+        <p class="subtitle">Match the AI slop to clear the grid!</p>
+      </div>
+
+      <div class="instructions">
+        <h2>How to Play:</h2>
+        <ul>
+          <li>Swap adjacent pieces to match 3+ in a row</li>
+          <li>Match 4 pieces to create special clearers</li>
+          <li>Match 5 pieces to create a rainbow piece</li>
+          <li>Create cascading combos for bonus points</li>
+          <li>Reach the target score before time runs out</li>
+        </ul>
+
+        <div class="piece-legend">
+          <h3>Slop Types:</h3>
+          <div class="legend-grid">
+            <div class="legend-item"><span class="piece-preview text">📝</span> Text</div>
+            <div class="legend-item"><span class="piece-preview image">🖼️</span> Image</div>
+            <div class="legend-item"><span class="piece-preview video">🎬</span> Video</div>
+            <div class="legend-item"><span class="piece-preview audio">🎵</span> Audio</div>
+            <div class="legend-item"><span class="piece-preview code">💻</span> Code</div>
+            <div class="legend-item"><span class="piece-preview art">🎨</span> Art</div>
+          </div>
+        </div>
+
+        <div class="difficulty-select">
+          <label>Difficulty:</label>
+          <select id="difficulty">
+            <option value="easy">Easy (3000 points, 90s)</option>
+            <option value="medium" selected>Medium (6000 points, 90s)</option>
+            <option value="hard">Hard (10000 points, 90s)</option>
+          </select>
+        </div>
+      </div>
+
+      <button id="start-btn" class="btn btn-primary">Start Game</button>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+      <div class="game-header">
+        <div class="stat">
+          <span class="stat-label">SCORE</span>
+          <span class="stat-value" id="score">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">TARGET</span>
+          <span class="stat-value" id="target">3000</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">TIME</span>
+          <span class="stat-value" id="timer">90</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">COMBO</span>
+          <span class="stat-value" id="combo">0x</span>
+        </div>
+      </div>
+
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+
+      <div class="board-container">
+        <div id="game-board" class="game-board">
+          <!-- Grid will be generated here -->
+        </div>
+      </div>
+
+      <div class="hints">
+        <div id="hint-text" class="hint-text">Swap pieces to match 3 or more!</div>
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-screen" class="screen">
+      <div class="results-wrapper">
+        <h1 class="results-title" id="results-title">Victory!</h1>
+
+        <div class="final-score-display">
+          <div class="score-big" id="final-score">0</div>
+          <div class="score-label">Final Score</div>
+        </div>
+
+        <div class="results-stats">
+          <div class="result-stat">
+            <span class="result-label">Target Score:</span>
+            <span class="result-value" id="result-target">3000</span>
+          </div>
+          <div class="result-stat">
+            <span class="result-label">Max Combo:</span>
+            <span class="result-value" id="max-combo">0x</span>
+          </div>
+          <div class="result-stat">
+            <span class="result-label">Time Remaining:</span>
+            <span class="result-value" id="time-remaining">0s</span>
+          </div>
+        </div>
+
+        <div class="rewards">
+          <h3>Pet Rewards:</h3>
+          <div class="reward-list" id="reward-list">
+            <!-- Rewards will be inserted here -->
+          </div>
+        </div>
+
+        <div class="results-buttons">
+          <button id="play-again-btn" class="btn btn-primary">Play Again</button>
+          <button id="close-btn" class="btn btn-secondary">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="minigame-swap.js"></script>
+</body>
+</html>

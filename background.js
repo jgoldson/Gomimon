@@ -444,7 +444,7 @@ async function handleLaunchMinigame(gameName) {
     debugLog('Launching minigame:', gameName);
 
     // Validate game name
-    const validGames = ['scholar'];
+    const validGames = ['scholar', 'swap'];
     if (!validGames.includes(gameName)) {
       throw new Error(`Invalid game name: ${gameName}`);
     }

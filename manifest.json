@@ -42,7 +42,10 @@
       "constants.js",
       "minigames/scholar/*.html",
       "minigames/scholar/*.css",
-      "minigames/scholar/*.js"
+      "minigames/scholar/*.js",
+      "minigames/swap/*.html",
+      "minigames/swap/*.css",
+      "minigames/swap/*.js"
     ],
     "matches": ["<all_urls>"]
   }],
