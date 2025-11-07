@@ -29,6 +29,7 @@ function cacheElements() {
   elements.rebootButton = document.getElementById('rebootButton');
   elements.infoText = document.getElementById('infoText');
   elements.petName = document.getElementById('petName');
+  elements.playSlopScholarButton = document.getElementById('playSlopScholarButton');
 }
 
 // Update the UI with current stats
@@ -64,6 +65,9 @@ async function updateUI() {
       elements.rebootButton.style.display = 'block';
       elements.infoText.textContent = '⚠️ SYSTEM ERROR: GomiMon has crashed!';
       elements.petName.textContent = 'ERROR.exe';
+      // Disable minigame button when crashed
+      elements.playSlopScholarButton.disabled = true;
+      elements.playSlopScholarButton.title = 'Reboot your pet first!';
     }
     // Check for starved state
     else if (stats.hunger === 0) {
@@ -74,11 +78,18 @@ async function updateUI() {
       elements.rebootButton.style.display = 'none';
       elements.infoText.textContent = '💀 Your GomiMon is starving! Feed it some slop!';
       elements.petName.textContent = 'Null-Sprite';
+      // Disable minigame button when starved
+      elements.playSlopScholarButton.disabled = true;
+      elements.playSlopScholarButton.title = 'Feed your pet first!';
     }
     // Normal state
     else {
       elements.petContainer.classList.remove('crashed');
       elements.rebootButton.style.display = 'none';
+
+      // Enable minigame button in normal state
+      elements.playSlopScholarButton.disabled = false;
+      elements.playSlopScholarButton.title = 'Play a trivia game with your pet!';
 
       // Determine evolution
       const evolution = stats.evolution || 'egg';
@@ -143,6 +154,25 @@ async function handleReboot() {
   }
 }
 
+// Handle Slop Scholar button click
+function handlePlaySlopScholar() {
+  try {
+    // Send message to background script to launch the game
+    chrome.runtime.sendMessage({
+      type: 'LAUNCH_MINIGAME',
+      game: 'scholar'
+    }, (response) => {
+      if (chrome.runtime.lastError) {
+        console.error('[GomiMon Popup] Error launching game:', chrome.runtime.lastError);
+      } else {
+        console.log('[GomiMon Popup] Game launched:', response);
+      }
+    });
+  } catch (error) {
+    console.error('[GomiMon Popup] Error launching Slop Scholar:', error);
+  }
+}
+
 // Initialize popup
 function initialize() {
   try {
@@ -151,6 +181,9 @@ function initialize() {
 
     // Set up reboot button listener
     elements.rebootButton.addEventListener('click', handleReboot);
+
+    // Set up Slop Scholar button listener
+    elements.playSlopScholarButton.addEventListener('click', handlePlaySlopScholar);
 
     // Initial update
     updateUI();

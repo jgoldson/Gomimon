@@ -169,6 +169,47 @@
     .pet-sprite:hover img {
       transform: scale(1.05);
     }
+
+    .minigames-section {
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    .minigame-button {
+      width: 100%;
+      padding: 10px;
+      background: rgba(0, 255, 136, 0.2);
+      color: #00ff88;
+      border: 2px solid #00ff88;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .minigame-button:hover {
+      background: rgba(0, 255, 136, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 255, 136, 0.3);
+    }
+
+    .minigame-button:active {
+      transform: translateY(0);
+    }
+
+    .minigame-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: rgba(255, 107, 107, 0.2);
+      border-color: #ff6b6b;
+      color: #ff6b6b;
+    }
   </style>
 </head>
 <body>
@@ -206,6 +247,13 @@
     </div>
 
     <button class="reboot-button" id="rebootButton">REBOOT</button>
+
+    <div class="minigames-section">
+      <button class="minigame-button" id="playSlopScholarButton">
+        <span>🎓</span>
+        <span>Play Slop Scholar</span>
+      </button>
+    </div>
 
     <div class="info" id="infoText">
       Right-click on posts to feed your GomiMon!

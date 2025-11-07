@@ -39,7 +39,10 @@
       "sprites/*.svg",
       "sprites/animated/*.gif",
       "sounds/*.wav",
-      "constants.js"
+      "constants.js",
+      "minigames/scholar/*.html",
+      "minigames/scholar/*.css",
+      "minigames/scholar/*.js"
     ],
     "matches": ["<all_urls>"]
   }],
