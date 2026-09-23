@@ -9,11 +9,16 @@ import {
   HIGH_GLITCH_THRESHOLD,
   GLITCH_CRASH_THRESHOLD,
   EGG_TO_BABY_FEEDS,
-  BABY_TO_ADULT_FEEDS,
+  BUBBLE_TO_ADULT_FEEDS,
   DIET_DOMINANCE_THRESHOLD,
   DEFAULT_STATS,
   VALID_EVOLUTIONS,
+  DEFAULT_DETECTOR_SETTINGS,
+  DETECTOR_CATEGORY_STRENGTH_THRESHOLDS,
+  sanitizeDetectorSettings,
   sanitizeStats,
+  normalizePetName,
+  validatePetName,
   debugLog
 } from '../../constants.js';
 
@@ -42,7 +47,7 @@ describe('Constants', () => {
 
     test('evolution feed counts are ascending', () => {
       expect(EGG_TO_BABY_FEEDS).toBeGreaterThan(0);
-      expect(BABY_TO_ADULT_FEEDS).toBeGreaterThan(EGG_TO_BABY_FEEDS);
+      expect(BUBBLE_TO_ADULT_FEEDS).toBeGreaterThan(EGG_TO_BABY_FEEDS);
     });
 
     test('diet dominance threshold is reasonable', () => {
@@ -95,6 +100,30 @@ describe('Constants', () => {
     test('has no duplicates', () => {
       const unique = [...new Set(VALID_EVOLUTIONS)];
       expect(unique.length).toBe(VALID_EVOLUTIONS.length);
+    });
+  });
+});
+
+describe('Detector settings', () => {
+  test('starts with category filters disabled and balanced strength', () => {
+    expect(DEFAULT_DETECTOR_SETTINGS.categories).toEqual([]);
+    expect(DEFAULT_DETECTOR_SETTINGS.categoryStrength).toBe('balanced');
+    expect(DEFAULT_DETECTOR_SETTINGS.debug).toBe(false);
+  });
+
+  test('sanitizes category IDs and strength while preserving valid AI settings', () => {
+    expect(sanitizeDetectorSettings({
+      mode: 'automatic',
+      sensitivity: 'balanced',
+      categories: ['politics', 'unknown', 'politics', 'reddit_ads'],
+      categoryStrength: 'aggressive',
+      debug: true
+    })).toMatchObject({
+      mode: 'automatic',
+      sensitivity: 'balanced',
+      categories: ['politics', 'ads'],
+      categoryStrength: 'aggressive',
+      debug: true
     });
   });
 });
@@ -209,6 +238,19 @@ describe('sanitizeStats', () => {
   });
 });
 
+describe('pet names', () => {
+  test('normalizes whitespace and accepts friendly Unicode names', () => {
+    expect(normalizePetName('  Gomi   Chan  ')).toBe('Gomi Chan');
+    expect(validatePetName('Müller-2')).toEqual({ valid: true, name: 'Müller-2', error: '' });
+    expect(validatePetName('O’Gomi')).toEqual({ valid: true, name: 'O’Gomi', error: '' });
+  });
+
+  test('rejects names that are too short or contain unsupported punctuation', () => {
+    expect(validatePetName('A').valid).toBe(false);
+    expect(validatePetName('Bad!Name').valid).toBe(false);
+  });
+});
+
 describe('debugLog', () => {
   test('does not throw errors', () => {
     expect(() => debugLog('test message')).not.toThrow();
@@ -222,4 +264,17 @@ describe('debugLog', () => {
     expect(() => debugLog(['array'])).not.toThrow();
     expect(() => debugLog(null)).not.toThrow();
   });
+});
+
+
+test('category strengths use the revised thresholds and migrate the legacy conservative choice', () => {
+  expect(DETECTOR_CATEGORY_STRENGTH_THRESHOLDS).toEqual({ conservative: .90, balanced: .80, aggressive: .70 });
+  expect(sanitizeDetectorSettings({ categoryStrength: 'cautious' }).categoryStrength).toBe('conservative');
+  expect(sanitizeDetectorSettings({}).categoryStrength).toBe('balanced');
+});
+
+ test('eating animation preference defaults on and preserves an explicit off', () => {
+  expect(sanitizeDetectorSettings({}).showEatingAnimations).toBe(true);
+  expect(sanitizeDetectorSettings({ showEatingAnimations: false }).showEatingAnimations).toBe(false);
+  expect(sanitizeDetectorSettings({ showEatingAnimations: 'false' }).showEatingAnimations).toBe(true);
 });

@@ -65,27 +65,33 @@ describe('E2E: Complete User Journeys', () => {
     });
   });
 
-  describe('Scenario 2: Pet Evolution to Baby', () => {
-    test('feeds 10 times and evolves to baby', async () => {
-      mockStorage.evolution = 'egg';
-      mockStorage.feedCount = 0;
-
-      // Feed 10 times
-      for (let i = 0; i < 10; i++) {
-        mockStorage.feedCount += 1;
-        mockStorage.diet.text += 1;
+  describe('Scenario 2: Pet Evolution', () => {
+    test('feeding at 100 meals evolves baby and sends a notification', async () => {
+      jest.resetModules();
+      jest.useFakeTimers();
+      try {
+        Object.assign(mockStorage, {
+          evolution: 'baby', feedCount: 99, onboardingStage: 'complete',
+          detectorSettings: { enabledPlatforms: ['reddit', 'x'], categories: [], mode: 'manual' }
+        });
+        chrome.tabs.sendMessage = jest.fn(async () => ({ success: true }));
+        await import('../../background.js');
+        const onMessage = chrome.runtime.onMessage.addListener.mock.calls.at(-1)[0];
+        const result = await new Promise(resolve => onMessage({
+          type: 'FEED_CONTENT', platform: 'x', source: 'automatic',
+          itemKey: 'release-evolution', effectId: 'release-evolution'
+        }, { tab: { id: 1, url: 'https://x.com/home' }, url: 'https://x.com/home', frameId: 0 }, resolve));
+        expect(result.success).toBe(true);
+        expect(mockStorage.feedCount).toBe(100);
+        expect(mockStorage.evolution).toBe('bubble-gomi');
+        expect(chrome.notifications.create).toHaveBeenCalledWith(expect.objectContaining({
+          type: 'basic', title: '🎉 GomiMon Evolved!',
+          message: expect.stringContaining('Bubble-Gomi')
+        }));
+      } finally {
+        jest.clearAllTimers();
+        jest.useRealTimers();
       }
-
-      // Check evolution
-      if (mockStorage.feedCount >= 10 && mockStorage.evolution === 'egg') {
-        mockStorage.evolution = 'baby';
-
-        // Expect notification
-        expect(chrome.notifications.create).toHaveBeenCalled();
-      }
-
-      expect(mockStorage.evolution).toBe('baby');
-      expect(mockStorage.feedCount).toBe(10);
     });
 
     test('continues feeding as baby', () => {
@@ -352,9 +358,18 @@ describe('E2E: Complete User Journeys', () => {
       expect(chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '!' });
     });
 
-    test('right-click context menu appears', () => {
-      // Context menu should be registered
-      expect(chrome.contextMenus.create).toHaveBeenCalled();
+    test('installation registers the context menu and hunger timer', async () => {
+      jest.resetModules();
+      chrome.tabs.create = jest.fn(async () => ({ id: 2 }));
+      await import('../../background.js');
+      const onInstalled = chrome.runtime.onInstalled.addListener.mock.calls.at(-1)[0];
+      await onInstalled({ reason: 'install' });
+      expect(chrome.contextMenus.create).toHaveBeenCalledWith({
+        id: 'feedGomiMon', title: 'Feed to GomiMon 👾', contexts: ['all']
+      });
+      expect(chrome.alarms.create).toHaveBeenCalledWith('hungerTick', { periodInMinutes: 15 });
+      expect(mockStorage.onboardingStage).toBe('hatch');
+      expect(chrome.tabs.create).toHaveBeenCalledWith({ url: chrome.runtime.getURL('popup.html') });
     });
   });
 

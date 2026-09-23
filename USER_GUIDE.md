@@ -43,7 +43,7 @@ Click the GomiMon icon in your toolbar anytime to check on your pet!
 
 #### Glitch-O-Meter (0-100)
 - **What it does**: Represents "indigestion" from eating junk content
-- **How it changes**: Increases by 5 points every time you feed
+- **How it changes**: Manual meals increase it by 5 points; automatic detector meals do not increase glitch
 - **Why it matters**: If it hits 100, your pet crashes!
 
 ### The Pet Interface
@@ -87,6 +87,36 @@ Each time you feed:
 - The toolbar icon wiggles
 - The post disappears with a glitch animation
 
+## Reddit and X Detector
+
+The detector estimates AI likelihood from text on Reddit posts/comments and X’s **For You and Following** timelines. Labels are experimental estimates, not proof of authorship. X profiles, search, post-detail threads, messages, composers, and custom lists are outside this release.
+
+1. Name and hatch your GomiMon, choose **Reddit**, **X**, or both, then choose a diet. Both platforms are initially selected. Closing the popup saves your onboarding step.
+2. Review the platform disclosure: text selected for analysis is sent through GomiMon to TypeSafe.
+3. Sign in with Google for AI and semantic category checks. Choose Manual or Automatic AI mode and sensitivity in Settings.
+
+Settings uses the same platform checkboxes and requires at least one selection. One account, pet, diet, mode, sensitivity, and daily allowance are shared across both platforms. Disabling a platform cancels pending checks, removes detector controls, and restores automatically hidden posts. Explicit right-click feeding remains available.
+
+AI checks require **10 words of the author’s own text on X** and **30 on Reddit**. Shorter posts show **Not enough text** and can still be manually fed or checked for categories. Quoted-post text is category context; it does not make a short reaction eligible for AI detection. Quote-only posts can be categorized. The lower X minimum does not establish accuracy on short posts.
+
+Only text already rendered is analyzed. Collapsed long posts are partial assessments. Expanding a post creates a new assessment revision; GomiMon never expands or opens posts itself. Images/video are excluded, but accompanying text may be assessed. Reposts use the original post identity; duplicate appearances do not earn duplicate automatic meals.
+
+### Content filters
+
+Choose AI content, Politics, Ads, Promotions, Ragebait, Celebrity gossip, Sports, or Crypto in your shared diet. Category strength can be Conservative (90%), Balanced (80%, default), or Aggressive (70%). **Ads** uses verified explicit platform markers locally; **Promotions** is a separate semantic category requiring sign-in. Semantic categories use one batched TypeSafe request and remain available below the AI word minimum.
+
+Reddit category filters apply to feed/search cards, leaving comments and the main discussion post alone. On X they apply only to the two supported home feeds. X matches show a placeholder with **Show post**, which restores the post for the tab session. Reddit feed matches are hidden. Failed or unsupported checks leave posts visible. Successful automatic feeds add progress without glitch.
+
+The shared default allowance is 1,000 analyses per account per UTC day. Cached results do not spend another analysis.
+
+## GomiMon Names and Leaderboard
+
+Choose a 2–24 character name while hatching. Letters, numbers, spaces, apostrophes, hyphens, and underscores are supported. The name remains local until you sign in; sign-in reserves it globally when available. Public names also pass deterministic guardrails and a TypeSafe Jev appropriateness check. If a name is taken or cannot be approved, detector sign-in and local pet progress continue normally while you choose another.
+
+Open **View meal leaderboard** to browse weekly or all-time standings. Browsing does not require sign-in. Joining is explicit and publishes only your GomiMon’s name, evolution, and meal count. Your existing local feed total is imported into all-time standings once; weekly standings count meals recorded after joining and reset Monday at 00:00 UTC.
+
+Leaderboard meal delivery retries in the background and never blocks feeding. Leaving immediately hides your GomiMon while keeping its score and reserved name for a later rejoin. Renaming a reserved pet requires sign-in. Deleting the GomiMon account removes the reservation, leaderboard profile, meal events, and detector account data.
+
 ## Pet States
 
 ### 😊 Healthy (Hunger 30-100, Glitch 0-80)
@@ -116,7 +146,7 @@ Each time you feed:
 
 ## Evolution System
 
-Your GomiMon evolves based on how much you feed it and what you feed it!
+Your GomiMon evolves based on the total number of meals consumed!
 
 ### Evolution Stages
 
@@ -128,35 +158,21 @@ Your GomiMon evolves based on how much you feed it and what you feed it!
 #### Stage 2: Baby-Gomi 👾
 - **Unlocked at**: 10 feeds
 - **Description**: Your pet hatches into a cute blob
-- **Appearance**: Purple creature with antenna
+- **Appearance**: Mint slime with a floating bubble tuft
 - **Evolution notification**: "Your GomiMon evolved into Baby-Gomi!"
 
-#### Stage 3: Final Forms (Choose One)
-**Unlocked at**: 50 feeds
+#### Stage 3: Bubble-Gomi
+- **Unlocked at**: 100 feeds
+- **Appearance**: Mint slime with little arms, feet, and a bubble crest
+- **Animations**: Idle, eating, celebration on evolution, and sleep while resting at high glitch
 
-Your final evolution depends on your feeding habits:
+#### Stage 4: Nimbus-Gomi
+- **Unlocked at**: 1,000 total meals
+- **Appearance**: A broad mint slime with larger arms, a cream belly, bubble crest, and curled tail
+- **Animations**: Idle, eating, celebration on evolution, and sleep at high glitch
 
-**📝 Typo-ling** (Text-heavy diet)
-- **Requirement**: 50%+ of feeds are text-based
-- **Appearance**: Made of glitched typography and symbols
-- **Perfect for**: Text content curators
-
-**🎨 Muta-Pixel** (Image-heavy diet)
-- **Requirement**: 50%+ of feeds are images
-- **Appearance**: Surreal creature with mismatched features
-- **Perfect for**: AI art hunters
-
-**🗑️ Classic-Gomi** (Balanced diet)
-- **Requirement**: Balanced mix of all food types
-- **Appearance**: Friendly trash can monster
-- **Perfect for**: All-around slop eaters
-
-### Evolution Tips
-
-- Check your diet stats in the popup: `📝 X | 🖼️ Y | 📄 Z`
-- Plan your feeding strategy for desired evolution
-- You can only evolve once per playthrough
-- Future updates may add more evolution paths!
+All food types count equally toward evolution. Existing adult forms stay unchanged.
+A pet advances one stage per meal, including imported pets with high meal counts.
 
 ## Tips & Strategies
 
@@ -211,7 +227,7 @@ Your final evolution depends on your feeding habits:
 
 ### Evolution not triggering
 - Check your feed count in the popup
-- Evolutions happen at feed 10 and 50
+- Evolutions happen at feeds 10, 100, and 1,000 (onboarding can hatch your egg earlier)
 - Try feeding one more time
 
 ### Stats reset unexpectedly
@@ -241,14 +257,15 @@ Check your popup info for:
 ### What GomiMon Does
 - Modifies your local view of web pages
 - Stores stats locally in your browser
-- No data sent to external servers
+- Sends selected Reddit or X text through the GomiMon detector service to TypeSafe
+- Stores detector account, quota, and hashed result metadata on the service
 - Only you see the modified feed
 
 ### What GomiMon Doesn't Do
 - Doesn't affect other users
 - Doesn't report or flag content
-- Doesn't track your browsing
-- Doesn't share any data
+- Uses sign-in for AI/semantic checks; explicit Ads filtering runs locally
+- Doesn't store raw post text after the detector request completes
 
 ### Ethical Use
 - Use GomiMon to curate your own feed

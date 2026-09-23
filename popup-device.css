@@ -1,0 +1,81 @@
+/* The housing stays still while long settings/leaderboard content scrolls inside. */
+/* Chrome measures the popup before assigning its viewport. Keep the root's
+   intrinsic width fixed: viewport-relative sizing can collapse that measurement. */
+html { width: 380px; min-width: 380px; background: #f5f1e6; }
+body.device-shell {
+  position: relative;
+  width: 380px;
+  min-width: 380px;
+  height: 600px;
+  min-height: 0;
+  padding: 22px 18px 20px;
+  overflow: hidden;
+  border: 3px solid #17263b;
+  border-radius: 30px 30px 42px 30px;
+  background: linear-gradient(100deg, #ffed9b, #ffdf70 6%, #ffe78b 48%, #f7cf57 96%, #d7a336);
+  box-shadow: inset 0 3px 0 #fff9cd, inset 3px 0 0 #fff4b3, inset -3px -5px 0 #d4a23c;
+}
+.device-shell::before { display: none; }
+.device-shell > .container {
+  height: 100%;
+  min-height: 0;
+  gap: 10px;
+  padding: 12px 12px 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #b0974e #ffe994;
+  border: 2px solid #c39d44;
+  border-radius: 22px 22px 31px 22px;
+  background: radial-gradient(ellipse at 45% 5%, #fff0ad, #ffe78b 75%);
+  box-shadow: 0 2px 0 #fff5bc, inset 0 3px 0 #deb651;
+}
+.device-shell > .container > * { flex-shrink: 0; }
+.device-shell:not(.is-home):not(.is-setup):not(.is-settings-open):not(.is-leaderboard):not(.is-history) > .container { background: #24203f; }
+.device-shell.is-home > .container { gap: 8px; }
+.device-shell.is-home .pet-container { height: 160px; }
+.device-shell.is-home .pet-sprite { inset: 48px 0 16px; }
+.device-shell.is-home .stats-grid { padding-bottom: 15px; }
+.device-shell.is-home .console-footer { padding-top: 0; }
+.device-shell.is-home .leaderboard-launch { margin: 0; }
+.device-shell:is(.is-settings-open, .is-history, .is-leaderboard) .topbar { top: -12px; padding-top: 12px; }
+.device-trim { position: absolute; inset: 0; z-index: 20; pointer-events: none; }
+.device-screw {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border: 1px solid #6c623d;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 25%, #fff5c1, #c8ad63 65%, #8c7844);
+  box-shadow: 0 1px 0 #fff5bd, 0 0 0 2px #e1b747;
+}
+.device-screw::before,
+.device-screw::after { position: absolute; content: ''; background: #29313a; border-radius: 1px; }
+.device-screw::before { width: 7px; height: 2px; left: 1px; top: 4px; }
+.device-screw::after { width: 2px; height: 7px; left: 4px; top: 1px; }
+.top-left { top: 9px; left: 10px; }
+.top-right { top: 9px; right: 10px; }
+.bottom-left { bottom: 8px; left: 10px; }
+.bottom-right { bottom: 8px; right: 14px; }
+.device-grip { position: absolute; top: 44%; width: 10px; height: 47px; border-radius: 3px; background: repeating-linear-gradient(to bottom, #b58933 0 3px, #d6ab46 3px 6px, #fff0a0 6px 8px, transparent 8px 13px); }
+.left-grip { left: 0; }
+.right-grip { right: 0; }
+
+/* First-run and sign-in completion open this same UI in a browser tab. */
+html.is-extension-tab {
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  padding: 24px 12px;
+  background: #f5f1e6;
+}
+html.is-extension-tab body.device-shell {
+  margin: 0 auto;
+  width: min(380px, 100%);
+  min-width: 0;
+  box-shadow: inset 0 3px 0 #fff9cd, inset 3px 0 0 #fff4b3, inset -3px -5px 0 #d4a23c, 0 12px 36px #17263b20;
+}
+@media (min-height: 700px) {
+  html.is-extension-tab { padding-top: max(24px, calc((100vh - 600px) / 2)); }
+}

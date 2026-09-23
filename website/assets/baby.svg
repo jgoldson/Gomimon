@@ -1,0 +1,28 @@
+<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Baby GomiMon sprite - cute blob -->
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Body -->
+  <ellipse cx="50" cy="60" rx="28" ry="25" fill="#667eea" stroke="#333" stroke-width="2"/>
+
+  <!-- Eyes -->
+  <circle cx="40" cy="55" r="6" fill="#333"/>
+  <circle cx="60" cy="55" r="6" fill="#333"/>
+  <circle cx="42" cy="53" r="2" fill="#fff"/>
+  <circle cx="62" cy="53" r="2" fill="#fff"/>
+
+  <!-- Mouth -->
+  <path d="M 40 65 Q 50 70 60 65" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- Antenna -->
+  <line x1="50" y1="35" x2="50" y2="25" stroke="#764ba2" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="50" cy="23" r="4" fill="#f093fb"/>
+</svg>

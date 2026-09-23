@@ -1,0 +1,26 @@
+{
+  "name": "gomimon-detector-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "node --test *.test.js",
+    "check": "node --check index.js && node --check app.js && node --check db.js && node --check leaderboard.js && node --check logic.js && node --check logging.js && node --check typesafe.js && node --check billing.js && node --check billing-config.js && node --check billing-schema.js && node --check reconcile-billing.js && node --check setup-billing-test.js",
+    "test:postgres": "node test-support/run-postgres.js",
+    "billing:reconcile": "node reconcile-billing.js",
+    "billing:setup:test": "node setup-billing-test.js"
+  },
+  "dependencies": {
+    "@typesafe-ai/sdk": "^0.6.0",
+    "dotenv": "^18.0.1",
+    "express": "^5.2.1",
+    "google-auth-library": "^11.1.0",
+    "jose": "^6.2.12",
+    "pg": "^8.23.0",
+    "stripe": "^22.6.2"
+  }
+}

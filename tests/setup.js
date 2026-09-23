@@ -1,3 +1,7 @@
+import { jest, beforeEach } from '@jest/globals';
+
+globalThis.jest = jest;
+
 // Test Setup - Mock Chrome APIs
 // This file sets up the testing environment with chrome API mocks
 
@@ -73,6 +77,7 @@ global.chrome = {
   },
 
   runtime: {
+    getURL: jest.fn(path => `chrome-extension://gomimon/${path}`),
     sendMessage: jest.fn(() => Promise.resolve()),
     onMessage: {
       addListener: jest.fn(),

@@ -1,0 +1,9 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+node_modules/
+server/node_modules/
+coverage/
+dist/
+output/

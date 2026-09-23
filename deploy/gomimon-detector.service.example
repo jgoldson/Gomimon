@@ -1,0 +1,21 @@
+[Unit]
+Description=GomiMon TypeSafe detector API
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=gomimon
+Group=gomimon
+WorkingDirectory=/srv/gomimon/server
+EnvironmentFile=/etc/gomimon.env
+ExecStart=/usr/bin/node /srv/gomimon/server/index.js
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/srv/gomimon
+
+[Install]
+WantedBy=multi-user.target

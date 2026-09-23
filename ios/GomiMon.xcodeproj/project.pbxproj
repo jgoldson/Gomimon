@@ -1,0 +1,460 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		20B99AEF26F4A3D7A2FF3CC8 /* baby1_idle.gif in Resources */ = {isa = PBXBuildFile; fileRef = 25CEB87B7D81299CB23ACB75 /* baby1_idle.gif */; };
+		253CF0C263EEA0B7B86C0A40 /* GomiMonApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD9982D16E7453E1723429 /* GomiMonApp.swift */; };
+		258DA333CD1350A96513B7FE /* reddit-detector.js in Resources */ = {isa = PBXBuildFile; fileRef = AA1F5D5C8ACB3550BD21BD54 /* reddit-detector.js */; };
+		36818FCA87459282BBE96D90 /* revision.js in Resources */ = {isa = PBXBuildFile; fileRef = D5A60D7AC139B279483761D4 /* revision.js */; };
+		4F5F2CC662005AAC6E6BC2C6 /* MobilePreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E03E3883AE9836E4C433C3 /* MobilePreferences.swift */; };
+		58E7355BA80B83F34A6BB6C8 /* onboarding-account.png in Resources */ = {isa = PBXBuildFile; fileRef = 204D5444AE4B0CA88480084B /* onboarding-account.png */; };
+		5D4CDF673DA86E591B452FA7 /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356BD6EBAFF08F74486C6B28 /* SessionStore.swift */; };
+		61136B479BE181024842040C /* bubble-gomi_idle.gif in Resources */ = {isa = PBXBuildFile; fileRef = 28DDCD01A9F755F117830FE0 /* bubble-gomi_idle.gif */; };
+		8DA3275EDB6A71083AFC9A5D /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 0664E64830DDD29AFCAF91B7 /* GoogleSignIn */; };
+		97D860D188EDB4FCC43FEB68 /* nimbus-gomi_idle.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4AF0EB18AAD29891B55CCD8D /* nimbus-gomi_idle.gif */; };
+		9C9F2E80436095A35446544E /* onboarding-egg.png in Resources */ = {isa = PBXBuildFile; fileRef = F02C111B15505F59880E84A6 /* onboarding-egg.png */; };
+		A1ADC17069050A8A8A254E2D /* mobile.js in Resources */ = {isa = PBXBuildFile; fileRef = 0245A65E1083EAB1380C847A /* mobile.js */; };
+		B6F4F4A01493AB5C30D45B0C /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 6A56550E95E1367EA86538D3 /* GoogleSignInSwift */; };
+		BBD9513EA60B2248217F7C40 /* x-detector.js in Resources */ = {isa = PBXBuildFile; fileRef = 7F0AF4CB0A74D7F4E6EEA44F /* x-detector.js */; };
+		C043FE6FA83759ABDF61CFF3 /* MobileAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7878702AD6D310ED58AB81 /* MobileAccount.swift */; };
+		C827AD238DF74B2FE939BE46 /* policy.js in Resources */ = {isa = PBXBuildFile; fileRef = 0B227B38879CA0D879D8101F /* policy.js */; };
+		D09EFD6B5CA968A07290E4A3 /* AppleSignInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5925332BDECAC7B86B209CC /* AppleSignInButton.swift */; };
+		E37EEC58698C519BCABB0FD3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18BA0992B5EF28FBF87DD7B9 /* Foundation.framework */; };
+		F77CF2519D22ECC21FE011F4 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F4E38A24A862E84AC39075 /* OnboardingView.swift */; };
+		FBB802239BBEBCD9CA5CB822 /* platforms.js in Resources */ = {isa = PBXBuildFile; fileRef = 10AFA2E57FB133AFAAF55373 /* platforms.js */; };
+		FC3FC23DD09A3CD7D91FE7A6 /* demo.html in Resources */ = {isa = PBXBuildFile; fileRef = 330605071401C1CB2833BBCC /* demo.html */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0245A65E1083EAB1380C847A /* mobile.js */ = {isa = PBXFileReference; includeInIndex = 1; path = mobile.js; sourceTree = "<group>"; };
+		0B227B38879CA0D879D8101F /* policy.js */ = {isa = PBXFileReference; includeInIndex = 1; name = policy.js; path = ../detector/policy.js; sourceTree = "<group>"; };
+		10AFA2E57FB133AFAAF55373 /* platforms.js */ = {isa = PBXFileReference; includeInIndex = 1; name = platforms.js; path = ../platforms.js; sourceTree = "<group>"; };
+		18BA0992B5EF28FBF87DD7B9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		204D5444AE4B0CA88480084B /* onboarding-account.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = "onboarding-account.png"; path = "../assets/onboarding-account.png"; sourceTree = "<group>"; };
+		25CEB87B7D81299CB23ACB75 /* baby1_idle.gif */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.gif; name = baby1_idle.gif; path = ../sprites/animated/baby1_idle.gif; sourceTree = "<group>"; };
+		28DDCD01A9F755F117830FE0 /* bubble-gomi_idle.gif */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.gif; name = "bubble-gomi_idle.gif"; path = "../sprites/animated/bubble-gomi_idle.gif"; sourceTree = "<group>"; };
+		330605071401C1CB2833BBCC /* demo.html */ = {isa = PBXFileReference; includeInIndex = 1; path = demo.html; sourceTree = "<group>"; };
+		356BD6EBAFF08F74486C6B28 /* SessionStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
+		4A7878702AD6D310ED58AB81 /* MobileAccount.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MobileAccount.swift; sourceTree = "<group>"; };
+		4AF0EB18AAD29891B55CCD8D /* nimbus-gomi_idle.gif */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.gif; name = "nimbus-gomi_idle.gif"; path = "../sprites/animated/nimbus-gomi_idle.gif"; sourceTree = "<group>"; };
+		58E03E3883AE9836E4C433C3 /* MobilePreferences.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MobilePreferences.swift; sourceTree = "<group>"; };
+		6AFD9982D16E7453E1723429 /* GomiMonApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GomiMonApp.swift; sourceTree = "<group>"; };
+		7F0AF4CB0A74D7F4E6EEA44F /* x-detector.js */ = {isa = PBXFileReference; includeInIndex = 1; name = "x-detector.js"; path = "../x-detector.js"; sourceTree = "<group>"; };
+		8F857ACFE820431740FAE298 /* GomiMon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GomiMon.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA1F5D5C8ACB3550BD21BD54 /* reddit-detector.js */ = {isa = PBXFileReference; includeInIndex = 1; name = "reddit-detector.js"; path = "../reddit-detector.js"; sourceTree = "<group>"; };
+		D5A60D7AC139B279483761D4 /* revision.js */ = {isa = PBXFileReference; includeInIndex = 1; name = revision.js; path = ../detector/revision.js; sourceTree = "<group>"; };
+		E0F4E38A24A862E84AC39075 /* OnboardingView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		E5925332BDECAC7B86B209CC /* AppleSignInButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppleSignInButton.swift; sourceTree = "<group>"; };
+		F02C111B15505F59880E84A6 /* onboarding-egg.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = "onboarding-egg.png"; path = "../assets/onboarding-egg.png"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		03F5DD259A38E8987899D11F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E37EEC58698C519BCABB0FD3 /* Foundation.framework in Frameworks */,
+				8DA3275EDB6A71083AFC9A5D /* GoogleSignIn in Frameworks */,
+				B6F4F4A01493AB5C30D45B0C /* GoogleSignInSwift in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		501254F3BAF0A04C9B4D6182 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CAB913143ECFF708323E4FD7 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5D03FFB34E9679CDF3B65AD4 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				330605071401C1CB2833BBCC /* demo.html */,
+				0245A65E1083EAB1380C847A /* mobile.js */,
+			);
+			name = Resources;
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		6FFBF72381D70D49C35C294D /* GomiMon */ = {
+			isa = PBXGroup;
+			children = (
+				E5925332BDECAC7B86B209CC /* AppleSignInButton.swift */,
+				6AFD9982D16E7453E1723429 /* GomiMonApp.swift */,
+				4A7878702AD6D310ED58AB81 /* MobileAccount.swift */,
+				58E03E3883AE9836E4C433C3 /* MobilePreferences.swift */,
+				E0F4E38A24A862E84AC39075 /* OnboardingView.swift */,
+				356BD6EBAFF08F74486C6B28 /* SessionStore.swift */,
+				5D03FFB34E9679CDF3B65AD4 /* Resources */,
+			);
+			name = GomiMon;
+			path = GomiMon;
+			sourceTree = "<group>";
+		};
+		8AFF7351346D248C6B6D0CC0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8F857ACFE820431740FAE298 /* GomiMon.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8F4923390B5FB7CF71C95D3F = {
+			isa = PBXGroup;
+			children = (
+				8AFF7351346D248C6B6D0CC0 /* Products */,
+				501254F3BAF0A04C9B4D6182 /* Frameworks */,
+				6FFBF72381D70D49C35C294D /* GomiMon */,
+				AA1F5D5C8ACB3550BD21BD54 /* reddit-detector.js */,
+				D5A60D7AC139B279483761D4 /* revision.js */,
+				0B227B38879CA0D879D8101F /* policy.js */,
+				10AFA2E57FB133AFAAF55373 /* platforms.js */,
+				7F0AF4CB0A74D7F4E6EEA44F /* x-detector.js */,
+				25CEB87B7D81299CB23ACB75 /* baby1_idle.gif */,
+				4AF0EB18AAD29891B55CCD8D /* nimbus-gomi_idle.gif */,
+				F02C111B15505F59880E84A6 /* onboarding-egg.png */,
+				204D5444AE4B0CA88480084B /* onboarding-account.png */,
+				28DDCD01A9F755F117830FE0 /* bubble-gomi_idle.gif */,
+			);
+			sourceTree = "<group>";
+		};
+		CAB913143ECFF708323E4FD7 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				18BA0992B5EF28FBF87DD7B9 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E833F9923606566556519598 /* GomiMon */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C855239DFAB55BC55D41F4CA /* Build configuration list for PBXNativeTarget "GomiMon" */;
+			buildPhases = (
+				09D5B2444E78FD0ACEF3E75F /* Sources */,
+				03F5DD259A38E8987899D11F /* Frameworks */,
+				E0DEC7DA2FB61E530F467CB8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GomiMon;
+			packageProductDependencies = (
+				0664E64830DDD29AFCAF91B7 /* GoogleSignIn */,
+				6A56550E95E1367EA86538D3 /* GoogleSignInSwift */,
+			);
+			productName = GomiMon;
+			productReference = 8F857ACFE820431740FAE298 /* GomiMon.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8C56D1B3A7D1F3C9758A535F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					E833F9923606566556519598 = {
+						DevelopmentTeam = 72UJTW8297;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+							com.apple.SignInWithApple = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = D4A2D3164417820A7AA218D2 /* Build configuration list for PBXProject "GomiMon" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 8F4923390B5FB7CF71C95D3F;
+			minimizedProjectReferenceProxies = 0;
+			packageReferences = (
+				957E5CDACD8C0E5BD47DE4E6 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
+			preferredProjectObjectVersion = 100;
+			productRefGroup = 8AFF7351346D248C6B6D0CC0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E833F9923606566556519598 /* GomiMon */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E0DEC7DA2FB61E530F467CB8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FC3FC23DD09A3CD7D91FE7A6 /* demo.html in Resources */,
+				A1ADC17069050A8A8A254E2D /* mobile.js in Resources */,
+				258DA333CD1350A96513B7FE /* reddit-detector.js in Resources */,
+				36818FCA87459282BBE96D90 /* revision.js in Resources */,
+				C827AD238DF74B2FE939BE46 /* policy.js in Resources */,
+				FBB802239BBEBCD9CA5CB822 /* platforms.js in Resources */,
+				BBD9513EA60B2248217F7C40 /* x-detector.js in Resources */,
+				20B99AEF26F4A3D7A2FF3CC8 /* baby1_idle.gif in Resources */,
+				97D860D188EDB4FCC43FEB68 /* nimbus-gomi_idle.gif in Resources */,
+				9C9F2E80436095A35446544E /* onboarding-egg.png in Resources */,
+				58E7355BA80B83F34A6BB6C8 /* onboarding-account.png in Resources */,
+				61136B479BE181024842040C /* bubble-gomi_idle.gif in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		09D5B2444E78FD0ACEF3E75F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D09EFD6B5CA968A07290E4A3 /* AppleSignInButton.swift in Sources */,
+				253CF0C263EEA0B7B86C0A40 /* GomiMonApp.swift in Sources */,
+				C043FE6FA83759ABDF61CFF3 /* MobileAccount.swift in Sources */,
+				4F5F2CC662005AAC6E6BC2C6 /* MobilePreferences.swift in Sources */,
+				F77CF2519D22ECC21FE011F4 /* OnboardingView.swift in Sources */,
+				5D4CDF673DA86E591B452FA7 /* SessionStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2027A5AF6D34CFEFE4FC032B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		796EF47FED9A61CA1DA83478 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		8765EF708D1C73FF41BAE259 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = GomiMon/GomiMon.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 72UJTW8297;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GomiMon/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "GomiMon Lab";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.goldentechlabs.gomimon.prototype;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A902C9EDD94071A68A37B922 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = GomiMon/GomiMon.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 72UJTW8297;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GomiMon/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "GomiMon Lab";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.goldentechlabs.gomimon.prototype;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C855239DFAB55BC55D41F4CA /* Build configuration list for PBXNativeTarget "GomiMon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A902C9EDD94071A68A37B922 /* Release */,
+				8765EF708D1C73FF41BAE259 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D4A2D3164417820A7AA218D2 /* Build configuration list for PBXProject "GomiMon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				796EF47FED9A61CA1DA83478 /* Debug */,
+				2027A5AF6D34CFEFE4FC032B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		957E5CDACD8C0E5BD47DE4E6 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS.git";
+			requirement = {
+				kind = exactVersion;
+				version = 9.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0664E64830DDD29AFCAF91B7 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 957E5CDACD8C0E5BD47DE4E6 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		6A56550E95E1367EA86538D3 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 957E5CDACD8C0E5BD47DE4E6 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 8C56D1B3A7D1F3C9758A535F /* Project object */;
+}

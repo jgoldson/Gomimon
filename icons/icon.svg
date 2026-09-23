@@ -1,4 +1,9 @@
-<svg width="128" height="128" xmlns="http://www.w3.org/2000/svg">
-  <rect width="128" height="128" fill="#764ba2"/>
-  <text x="64" y="80" font-size="80" text-anchor="middle" fill="white">👾</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <rect x="8" y="9" width="112" height="112" rx="29" fill="#cfa954"/>
+  <rect x="8" y="5" width="112" height="112" rx="29" fill="#fff1b9" stroke="#17263b" stroke-width="6"/>
+  <rect x="18" y="15" width="92" height="92" rx="20" fill="#ff7c8d"/>
+  <g fill="none" stroke="#17263b" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M53 49 A18 18 0 1 0 53 78 V64 H43"/>
+    <path d="M68 79 V45 L82 63 L98 45 V79"/>
+  </g>
 </svg>

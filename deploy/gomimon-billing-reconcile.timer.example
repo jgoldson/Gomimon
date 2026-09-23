@@ -1,0 +1,11 @@
+[Unit]
+Description=Hourly GomiMon billing reconciliation
+
+[Timer]
+OnCalendar=hourly
+Persistent=true
+RandomizedDelaySec=120
+Unit=gomimon-billing-reconcile.service
+
+[Install]
+WantedBy=timers.target

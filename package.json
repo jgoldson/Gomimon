@@ -1,25 +1,44 @@
 {
   "name": "gomimon-tests",
   "version": "0.2.0",
+  "type": "module",
   "description": "Test suite for GomiMon extension",
   "scripts": {
-    "test": "jest",
-    "test:unit": "jest tests/unit",
-    "test:integration": "jest tests/integration",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "test:e2e": "node tests/e2e/run-e2e-tests.js"
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:unit": "NODE_OPTIONS=--experimental-vm-modules jest tests/unit",
+    "test:integration": "NODE_OPTIONS=--experimental-vm-modules jest tests/integration",
+    "test:reddit": "node --test reddit-detector.test.js feed-logic.test.js detector-state.test.js detector-broker.test.js",
+    "package:extension": "node scripts/package-extension.mjs",
+    "package:store": "node scripts/package-extension.mjs --store",
+    "verify:store": "node scripts/verify-store-package.mjs",
+    "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
+    "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "test:e2e": "node tests/e2e/run-e2e-tests.js",
+    "test:detector": "node --test reddit-detector.test.js x-detector.test.js x-content.test.js feed-logic.test.js detector-state.test.js detector-broker.test.js billing-content.test.js",
+    "build:website": "node scripts/build-website.mjs",
+    "preview:website": "node scripts/serve-website.mjs",
+    "test:website": "node --test tests/website.test.mjs",
+    "package:safari": "node scripts/package-extension.mjs --safari",
+    "test:safari": "node --test safari/*.test.mjs",
+    "build:safari:mac": "npm run package:safari && xcodebuild -project \"safari/GomiMon Safari/GomiMon Safari.xcodeproj\" -scheme \"GomiMon Safari (macOS)\" -configuration Debug -derivedDataPath dist/safari-macos-signed -allowProvisioningUpdates build"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.254",
     "@types/jest": "^29.5.0",
     "jest": "^29.5.0",
-    "jest-chrome": "^0.8.0",
     "jest-environment-jsdom": "^29.5.0"
   },
   "jest": {
     "testEnvironment": "jsdom",
-    "setupFiles": ["<rootDir>/tests/setup.js"],
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setup.js"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/server/"
+    ],
+    "testMatch": [
+      "<rootDir>/tests/**/*.test.js"
+    ],
     "collectCoverageFrom": [
       "*.js",
       "!*.config.js",

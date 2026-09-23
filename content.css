@@ -49,7 +49,8 @@
 }
 
 /* GomiMon Pet Overlay */
-#gomimon-pet-overlay {
+#gomimon-pet-overlay,
+.gomimon-pet-overlay {
   position: fixed;
   width: 120px;
   height: 120px;
@@ -58,7 +59,8 @@
   will-change: transform;
 }
 
-#gomimon-pet-overlay img {
+#gomimon-pet-overlay img,
+.gomimon-pet-overlay img {
   width: 100%;
   height: 100%;
   image-rendering: pixelated;
@@ -122,7 +124,1532 @@
     }
   }
 
-  #gomimon-pet-overlay {
+  #gomimon-pet-overlay,
+  .gomimon-pet-overlay {
     display: none !important;
   }
 }
+
+/* Reddit AI detector */
+.gomimon-pet-overlay.gomimon-corner-munch {
+  right: max(20px, env(safe-area-inset-right));
+  bottom: max(20px, env(safe-area-inset-bottom));
+  width: 88px;
+  height: 88px;
+  animation: gomimon-corner-appear 160ms ease-out;
+}
+
+@keyframes gomimon-corner-appear {
+  from { opacity: 0; transform: translateY(8px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gomimon-pet-overlay.gomimon-corner-munch {
+    display: block !important;
+    animation: none;
+  }
+}
+
+.gomimon-hidden-target {
+  display: none !important;
+}
+
+.gomimon-ai-panel {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0;
+  padding: 6px 8px;
+  border: 1px solid rgba(118, 84, 180, 0.35);
+  border-radius: 6px;
+  background: rgba(248, 246, 255, 0.96);
+  color: #3b2c52;
+  font: 12px/1.35 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.gomimon-ai-panel details {
+  flex-basis: 100%;
+  color: #695b78;
+}
+
+.gomimon-ai-panel details p {
+  margin: 5px 0 0;
+}
+
+.gomimon-ai-assessed {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.gomimon-ai-panel summary {
+  cursor: pointer;
+}
+
+.gomimon-ai-brand,
+.gomimon-ai-loading {
+  font-weight: 700;
+}
+
+.gomimon-ai-label {
+  font-weight: 700;
+}
+
+.gomimon-ai-probability {
+  color: #695b78;
+  font-variant-numeric: tabular-nums;
+}
+
+.gomimon-category-label {
+  color: #5f3e99;
+  font-weight: 700;
+}
+
+.gomimon-ai-high { color: #a52b42; }
+.gomimon-ai-low { color: #24724d; }
+.gomimon-ai-uncertain,
+.gomimon-ai-insufficient,
+.gomimon-ai-unavailable,
+.gomimon-ai-waiting,
+.gomimon-ai-blocked,
+.gomimon-ai-quota_blocked,
+.gomimon-ai-auth_blocked { color: #765b20; }
+
+.gomimon-ai-button {
+  border: 1px solid #7654b4;
+  border-radius: 4px;
+  padding: 3px 7px;
+  background: #7654b4;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+
+.gomimon-ai-button:hover {
+  background: #5f3e99;
+}
+
+/* Comments keep the assessment in the existing thread geometry. The tick is
+   deliberately quieter than Reddit's own vote and reply controls. */
+shreddit-comment,
+[data-testid="comment"],
+article[data-testid^="comment"],
+shreddit-post,
+[data-testid="post-container"],
+article[data-testid="post-container"] {
+  position: relative;
+}
+
+.gomimon-comment-marker {
+  position: absolute;
+  z-index: 3;
+  top: 14px;
+  left: -7px;
+  width: 4px;
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #a27622;
+  cursor: pointer;
+}
+
+.gomimon-comment-marker[data-status="high"] { background: #b84a55; }
+.gomimon-comment-marker[data-status="low"] { background: #2c7b58; }
+.gomimon-comment-marker[data-status="uncertain"] { background: #a27622; }
+
+.gomimon-post-marker {
+  position: absolute;
+  z-index: 3;
+  top: 13px;
+  bottom: 13px;
+  left: 0;
+  width: 4px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0 999px 999px 0;
+  background: #a27622;
+  cursor: pointer;
+}
+
+.gomimon-post-marker[data-status="high"] { background: #b84a55; }
+.gomimon-post-marker[data-status="low"] { background: #2c7b58; }
+.gomimon-post-marker[data-status="uncertain"] { background: #a27622; }
+.gomimon-post-marker[data-status="unavailable"] { background: #82909a; }
+
+.gomimon-comment-marker:focus-visible,
+.gomimon-post-marker:focus-visible {
+  outline: 2px solid #4c87c6;
+  outline-offset: 3px;
+}
+
+.gomimon-ai-panel.gomimon-comment-controls,
+.gomimon-ai-panel.gomimon-post-controls {
+  position: relative;
+  z-index: 4;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 2px;
+  margin: 0 0 0 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.gomimon-comment-action,
+.gomimon-post-action {
+  min-height: 24px;
+  padding: 2px 5px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: #576f7d;
+  cursor: pointer;
+  font: 600 12px/1.25 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.gomimon-comment-action:hover,
+.gomimon-comment-action:focus-visible,
+.gomimon-post-action:hover,
+.gomimon-post-action:focus-visible {
+  background: rgba(87, 111, 125, 0.12);
+  color: #263b46;
+}
+
+.gomimon-feed-icon {
+  width: 15px;
+  height: 15px;
+  margin-right: 3px;
+  object-fit: contain;
+  vertical-align: -3px;
+}
+
+.gomimon-eaten-target {
+  min-height: 32px;
+}
+
+.gomimon-filter-placeholder,
+.gomimon-eaten-placeholder {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px;
+  border: 1px dashed rgba(118, 84, 180, 0.5);
+  border-radius: 6px;
+  background: rgba(118, 84, 180, 0.08);
+  color: #695b78;
+  font: 12px/1.35 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.gomimon-eaten-copy {
+  font-weight: 600;
+}
+
+/* Match Reddit's quiet action row, with Feed at the trailing edge. */
+.gomimon-comment-action-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.gomimon-ai-panel.gomimon-comment-controls {
+  margin-inline-start: auto;
+  padding-inline-start: 12px;
+}
+
+.gomimon-ai-panel.gomimon-comment-controls-fallback {
+  display: flex;
+  justify-content: flex-end;
+  margin: 6px 0;
+}
+
+.gomimon-comment-feed {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 4px 8px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.gomimon-comment-feed .gomimon-feed-icon {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+}
+
+.gomimon-comment-marker {
+  left: -8px;
+  width: 5px;
+  height: 24px;
+  background: #e5a000;
+}
+
+/* A generous invisible target keeps the slender bar easy to use. */
+.gomimon-comment-marker::after,
+.gomimon-post-marker::after {
+  content: '';
+  position: absolute;
+  inset: -8px -9px;
+}
+
+.gomimon-comment-marker[data-status="high"] { background: #d94b59; }
+.gomimon-comment-marker[data-status="low"] { background: #19b878; }
+.gomimon-comment-marker[data-status="uncertain"] { background: #e5a000; }
+
+.gomimon-assessment-popover {
+  position: fixed;
+  z-index: 2147483646;
+  right: auto;
+  bottom: auto;
+  display: block;
+  box-sizing: border-box;
+  width: 240px;
+  max-width: calc(100vw - 16px);
+  max-height: calc(100vh - 16px);
+  overflow: auto;
+  padding: 12px 14px;
+  border: 1px solid #dce2e7;
+  background: #fff;
+  color: #3b4b55;
+  box-shadow: 0 4px 16px rgba(32, 48, 58, 0.14);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  border-radius: 10px;
+  white-space: normal;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.gomimon-assessment-popover[hidden],
+.gomimon-post-marker[hidden],
+.gomimon-comment-marker[hidden],
+.gomimon-comment-controls[hidden] { display: none !important; }
+
+.gomimon-assessment-popover .gomimon-ai-label::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.gomimon-assessment-popover details {
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid #e3e8ec;
+}
+
+.gomimon-assessment-popover summary {
+  color: #1766cc;
+  cursor: pointer;
+}
+
+.gomimon-assessment-popover p { margin: 8px 0 0; }
+
+@media (prefers-color-scheme: dark) {
+  .gomimon-assessment-popover {
+    background: #182126;
+    border-color: #3c4b54;
+    color: #e3e9ed;
+  }
+  .gomimon-assessment-popover .gomimon-ai-probability { color: #aebec9; }
+  .gomimon-assessment-popover .gomimon-ai-low { color: #57d69c; }
+  .gomimon-assessment-popover .gomimon-ai-high { color: #ff8793; }
+  .gomimon-assessment-popover .gomimon-ai-uncertain { color: #efb940; }
+  .gomimon-assessment-popover summary { color: #80b5ff; }
+  .gomimon-assessment-popover details { border-color: #3c4b54; }
+  .gomimon-comment-feed { color: #aebec9; }
+}
+
+/* Gray means there is no AI verdict; amber is reserved for uncertainty. */
+.gomimon-comment-marker { background: #82909a; }
+.gomimon-comment-marker[data-status="high"] { background: #d94b59; }
+.gomimon-comment-marker[data-status="low"] { background: #19b878; }
+.gomimon-comment-marker[data-status="uncertain"] { background: #e5a000; }
+
+.gomimon-ai-panel.gomimon-comment-controls { order: 100; }
+.gomimon-feed-icon-frame {
+  position: relative;
+  display: inline-block;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  overflow: hidden;
+  vertical-align: middle;
+}
+/* The source artwork has transparent padding around the bowl. */
+.gomimon-feed-icon-frame .gomimon-feed-icon {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  max-width: none;
+  left: -12px;
+  top: -12px;
+  margin: 0;
+}
+
+/* Keep X's action rhythm while retaining GomiMon's bowl artwork. */
+.gomimon-ai-panel.gomimon-post-controls.gomimon-x-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+  color: #536471;
+  font: 400 13px/1.25 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.gomimon-x-controls.gomimon-post-controls .gomimon-post-action {
+  min-height: 34px;
+  gap: 6px;
+  padding: 0 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.gomimon-x-controls.gomimon-post-controls .gomimon-post-action:hover {
+  background: rgba(29, 155, 240, .1);
+  color: #1d9bf0;
+}
+
+.gomimon-x-controls.gomimon-post-controls .gomimon-post-action:focus-visible {
+  outline: 2px solid #1d9bf0;
+  outline-offset: 2px;
+  background: rgba(29, 155, 240, .1);
+}
+
+.gomimon-x-controls.gomimon-post-controls .gomimon-feed-icon-frame {
+  flex-basis: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.gomimon-x-controls.gomimon-post-controls .gomimon-feed-icon {
+  width: 40px;
+  height: 40px;
+  left: -10px;
+  top: -10px;
+}
+
+.gomimon-x-controls .gomimon-ai-insufficient {
+  color: inherit;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+@media (prefers-color-scheme: dark) {
+  .gomimon-ai-panel.gomimon-post-controls.gomimon-x-controls { color: #8b98a5; }
+}
+.gomimon-filter-placeholder { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; font: 13px/1.4 sans-serif; }
+.gomimon-filter-placeholder button { border: 1px solid currentColor; border-radius: 999px; padding: 6px 12px; background: transparent; color: inherit; cursor: pointer; }
+
+.gomimon-assessment-popover strong,
+.gomimon-assessment-popover > span { display: block; }
+
+/* Neutral states still expose details without implying an AI verdict. */
+.gomimon-post-marker { min-height: 28px; }
+.gomimon-post-marker:is([data-status="unchecked"], [data-status="insufficient"], [data-status="category_checked"], [data-status="blocked"], [data-status="retry_wait"], [data-status="waiting"], [data-status="unsupported"]) { background: #82909a; }
+.gomimon-post-marker[data-status="checking"] { background: #4c87c6; }
+
+.gomimon-refresh-notice {
+  position: fixed; bottom: 16px; right: 16px; z-index: 2147483647;
+  max-width: 360px; padding: 16px; border: 1px solid #cbd5df;
+  border-radius: 12px; background: #fff; color: #263b46;
+  box-shadow: 0 4px 20px #0002; font: 14px/1.5 sans-serif;
+}
+.gomimon-refresh-notice button { cursor: pointer; margin-top: 8px; }
+
+/* Vacuum meal: the live post contracts around a viewport-aligned mouth. */
+.gomimon-vacuum-target {
+  transform-origin: var(--gomi-mouth-x) var(--gomi-mouth-y) !important;
+  animation: gomimon-vacuum-swallow 1s cubic-bezier(.55, .02, .85, .4) forwards !important;
+  pointer-events: none !important;
+  will-change: transform, opacity;
+}
+@keyframes gomimon-vacuum-swallow {
+  0% { transform: scale(1); opacity: 1; }
+  12% { transform: scale(1.025, .96) skewX(-2deg); }
+  25% { transform: scale(.98, 1.02) skewX(2deg); }
+  48% { transform: scale(.82, .56) skewX(-8deg); opacity: 1; }
+  76% { transform: scale(.44, .13) skewX(-15deg); opacity: .9; }
+  100% { transform: scale(.015, .008); opacity: 0; }
+}
+.gomimon-vacuum-pet {
+  transform: translate(-50%, -50%);
+  isolation: isolate;
+}
+.gomimon-vacuum-pet img {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  max-width: none;
+  left: -50%;
+  top: -50%;
+  object-fit: contain;
+}
+.gomimon-vacuum-pet[data-phase="arrive"] { animation: gomimon-vacuum-arrive .4s both; }
+.gomimon-vacuum-pet[data-phase="inhale"] img { animation: gomimon-vacuum-inhale .25s both; }
+.gomimon-vacuum-pet[data-phase="suck"] img { animation: gomimon-vacuum-pull .16s ease-in-out infinite alternate; }
+.gomimon-vacuum-pet[data-phase="gulp"] img { animation: gomimon-vacuum-gulp .4s both; }
+.gomimon-vacuum-pet[data-phase="leave"] { animation: gomimon-vacuum-leave .35s both; }
+.gomimon-vacuum-wind {
+  position: absolute;
+  left: 60px;
+  top: 78px;
+  opacity: 0;
+  pointer-events: none;
+}
+.gomimon-vacuum-pet[data-phase="suck"] .gomimon-vacuum-wind { opacity: 1; }
+.gomimon-vacuum-wind i {
+  position: absolute;
+  width: 52px;
+  height: 3px;
+  border-radius: 100%;
+  background: linear-gradient(90deg, transparent, #8fded5, #efffff);
+  box-shadow: 0 0 5px #46aa9980;
+  animation: gomimon-vacuum-stream .55s linear infinite;
+  animation-delay: var(--stream-delay);
+}
+@keyframes gomimon-vacuum-arrive {
+  from { transform: translate(90px, 30px) scale(.35) rotate(-12deg); opacity: 0; }
+  to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+@keyframes gomimon-vacuum-inhale {
+  50% { transform: scale(.88, 1.14) rotate(5deg); }
+  100% { transform: scale(1.1, .94) rotate(-3deg); }
+}
+@keyframes gomimon-vacuum-pull {
+  from { transform: scale(1.1, .94) rotate(-3deg); }
+  to { transform: scale(1.15, .9) rotate(-1deg); }
+}
+@keyframes gomimon-vacuum-stream {
+  from { transform: translate(-260px, var(--stream-y)) scaleX(1.4); opacity: 0; }
+  25% { opacity: .85; }
+  to { transform: translate(-24px, 0) scaleX(.15); opacity: 0; }
+}
+@keyframes gomimon-vacuum-gulp {
+  0% { transform: scale(1.15, .9); }
+  30% { transform: scale(1.32, 1.15) translateY(-4px); }
+  65% { transform: scale(.94, 1.07); }
+  100% { transform: scale(1); }
+}
+@keyframes gomimon-vacuum-leave {
+  from { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  to { transform: translate(40px, -90px) scale(.5) rotate(12deg); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gomimon-vacuum-target { animation: gomi-fade-out .15s forwards !important; }
+  .gomimon-vacuum-pet { display: none !important; }
+}
+
+/* Fine dining: set the table, take one polite bite, then lose all restraint. */
+.gomimon-dining-target {
+  transform-origin: center !important;
+  animation: gomimon-dining-plate .65s ease-in-out forwards !important;
+  pointer-events: none !important;
+  will-change: transform, opacity;
+}
+@keyframes gomimon-dining-plate {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; }
+  75% { opacity: 1; }
+  100% { transform: translate(var(--gomi-plate-x), var(--gomi-plate-y)) scale(var(--gomi-plate-scale)); opacity: 0; }
+}
+.gomimon-dining-pet { transform: translate(-50%, -50%); isolation: isolate; }
+.gomimon-dining-pet .gomimon-meal-character {
+  position: absolute;
+  width: 200%; height: 200%; max-width: none;
+  left: -50%; top: -65%; object-fit: contain;
+  z-index: 1;
+}
+.gomimon-dining-pet .gomimon-dining-table {
+  position: absolute;
+  width: 300px; height: 200px; max-width: none;
+  left: -90px; top: 14px; object-fit: contain;
+  filter: none; z-index: 2;
+}
+.gomimon-dining-dish {
+  position: absolute; left: 24px; top: 82px;
+  width: 72px; height: 40px; padding: 4px; box-sizing: border-box;
+  overflow: hidden; border: 2px solid #41685d; border-radius: 4px;
+  background: #f4fff3; color: #38564a; font: 5px/1.4 monospace;
+  box-shadow: 0 3px 0 #274c4033; z-index: 3; opacity: 0;
+  transform: rotate(-8deg) scaleY(.65);
+}
+.gomimon-dining-fork {
+  position: absolute; left: 104px; top: 79px; z-index: 4;
+  width: 4px; height: 33px; background: #cfdfd8;
+  border: 1px solid #466459; border-radius: 0 0 2px 2px;
+  transform: rotate(24deg); transform-origin: 50% 100%;
+}
+.gomimon-dining-fork::before {
+  content: ''; position: absolute; left: -4px; top: -10px;
+  width: 10px; height: 12px; border-bottom: 3px solid #466459;
+  background: repeating-linear-gradient(90deg, #466459 0 2px, #dcebe1 2px 3px, transparent 3px 4px);
+}
+.gomimon-dining-crumb {
+  position: absolute; left: 83px; top: 86px;
+  width: 9px; height: 8px; border: 2px solid #41685d;
+  background: #f4fff3; z-index: 5; opacity: 0;
+}
+.gomimon-dining-pet[data-phase="arrive"] { animation: gomimon-dining-arrive .4s both; }
+.gomimon-dining-pet[data-phase="served"] .gomimon-dining-dish,
+.gomimon-dining-pet[data-phase="taste"] .gomimon-dining-dish,
+.gomimon-dining-pet[data-phase="savor"] .gomimon-dining-dish { opacity: 1; }
+.gomimon-dining-pet[data-phase="taste"] .gomimon-dining-dish,
+.gomimon-dining-pet[data-phase="savor"] .gomimon-dining-dish {
+  clip-path: polygon(0 0, 70% 0, 70% 32%, 100% 32%, 100% 100%, 0 100%);
+}
+.gomimon-dining-pet[data-phase="taste"] .gomimon-dining-fork { animation: gomimon-dining-fork-lift .35s both; }
+.gomimon-dining-pet[data-phase="taste"] .gomimon-dining-crumb { animation: gomimon-dining-taste .35s both; }
+.gomimon-dining-pet[data-phase="savor"] .gomimon-meal-character { animation: gomimon-dining-nod .4s both; }
+.gomimon-dining-pet[data-phase="gobble"] .gomimon-dining-dish { animation: gomimon-dining-gobble .35s both; }
+.gomimon-dining-pet[data-phase="gobble"] .gomimon-meal-character { animation: gomimon-dining-lunge .35s both; }
+.gomimon-dining-pet[data-phase="gulp"] .gomimon-meal-character { animation: gomimon-vacuum-gulp .4s both; }
+.gomimon-dining-pet[data-phase="leave"] { animation: gomimon-dining-leave .45s both; }
+@keyframes gomimon-dining-arrive {
+  from { opacity: 0; transform: translate(-50%, -30%) scale(.65); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes gomimon-dining-fork-lift {
+  45%, 65% { transform: translate(-35px, -37px) rotate(-35deg); }
+  100% { transform: rotate(24deg); }
+}
+@keyframes gomimon-dining-taste {
+  0% { opacity: 1; transform: translate(0, 0); }
+  70% { opacity: 1; transform: translate(-28px, -35px) scale(.65); }
+  100% { opacity: 0; transform: translate(-28px, -35px) scale(0); }
+}
+@keyframes gomimon-dining-nod {
+  40% { transform: translateY(5px) rotate(5deg); }
+  75% { transform: translateY(-3px) rotate(-3deg); }
+  100% { transform: none; }
+}
+@keyframes gomimon-dining-gobble {
+  0% { opacity: 1; transform: rotate(-8deg) scaleY(.65); }
+  45% { opacity: 1; transform: translateY(-15px) rotate(12deg) scale(.7); }
+  100% { opacity: 0; transform: translateY(-45px) scale(.02); }
+}
+@keyframes gomimon-dining-lunge {
+  40% { transform: translateY(14px) scale(1.2, .87); }
+  100% { transform: scale(1.1, 1.05); }
+}
+@keyframes gomimon-dining-leave {
+  to { opacity: 0; transform: translate(-50%, -35%) scale(.8); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gomimon-dining-target { animation: gomi-fade-out .15s forwards !important; }
+  .gomimon-dining-pet { display: none !important; }
+}
+
+/* Magic trick: hide the live post under silk, then betray the secret. */
+.gomimon-magic-target { opacity: 0 !important; pointer-events: none !important; }
+.gomimon-magic-character { position: absolute; inset: 0; z-index: 1; }
+.gomimon-magic-pet { transform: translate(-50%, -50%); isolation: isolate; }
+.gomimon-magic-pet .gomimon-meal-character {
+  position: absolute; left: -50%; top: -50%;
+  width: 200%; height: 200%; max-width: none; object-fit: contain; z-index: 1;
+}
+.gomimon-magic-cloth {
+  position: absolute; z-index: -1; opacity: 0; overflow: hidden;
+  box-sizing: border-box; border: 3px solid #d2b16c; border-radius: 10px 10px 16px 16px;
+  background: repeating-linear-gradient(100deg, #35245f 0%, #644282 12%, #453069 24%, #795396 36%, #35245f 48%);
+  box-shadow: 0 12px 28px #21133335, inset 0 -8px 0 #b7975833;
+  transform-origin: 50% 0;
+}
+.gomimon-magic-cloth span { position: absolute; color: #e6c784; font: 28px/1 serif; text-shadow: 0 1px #2c174a; }
+.gomimon-magic-hat {
+  position: absolute; left: 40px; top: 24px; width: 42px; height: 34px;
+  box-sizing: border-box; border: 3px solid #24243b; border-bottom: 10px solid #9272b5;
+  border-radius: 4px 4px 0 0; background: linear-gradient(90deg, #29283f, #4a465e, #29283f);
+  transform: rotate(-6deg); z-index: 3;
+}
+.gomimon-magic-hat::after {
+  content: ''; position: absolute; width: 60px; height: 7px;
+  left: -12px; bottom: -15px; background: #29283f; border: 2px solid #17182b; border-radius: 50%;
+}
+.gomimon-magic-pet[data-evolution="bubble-gomi"] .gomimon-magic-hat { left: 36px; top: -12px; }
+.gomimon-magic-pet[data-evolution="nimbus-gomi"] .gomimon-magic-hat { left: 22px; top: -34px; }
+.gomimon-magic-wand {
+  position: absolute; left: 13px; top: 76px; width: 48px; height: 6px;
+  background: linear-gradient(90deg, #fff5d9 0 18%, #302b43 18% 82%, #fff5d9 82%);
+  border: 1px solid #292437; border-radius: 2px; z-index: 4;
+  transform: rotate(-30deg); transform-origin: 100% 50%;
+}
+.gomimon-magic-belly {
+  position: absolute; left: 28px; top: 91px; width: 64px; height: 32px;
+  box-sizing: border-box; opacity: 0; z-index: 2;
+  border: 4px solid #355d51; border-radius: 5px;
+  background: linear-gradient(#bee3b8, #8ec9b4); box-shadow: inset 3px 3px #e1f2c3, 0 4px #25473d44;
+}
+.gomimon-magic-belly::after {
+  content: ''; position: absolute; left: 12px; right: 12px; top: 9px;
+  height: 2px; background: #679f8e; box-shadow: 0 6px #679f8e;
+}
+.gomimon-magic-sparkles {
+  position: absolute; left: -55px; top: 24px; width: 200px;
+  color: #dfb04f; font: 30px/1 serif; text-align: center;
+  text-shadow: 0 0 12px #fff3cb; opacity: 0; z-index: 5;
+}
+.gomimon-magic-pet[data-phase="arrive"] .gomimon-magic-character { animation: gomimon-magic-appear .4s both; }
+.gomimon-magic-pet[data-phase="cover"] .gomimon-magic-cloth { animation: gomimon-magic-cover .55s both; }
+.gomimon-magic-pet[data-phase="spell"] .gomimon-magic-cloth { opacity: 1; }
+.gomimon-magic-pet[data-phase="spell"] .gomimon-magic-wand { animation: gomimon-magic-wave .25s 2; }
+.gomimon-magic-pet[data-phase="reveal"] .gomimon-magic-cloth { animation: gomimon-magic-reveal .4s both; }
+.gomimon-magic-pet[data-phase="reveal"] .gomimon-magic-sparkles { animation: gomimon-magic-sparkle .4s both; }
+.gomimon-magic-pet[data-phase="caught"] .gomimon-magic-belly { animation: gomimon-magic-bulge .75s both; }
+.gomimon-magic-pet[data-phase="caught"] .gomimon-magic-character { animation: gomimon-magic-shifty .75s both; }
+.gomimon-magic-pet[data-phase="bow"] .gomimon-magic-belly,
+.gomimon-magic-pet[data-phase="leave"] .gomimon-magic-belly { opacity: 1; }
+.gomimon-magic-pet[data-phase="bow"] { animation: gomimon-magic-bow .45s both; }
+.gomimon-magic-pet[data-phase="leave"] { animation: gomimon-dining-leave .45s both; }
+@keyframes gomimon-magic-appear {
+  from { opacity: 0; transform: scale(.4) rotate(-12deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes gomimon-magic-cover {
+  from { opacity: 0; transform: scaleY(.02); }
+  15% { opacity: 1; }
+  to { opacity: 1; transform: scaleY(1); }
+}
+@keyframes gomimon-magic-wave {
+  50% { transform: rotate(-75deg); }
+}
+@keyframes gomimon-magic-reveal {
+  from { opacity: 1; transform: scaleY(1); }
+  to { opacity: 0; transform: translateY(-45px) scale(.8, .02) rotate(-4deg); }
+}
+@keyframes gomimon-magic-sparkle {
+  0% { opacity: 0; transform: scale(.5); }
+  35% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-22px) scale(1.4); }
+}
+@keyframes gomimon-magic-bulge {
+  0% { opacity: 0; transform: scale(.5); }
+  20% { opacity: 1; transform: scale(1.15); }
+  40%, 100% { opacity: 1; transform: scale(1); }
+}
+@keyframes gomimon-magic-shifty {
+  35% { transform: translateX(-5px); }
+  65% { transform: translateX(5px); }
+  100% { transform: none; }
+}
+@keyframes gomimon-magic-bow {
+  50% { transform: translate(-50%, -45%) rotate(12deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gomimon-magic-pet { display: none !important; }
+}
+
+/* Ambush: peek from behind the card, wind up, then snap it into one bite. */
+.gomimon-ambush-pet { transform: translate(-50%, -50%); isolation: isolate; }
+.gomimon-ambush-character { position: absolute; inset: 0; }
+.gomimon-ambush-pet .gomimon-meal-character {
+  position: absolute; left: -50%; top: -50%;
+  width: 200%; height: 200%; max-width: none; object-fit: contain;
+}
+.gomimon-ambush-pet[data-phase="arrive"] .gomimon-meal-character { animation: gomimon-magic-appear .3s both; }
+.gomimon-ambush-pet[data-phase="set"] .gomimon-meal-character { animation: gomimon-ambush-set .7s both; }
+.gomimon-ambush-pet[data-phase="hide"] .gomimon-ambush-character,
+.gomimon-ambush-pet[data-phase="caught"] .gomimon-ambush-character { clip-path: inset(-120px -120px 36px -120px); }
+.gomimon-ambush-pet[data-phase="hide"] .gomimon-meal-character { animation: gomimon-ambush-hide .35s both; }
+.gomimon-ambush-pet[data-phase="caught"] .gomimon-meal-character { transform: translateY(80px); }
+.gomimon-ambush-pet[data-phase="leap"] .gomimon-meal-character { animation: gomimon-ambush-leap .3s both; }
+.gomimon-ambush-pet[data-phase="snap"] .gomimon-meal-character { animation: gomimon-ambush-snap .45s both; }
+.gomimon-ambush-pet[data-phase="gulp"] .gomimon-meal-character { animation: gomimon-vacuum-gulp .4s both; }
+.gomimon-ambush-pet[data-phase="leave"] { animation: gomimon-ambush-leave .35s both; }
+.gomimon-ambush-edge {
+  position: absolute; left: 20px; top: 59px; width: 80px; height: 4px;
+  background: #254e4933; border-radius: 50%; opacity: 0;
+}
+.gomimon-ambush-pet[data-phase="peek"] .gomimon-ambush-edge,
+.gomimon-ambush-pet[data-phase="crouch"] .gomimon-ambush-edge { opacity: 1; }
+.gomimon-ambush-crumbs { position: absolute; left: 60px; top: 78px; }
+.gomimon-ambush-crumbs i {
+  position: absolute; width: 7px; height: 9px; border: 1px solid #659d89;
+  background: #e9f5ce; opacity: 0;
+}
+.gomimon-ambush-pet[data-phase="snap"] .gomimon-ambush-crumbs i { animation: gomimon-ambush-crumb .45s both; }
+.gomimon-ambush-target {
+  transform-origin: var(--gomi-mouth-x) var(--gomi-mouth-y) !important;
+  animation: gomimon-ambush-bite .45s cubic-bezier(.6, 0, .9, .4) forwards !important;
+  pointer-events: none !important; will-change: transform, opacity;
+}
+@keyframes gomimon-ambush-peek {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(var(--peek-rise)); opacity: 1; }
+}
+@keyframes gomimon-ambush-crouch {
+  from { transform: translateY(var(--peek-rise)); }
+  to { transform: translateY(6px) scale(1.13, .82); }
+}
+@keyframes gomimon-ambush-leap {
+  0% { transform: translateY(80px) scale(1.13, .82); }
+  65% { transform: translateY(-36px) scale(1.35, 1.4) rotate(-8deg); }
+  100% { transform: translateY(-14px) scale(1.4, 1.25) rotate(4deg); }
+}
+@keyframes gomimon-ambush-snap {
+  0% { transform: translateY(-14px) scale(1.4, 1.25) rotate(4deg); }
+  35% { transform: translateY(12px) scale(1.45, .85); }
+  70% { transform: translateY(-3px) scale(.96, 1.1); }
+  100% { transform: none; }
+}
+@keyframes gomimon-ambush-bite {
+  0% { transform: scale(1); opacity: 1; }
+  20% { transform: scale(1.02, .96) rotate(-1deg); opacity: 1; }
+  70% { transform: scale(.4, .18) rotate(5deg); opacity: 1; }
+  100% { transform: scale(.01); opacity: 0; }
+}
+@keyframes gomimon-ambush-crumb {
+  0% { opacity: 0; transform: translate(0, 0) scale(.2); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--crumb-x), var(--crumb-y)) rotate(130deg) scale(.4); }
+}
+@keyframes gomimon-ambush-leave {
+  to { opacity: 0; transform: translate(-50%, -20%) scale(.5) rotate(10deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gomimon-ambush-pet { display: none !important; }
+  .gomimon-ambush-target { animation: gomi-fade-out .15s forwards !important; }
+}
+
+/* Toaster: load the post, wait for the spring, then catch breakfast midair. */
+.gomimon-toaster-pet { transform: translate(-50%, -50%); isolation: isolate; }
+.gomimon-toaster-pet .gomimon-meal-character {
+  position: absolute; left: -50%; top: -50%;
+  width: 200%; height: 200%; max-width: none; object-fit: contain; z-index: 4;
+}
+.gomimon-toaster-pet .gomimon-toaster-appliance {
+  position: absolute; left: -120px; top: -14px;
+  width: 160px; height: 160px; max-width: none; object-fit: contain; filter: none; z-index: 2;
+}
+.gomimon-toaster-toast {
+  position: absolute; left: -78px; top: -10px; width: 60px; height: 36px;
+  box-sizing: border-box; padding: 4px; overflow: hidden;
+  border: 2px solid #547468; border-radius: 5px; background: #f2fae8;
+  color: #426052; font: 5px/1.4 monospace; opacity: 0; z-index: 3;
+}
+.gomimon-toaster-heat {
+  position: absolute; left: -80px; top: 28px; width: 78px; height: 3px;
+  border-radius: 50%; background: #ffb853; box-shadow: 0 0 12px 4px #ffb85377;
+  z-index: 3; opacity: 0;
+}
+.gomimon-toaster-pop {
+  position: absolute; left: -66px; top: -22px; color: #cf9535;
+  font: 34px/1 serif; opacity: 0; z-index: 5;
+}
+.gomimon-toaster-target {
+  transform-origin: center !important;
+  animation: gomimon-dining-plate .65s ease-in-out forwards !important;
+  pointer-events: none !important; will-change: transform, opacity;
+}
+.gomimon-toaster-pet[data-phase="arrive"] { animation: gomimon-dining-arrive .4s both; }
+.gomimon-toaster-pet[data-phase="loaded"] .gomimon-toaster-toast { opacity: 1; }
+.gomimon-toaster-pet[data-phase="insert"] .gomimon-toaster-toast { animation: gomimon-toaster-insert .35s both; }
+.gomimon-toaster-pet[data-phase="insert"] .gomimon-meal-character { animation: gomimon-toaster-push .35s both; }
+.gomimon-toaster-pet[data-phase="toast"] .gomimon-toaster-heat { animation: gomimon-toaster-heat .3s infinite alternate; }
+.gomimon-toaster-pet[data-phase="toast"] .gomimon-toaster-appliance { animation: gomimon-toaster-rattle .12s infinite alternate; }
+.gomimon-toaster-pet[data-phase="pop"] .gomimon-toaster-appliance { animation: gomimon-toaster-spring .3s both; }
+.gomimon-toaster-pet[data-phase="pop"] .gomimon-toaster-toast { animation: gomimon-toaster-flight .6s linear both; }
+.gomimon-toaster-pet[data-phase="pop"] .gomimon-meal-character { animation: gomimon-toaster-jump .6s both; }
+.gomimon-toaster-pet[data-phase="pop"] .gomimon-toaster-pop { animation: gomimon-magic-sparkle .4s both; }
+.gomimon-toaster-pet[data-phase="catch"] .gomimon-meal-character { animation: gomimon-toaster-catch .4s both; }
+.gomimon-toaster-pet[data-phase="leave"] { animation: gomimon-dining-leave .35s both; }
+@keyframes gomimon-toaster-insert {
+  from { opacity: 1; transform: translateY(0) scaleY(1); }
+  to { opacity: 0; transform: translateY(22px) scaleY(.02); }
+}
+@keyframes gomimon-toaster-push {
+  50% { transform: translate(-22px, 8px) rotate(-10deg); }
+}
+@keyframes gomimon-toaster-heat { from { opacity: .4; } to { opacity: 1; } }
+@keyframes gomimon-toaster-rattle { from { transform: rotate(-1deg); } to { transform: rotate(1deg); } }
+@keyframes gomimon-toaster-spring {
+  30% { transform: translateY(4px) scale(1.04, .95); }
+  65% { transform: translateY(-3px) scale(.98, 1.03); }
+}
+@keyframes gomimon-toaster-flight {
+  0% { opacity: 0; transform: translate(0, 25px) scaleY(.1); background: #ffe3a3; border-color: #ad7939; }
+  12% { opacity: 1; transform: translate(8px, -20px) rotate(-12deg); }
+  40% { opacity: 1; transform: translate(40px, -100px) rotate(-22deg); }
+  60% { opacity: 1; transform: translate(70px, -105px) rotate(5deg); }
+  85% { opacity: 1; transform: translate(100px, -58px) rotate(18deg) scale(.8); }
+  100% { opacity: 0; transform: translate(110px, -35px) rotate(0deg) scale(.05); background: #ffe3a3; border-color: #ad7939; }
+}
+@keyframes gomimon-toaster-jump {
+  0%, 30% { transform: none; }
+  50% { transform: translateY(7px) scale(1.1, .85); }
+  85%, 100% { transform: translateY(-99px) scale(1.12); }
+}
+@keyframes gomimon-toaster-catch {
+  0% { transform: translateY(-99px) scale(1.12); }
+  30% { transform: translateY(-60px) scale(1.25, 1.1); }
+  70% { transform: translateY(5px) scale(1.12, .9); }
+  100% { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gomimon-toaster-pet { display: none !important; }
+  .gomimon-toaster-target { animation: gomi-fade-out .15s forwards !important; }
+}
+
+/* Black hole: swirl the meal away, eat the vortex, hiccup a tiny star. */
+.gomimon-blackhole-pet { transform: translate(-50%, -50%); isolation: isolate; }
+.gomimon-blackhole-pet .gomimon-meal-character {
+  position: absolute; left: -50%; top: -50%;
+  width: 200%; height: 200%; max-width: none; object-fit: contain; z-index: 3;
+}
+.gomimon-blackhole-portal {
+  position: absolute; left: -95px; top: 33px; width: 90px; height: 90px;
+  border-radius: 50%; opacity: 0; z-index: 2;
+  background: radial-gradient(circle, #100d24 0 44%, #241533 49%, #a982e1 55%, #d8b8ff 58%, #7051b3 63%, transparent 70%);
+  box-shadow: 0 0 22px #8a66bf55;
+}
+.gomimon-blackhole-ring {
+  position: absolute; inset: -5px -18px; border-radius: 50%;
+  background: conic-gradient(from 20deg, transparent 10%, #e5b8ff 24%, #8c63d4 37%, transparent 49%, #bf8eeb 65%, #fde4ff 80%, transparent 94%);
+  mask-image: radial-gradient(ellipse, transparent 54%, #000 57% 63%, transparent 66%);
+  transform: rotate(-25deg) scaleY(.65);
+  animation: gomimon-blackhole-orbit .9s linear infinite;
+}
+.gomimon-blackhole-dust { position: absolute; left: -50px; top: 78px; z-index: 2; opacity: 0; }
+.gomimon-blackhole-dust i {
+  position: absolute; width: 4px; height: 4px; background: #cba5f0;
+  box-shadow: 0 0 5px #a885da; border-radius: 50%;
+  animation: gomimon-blackhole-dust .8s linear infinite;
+  animation-delay: var(--orbit-delay);
+}
+.gomimon-blackhole-star {
+  position: absolute; left: 51px; top: 34px; width: 19px; height: 19px; z-index: 4; opacity: 0;
+  background: #ffd96e;
+  clip-path: polygon(50% 0, 62% 35%, 100% 38%, 70% 61%, 80% 100%, 50% 77%, 20% 100%, 30% 61%, 0 38%, 38% 35%);
+}
+.gomimon-blackhole-target {
+  transform-origin: var(--gomi-mouth-x) var(--gomi-mouth-y) !important;
+  animation: gomimon-blackhole-swallow 1s cubic-bezier(.45, .05, .8, .3) forwards !important;
+  pointer-events: none !important; will-change: transform, opacity;
+}
+.gomimon-blackhole-pet[data-phase="arrive"] .gomimon-meal-character { animation: gomimon-magic-appear .3s both; }
+.gomimon-blackhole-pet[data-phase="summon"] .gomimon-blackhole-portal { animation: gomimon-blackhole-summon .35s both; }
+.gomimon-blackhole-pet[data-phase="swirl"] .gomimon-blackhole-portal,
+.gomimon-blackhole-pet[data-phase="consider"] .gomimon-blackhole-portal { opacity: 1; }
+.gomimon-blackhole-pet[data-phase="swirl"] .gomimon-blackhole-dust { opacity: 1; }
+.gomimon-blackhole-pet[data-phase="consider"] .gomimon-meal-character { animation: gomimon-dining-nod .25s both; }
+.gomimon-blackhole-pet[data-phase="devour"] .gomimon-blackhole-portal { animation: gomimon-blackhole-devour .5s both; }
+.gomimon-blackhole-pet[data-phase="devour"] .gomimon-meal-character { animation: gomimon-blackhole-reach .5s both; }
+.gomimon-blackhole-pet[data-phase="hiccup"] .gomimon-meal-character { animation: gomimon-blackhole-hiccup .55s both; }
+.gomimon-blackhole-pet[data-phase="hiccup"] .gomimon-blackhole-star { animation: gomimon-blackhole-star .55s both; }
+.gomimon-blackhole-pet[data-phase="leave"] { animation: gomimon-dining-leave .35s both; }
+@keyframes gomimon-blackhole-orbit {
+  to { transform: rotate(335deg) scaleY(.65); }
+}
+@keyframes gomimon-blackhole-dust {
+  from { transform: rotate(var(--orbit-angle)) translateX(85px) scale(1); opacity: 0; }
+  20% { opacity: .8; }
+  to { transform: rotate(calc(var(--orbit-angle) + 160deg)) translateX(12px) scale(.1); opacity: 0; }
+}
+@keyframes gomimon-blackhole-summon {
+  from { opacity: 0; transform: scale(.02) rotate(-90deg); }
+  75% { opacity: 1; transform: scale(1.1); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes gomimon-blackhole-swallow {
+  0% { transform: rotate(0) scale(1); opacity: 1; }
+  35% { transform: rotate(-12deg) scale(.78); opacity: 1; }
+  75% { transform: rotate(-100deg) scale(.25, .12); opacity: .8; }
+  100% { transform: rotate(-210deg) scale(.001); opacity: 0; }
+}
+@keyframes gomimon-blackhole-devour {
+  0% { opacity: 1; transform: translateX(0) scale(1); }
+  35% { opacity: 1; transform: translateX(20px) scale(1.15, .8); }
+  90% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(110px) scale(.01); }
+}
+@keyframes gomimon-blackhole-reach {
+  40% { transform: translateX(-15px) scale(1.1, .95); }
+  100% { transform: scale(1.12); }
+}
+@keyframes gomimon-blackhole-hiccup {
+  0% { transform: scale(1.12); }
+  20% { transform: translateY(-10px) scale(.95, 1.17); }
+  55% { transform: translateY(3px) scale(1.12, .94); }
+  100% { transform: none; }
+}
+@keyframes gomimon-blackhole-star {
+  0% { opacity: 1; transform: scale(.5); }
+  25% { opacity: 1; transform: translate(8px, -12px) scale(1); }
+  70% { opacity: 1; }
+  100% { opacity: 0; transform: translate(60px, -80px) rotate(100deg) scale(.4); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gomimon-blackhole-pet { display: none !important; }
+  .gomimon-blackhole-target { animation: gomi-fade-out .15s forwards !important; }
+}
+
+/* Movie snack: the post pops into kernels, then restraint runs out. */
+.gomimon-popcorn-pet { transform: translate(-50%, -50%); isolation: isolate; }
+.gomimon-popcorn-pet .gomimon-meal-character {
+  position: absolute; left: -50%; top: -50%;
+  width: 200%; height: 200%; max-width: none; object-fit: contain; z-index: 2;
+}
+.gomimon-popcorn-pet .gomimon-popcorn-bucket {
+  position: absolute; left: -62px; top: 24px;
+  width: 100px; height: 100px; max-width: none; object-fit: contain;
+  filter: none; z-index: 3; opacity: 0; transform-origin: 50% 20%;
+}
+.gomimon-popcorn-kernels { position: absolute; left: -12px; top: 70px; z-index: 4; }
+.gomimon-popcorn-kernels i, .gomimon-popcorn-bite {
+  position: absolute; width: 8px; height: 8px; background: #fff0bb;
+  border: 1px solid #bd964a; border-radius: 3px; opacity: 0;
+  box-shadow: -3px 2px #f7dfa0, 3px -2px #ffeec1;
+}
+.gomimon-popcorn-bite { left: -12px; top: 45px; z-index: 4; }
+.gomimon-popcorn-target {
+  transform-origin: var(--gomi-mouth-x) var(--gomi-mouth-y) !important;
+  animation: gomimon-popcorn-pop .75s ease-in forwards !important;
+  pointer-events: none !important; will-change: transform, opacity;
+}
+.gomimon-popcorn-pet[data-phase="arrive"] .gomimon-meal-character { animation: gomimon-magic-appear .35s both; }
+.gomimon-popcorn-pet[data-phase="pop"] .gomimon-popcorn-bucket { animation: gomimon-popcorn-fill .75s both; }
+.gomimon-popcorn-pet[data-phase="pop"] .gomimon-popcorn-kernels i {
+  animation: gomimon-popcorn-kernel .5s both; animation-delay: var(--kernel-delay);
+}
+.gomimon-popcorn-pet[data-phase="ready"] .gomimon-popcorn-bucket,
+.gomimon-popcorn-pet[data-phase="nibble"] .gomimon-popcorn-bucket { opacity: 1; }
+.gomimon-popcorn-pet[data-phase="nibble"] .gomimon-popcorn-bite { animation: gomimon-popcorn-nibble .42s 2 both; }
+.gomimon-popcorn-pet[data-phase="nibble"] .gomimon-meal-character { animation: gomimon-dining-nod .42s 2 both; }
+.gomimon-popcorn-pet[data-phase="tip"] .gomimon-popcorn-bucket { animation: gomimon-popcorn-tip .6s both; }
+.gomimon-popcorn-pet[data-phase="tip"] .gomimon-popcorn-kernels i {
+  animation: gomimon-popcorn-pour .35s both; animation-delay: var(--kernel-delay);
+}
+.gomimon-popcorn-pet[data-phase="tip"] .gomimon-meal-character { animation: gomimon-popcorn-lean .6s both; }
+.gomimon-popcorn-pet[data-phase="gulp"] .gomimon-meal-character { animation: gomimon-vacuum-gulp .4s both; }
+.gomimon-popcorn-pet[data-phase="gulp"] .gomimon-popcorn-bucket,
+.gomimon-popcorn-pet[data-phase="leave"] .gomimon-popcorn-bucket {
+  opacity: 1; clip-path: inset(38% 0 0 0);
+}
+.gomimon-popcorn-pet[data-phase="leave"] { animation: gomimon-dining-leave .35s both; }
+@keyframes gomimon-popcorn-pop {
+  0% { transform: scale(1); opacity: 1; }
+  18% { transform: scale(1.035) rotate(1deg); }
+  35% { transform: scale(.85) rotate(-2deg); opacity: 1; }
+  65% { transform: scale(.4) rotate(5deg); opacity: .5; }
+  100% { transform: scale(.01); opacity: 0; }
+}
+@keyframes gomimon-popcorn-fill {
+  0%, 25% { opacity: 0; transform: scale(.5); }
+  70% { opacity: 1; transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes gomimon-popcorn-kernel {
+  0% { opacity: 0; transform: translate(var(--kernel-x), var(--kernel-y)) scale(.3); }
+  20% { opacity: 1; }
+  55% { opacity: 1; transform: translate(calc(var(--kernel-x) * .6), calc(var(--kernel-y) - 20px)) rotate(40deg); }
+  100% { opacity: 0; transform: translate(0, -12px) rotate(120deg) scale(.6); }
+}
+@keyframes gomimon-popcorn-nibble {
+  0% { opacity: 1; transform: translate(0, 0); }
+  50% { opacity: 1; transform: translate(35px, -28px) rotate(45deg); }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: translate(72px, 0) scale(.1); }
+}
+@keyframes gomimon-popcorn-tip {
+  0% { opacity: 1; transform: none; clip-path: inset(0); }
+  35% { opacity: 1; transform: translate(50px, -50px) rotate(100deg); clip-path: inset(0); }
+  65% { opacity: 1; transform: translate(50px, -50px) rotate(110deg); clip-path: inset(38% 0 0 0); }
+  100% { opacity: 1; transform: none; clip-path: inset(38% 0 0 0); }
+}
+@keyframes gomimon-popcorn-pour {
+  0% { opacity: 0; transform: translate(50px, -50px) scale(.6); }
+  20% { opacity: 1; }
+  65% { opacity: 1; }
+  100% { opacity: 0; transform: translate(72px, -25px) rotate(100deg) scale(.1); }
+}
+@keyframes gomimon-popcorn-lean {
+  35%, 65% { transform: translateY(-8px) rotate(-12deg) scale(1.12); }
+  100% { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gomimon-popcorn-pet { display: none !important; }
+  .gomimon-popcorn-target { animation: gomi-fade-out .15s forwards !important; }
+}
+
+/* Fishing trip: cast, struggle, reel, and land the post in one bite. */
+.gomimon-fishing-pet { transform: translate(-50%, -50%); isolation: isolate; }
+.gomimon-fishing-pet .gomimon-meal-character {
+  position: absolute; left: -50%; top: -50%;
+  width: 200%; height: 200%; max-width: none; object-fit: contain; z-index: 2;
+}
+.gomimon-fishing-tackle { position: absolute; inset: 0; width: 120px; height: 120px; overflow: visible; z-index: 3; }
+.gomimon-fishing-tackle path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.gomimon-fishing-rod { stroke: #80542d; stroke-width: 6px; }
+.gomimon-fishing-reel { stroke: #496d60; stroke-width: 4px; }
+.gomimon-fishing-line { stroke: #779d9b; stroke-width: 1.5px; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.gomimon-fishing-hook { stroke: #6a8288; stroke-width: 2.5px; opacity: 0; }
+.gomimon-fishing-pet[data-phase="arrive"] { animation: gomimon-dining-arrive .35s both; }
+.gomimon-fishing-pet[data-phase="cast"] .gomimon-fishing-line { animation: gomimon-fishing-cast .45s both; }
+.gomimon-fishing-pet[data-phase="cast"] .gomimon-fishing-hook { animation: gomimon-fishing-hook-appear .45s both; }
+.gomimon-fishing-pet[data-phase="tug"] .gomimon-fishing-line { stroke-dashoffset: 0; }
+.gomimon-fishing-pet[data-phase="tug"] .gomimon-fishing-hook { opacity: 1; }
+.gomimon-fishing-pet[data-phase="tug"] .gomimon-meal-character { animation: gomimon-fishing-struggle .425s 2 both; }
+.gomimon-fishing-pet[data-phase="tug"] .gomimon-fishing-rod { animation: gomimon-fishing-bend .425s 2 both; transform-origin: 35px 85px; }
+.gomimon-fishing-pet[data-phase="reel"] .gomimon-fishing-line { animation: gomimon-fishing-retract .65s both; }
+.gomimon-fishing-pet[data-phase="reel"] .gomimon-fishing-hook { animation: gomimon-fishing-land .65s both; }
+.gomimon-fishing-pet[data-phase="reel"] .gomimon-meal-character { animation: gomimon-fishing-pull .65s both; }
+.gomimon-fishing-pet[data-phase="gulp"] .gomimon-meal-character { animation: gomimon-vacuum-gulp .4s both; }
+.gomimon-fishing-pet[data-phase="leave"] { animation: gomimon-dining-leave .35s both; }
+.gomimon-fishing-target {
+  transform-origin: var(--gomi-mouth-x) var(--gomi-mouth-y) !important;
+  animation: gomimon-fishing-catch 1.5s linear forwards !important;
+  pointer-events: none !important; will-change: transform, opacity;
+}
+@keyframes gomimon-fishing-cast { to { stroke-dashoffset: 0; } }
+@keyframes gomimon-fishing-hook-appear { 0%, 70% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes gomimon-fishing-bend { 50% { transform: rotate(-5deg) scaleX(.92); } }
+@keyframes gomimon-fishing-struggle {
+  30% { transform: translate(-9px, 3px) rotate(-7deg); }
+  75% { transform: translate(4px, 0) rotate(7deg); }
+  100% { transform: none; }
+}
+@keyframes gomimon-fishing-catch {
+  0%, 28%, 56% { transform: translateX(0) rotate(0) scale(1); opacity: 1; }
+  14%, 42% { transform: translateX(-5px) rotate(-1deg) scale(1); opacity: 1; }
+  72% { transform: translateY(-15px) rotate(5deg) scale(.7); opacity: 1; }
+  87% { transform: translateY(-8px) rotate(-8deg) scale(.3); opacity: .9; }
+  100% { transform: scale(.01); opacity: 0; }
+}
+@keyframes gomimon-fishing-retract { from { stroke-dashoffset: 0; } to { stroke-dashoffset: 1; } }
+@keyframes gomimon-fishing-land {
+  0% { opacity: 1; transform: translate(0, 0); }
+  75% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--hook-x), var(--hook-y)); }
+}
+@keyframes gomimon-fishing-pull {
+  35% { transform: translateX(12px) rotate(12deg) scale(1.05); }
+  75% { transform: translateX(-4px) rotate(-4deg) scale(1.15, .95); }
+  100% { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gomimon-fishing-pet { display: none !important; }
+  .gomimon-fishing-target { animation: gomi-fade-out .15s forwards !important; }
+}
+
+/* The heist: descend on a cable, steal lunch, discover the weight limit. */
+.gomimon-heist-pet { transform: translate(-50%, -50%); isolation: isolate; }
+.gomimon-heist-rig { position: absolute; inset: 0; }
+.gomimon-heist-pet .gomimon-meal-character {
+  position: absolute; left: -50%; top: -50%;
+  width: 200%; height: 200%; max-width: none; object-fit: contain; z-index: 2;
+}
+.gomimon-heist-cable {
+  position: absolute; left: 58px; bottom: 44px; width: 3px; height: 150vh;
+  background: repeating-linear-gradient(0deg, #344b4a 0 5px, #8b9e93 5px 7px);
+  box-shadow: 1px 0 #ffffff70; z-index: 1;
+}
+.gomimon-heist-pet[data-phase="arrive"] .gomimon-heist-rig { animation: gomimon-heist-drop .65s both; }
+.gomimon-heist-pet[data-phase="hover"] .gomimon-heist-rig { animation: gomimon-heist-hover .4s both; }
+.gomimon-heist-pet[data-phase="steal"] .gomimon-meal-character { animation: gomimon-heist-gulp .6s both; }
+.gomimon-heist-pet[data-phase="stuck"] .gomimon-meal-character,
+.gomimon-heist-pet[data-phase="escape"] .gomimon-meal-character { transform: scale(1.25, 1.1); }
+.gomimon-heist-pet[data-phase="stuck"] .gomimon-heist-rig { animation: gomimon-heist-stuck .45s 2 both; }
+.gomimon-heist-pet[data-phase="escape"] .gomimon-heist-rig { animation: gomimon-heist-escape .7s both; }
+.gomimon-heist-target {
+  transform-origin: var(--gomi-mouth-x) var(--gomi-mouth-y) !important;
+  animation: gomimon-heist-steal .6s ease-in forwards !important;
+  pointer-events: none !important; will-change: transform, opacity;
+}
+@keyframes gomimon-heist-drop {
+  from { transform: translateY(calc(-1 * var(--heist-drop))); }
+  80% { transform: translateY(8px); }
+  to { transform: translateY(0); }
+}
+@keyframes gomimon-heist-hover {
+  40% { transform: translateX(-5px) rotate(-3deg); }
+  75% { transform: translateX(3px) rotate(2deg); }
+}
+@keyframes gomimon-heist-steal {
+  0% { transform: scale(1); opacity: 1; }
+  35% { transform: scale(.85) rotate(-3deg); opacity: 1; }
+  80% { transform: scale(.15) rotate(12deg); opacity: .9; }
+  100% { transform: scale(.01); opacity: 0; }
+}
+@keyframes gomimon-heist-gulp {
+  45% { transform: scale(1.1, .9); }
+  80% { transform: scale(1.35, 1.15); }
+  100% { transform: scale(1.25, 1.1); }
+}
+@keyframes gomimon-heist-stuck {
+  30% { transform: translateY(-22px); }
+  55% { transform: translateY(6px) rotate(4deg); }
+  75% { transform: translateY(-3px) rotate(-3deg); }
+  100% { transform: none; }
+}
+@keyframes gomimon-heist-escape {
+  0% { transform: translateY(0); }
+  20% { transform: translateY(8px); }
+  100% { transform: translateY(calc(-1 * var(--heist-drop))); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gomimon-heist-pet { display: none !important; }
+  .gomimon-heist-target { animation: gomi-fade-out .15s forwards !important; }
+}
+
+/* Food critic: sample, consider, award five stars, abandon all restraint. */
+.gomimon-critic-pet { transform: translate(-50%, -50%); isolation: isolate; }
+.gomimon-critic-pet .gomimon-meal-character {
+  position: absolute; left: -50%; top: -50%; width: 200%; height: 200%;
+  max-width: none; object-fit: contain; z-index: 2;
+}
+.gomimon-critic-rating {
+  position: absolute; left: -48px; top: -17px; width: 145px; padding: 8px;
+  box-sizing: border-box; text-align: center; font: 22px/1.2 Georgia, serif;
+  letter-spacing: 2px; color: #b87f22; background: #fff9e8; border: 2px solid #c7a464;
+  border-radius: 7px; box-shadow: 0 5px 0 #38584622; opacity: 0; z-index: 3;
+}
+.gomimon-critic-pet[data-evolution="bubble-gomi"] .gomimon-critic-rating,
+.gomimon-critic-pet[data-evolution="nimbus-gomi"] .gomimon-critic-rating { top: -65px; }
+.gomimon-critic-bite {
+  position: absolute; left: -32px; top: 60px; width: 22px; height: 17px;
+  overflow: hidden; border: 1px solid #708c77; background: #f5fff0;
+  color: #436052; font: 4px/1.4 monospace; padding: 2px; opacity: 0; z-index: 3;
+}
+.gomimon-critic-thought {
+  position: absolute; left: -18px; top: 10px; padding: 0 10px 5px;
+  font: bold 26px/1.1 Georgia, serif; color: #536861; background: #fffdf1;
+  border: 1px solid #cbd6c8; border-radius: 50%; opacity: 0; z-index: 3;
+}
+.gomimon-critic-sampled {
+  clip-path: polygon(0 0, 94% 0, 94% 7%, 100% 7%, 100% 100%, 0 100%) !important;
+}
+.gomimon-critic-target {
+  transform-origin: var(--gomi-mouth-x) var(--gomi-mouth-y) !important;
+  animation: gomimon-heist-steal .55s ease-in forwards !important;
+  pointer-events: none !important; will-change: transform, opacity;
+}
+.gomimon-critic-pet[data-phase="arrive"] { animation: gomimon-dining-arrive .35s both; }
+.gomimon-critic-pet[data-phase="sample"] .gomimon-critic-bite { animation: gomimon-critic-sample .5s both; }
+.gomimon-critic-pet[data-phase="consider"] .gomimon-critic-thought { animation: gomimon-critic-think .6s both; }
+.gomimon-critic-pet[data-phase="consider"] .gomimon-meal-character { animation: gomimon-dining-nod .6s both; }
+.gomimon-critic-pet[data-phase="rate"] .gomimon-critic-rating { animation: gomimon-critic-award .7s both; }
+.gomimon-critic-pet[data-phase="devour"] .gomimon-critic-rating { animation: gomimon-critic-drop .35s both; }
+.gomimon-critic-pet[data-phase="devour"] .gomimon-meal-character { animation: gomimon-blackhole-reach .55s both; }
+.gomimon-critic-pet[data-phase="gulp"] .gomimon-meal-character { animation: gomimon-vacuum-gulp .4s both; }
+.gomimon-critic-pet[data-phase="leave"] { animation: gomimon-dining-leave .35s both; }
+@keyframes gomimon-critic-sample {
+  0% { opacity: 1; transform: translate(0, 0) rotate(-10deg); }
+  50% { opacity: 1; transform: translate(40px, -28px) rotate(15deg); }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: translate(82px, -10px) scale(.05); }
+}
+@keyframes gomimon-critic-think { 0%, 100% { opacity: 0; } 20%, 85% { opacity: 1; } }
+@keyframes gomimon-critic-award {
+  0% { opacity: 0; transform: translateY(14px) scale(.5) rotate(-8deg); }
+  25% { opacity: 1; transform: translateY(0) scale(1.08) rotate(3deg); }
+  40%, 100% { opacity: 1; transform: none; }
+}
+@keyframes gomimon-critic-drop {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(70px) rotate(25deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gomimon-critic-pet { display: none !important; }
+  .gomimon-critic-target { animation: gomi-fade-out .15s forwards !important; }
+}
+
+/* Boss battle: an overconfident charge loses to the obvious tiny bite. */
+.gomimon-boss-pet { transform: translate(-50%, -50%); isolation: isolate; }
+.gomimon-boss-pet .gomimon-meal-character {
+  position: absolute; left: -50%; top: -50%; width: 200%; height: 200%;
+  max-width: none; object-fit: contain; z-index: 2;
+}
+.gomimon-boss-impact {
+  position: absolute; left: -55px; top: 48px; width: 45px; height: 45px;
+  background: #ffe195; opacity: 0; z-index: 3;
+  clip-path: polygon(50% 0, 60% 30%, 90% 10%, 73% 42%, 100% 50%, 70% 60%, 90% 90%, 58% 73%, 50% 100%, 40% 70%, 10% 90%, 27% 58%, 0 50%, 30% 40%, 10% 10%, 42% 27%);
+}
+.gomimon-boss-stars {
+  position: absolute; left: -7px; top: 8px; width: 130px; text-align: center;
+  color: #d6a544; font: 22px/1 serif; opacity: 0; z-index: 3;
+}
+.gomimon-boss-idea {
+  position: absolute; left: 22px; top: -5px; width: 27px; height: 32px;
+  text-align: center; font: bold 24px/32px Georgia, serif; color: #7c591e;
+  background: #fff1b6; border: 2px solid #d5ad59; border-radius: 50%; opacity: 0; z-index: 3;
+}
+.gomimon-boss-pet[data-evolution="bubble-gomi"] .gomimon-boss-stars,
+.gomimon-boss-pet[data-evolution="nimbus-gomi"] .gomimon-boss-stars { top: -42px; }
+.gomimon-boss-pet[data-evolution="bubble-gomi"] .gomimon-boss-idea,
+.gomimon-boss-pet[data-evolution="nimbus-gomi"] .gomimon-boss-idea { top: -55px; }
+.gomimon-boss-pet[data-phase="arrive"] { animation: gomimon-dining-arrive .35s both; }
+.gomimon-boss-pet[data-phase="charge"] .gomimon-boss-fighter { animation: gomimon-boss-charge .35s both; }
+.gomimon-boss-pet[data-phase="bonk"] .gomimon-boss-fighter { animation: gomimon-boss-bounce .45s both; }
+.gomimon-boss-pet[data-phase="bonk"] .gomimon-boss-impact { animation: gomimon-boss-impact .45s both; }
+.gomimon-boss-pet[data-phase="dazed"] .gomimon-boss-fighter { animation: gomimon-boss-wobble .5s both; }
+.gomimon-boss-pet[data-phase="dazed"] .gomimon-boss-stars { animation: gomimon-boss-stars .5s both; }
+.gomimon-boss-pet[data-phase="idea"] .gomimon-boss-idea { animation: gomimon-critic-award .45s both; }
+.gomimon-boss-pet[data-phase="slash"] .gomimon-boss-fighter { animation: gomimon-boss-nibble .55s both; }
+.gomimon-boss-pet[data-phase="proud"] .gomimon-meal-character { animation: gomimon-dining-nod .45s both; }
+.gomimon-boss-pet[data-phase="leave"] { animation: gomimon-dining-leave .35s both; }
+.gomimon-boss-target {
+  transform-origin: var(--gomi-mouth-x) var(--gomi-mouth-y) !important;
+  animation: gomimon-boss-destroy .55s linear forwards !important;
+  pointer-events: none !important; will-change: transform, opacity;
+}
+@keyframes gomimon-boss-charge {
+  0% { transform: none; }
+  45% { transform: translateX(10px) scale(.9, 1.08); }
+  100% { transform: translateX(-38px) scale(1.15, .9) rotate(-10deg); }
+}
+@keyframes gomimon-boss-bounce {
+  0% { transform: translateX(-38px) scale(.7, 1.3) rotate(-10deg); }
+  45% { transform: translate(12px, -20px) rotate(20deg); }
+  100% { transform: translateY(5px) rotate(-5deg) scale(1.1, .9); }
+}
+@keyframes gomimon-boss-impact {
+  0% { opacity: 1; transform: scale(.4); }
+  30% { opacity: 1; transform: scale(1.1) rotate(10deg); }
+  100% { opacity: 0; transform: scale(1.4) rotate(20deg); }
+}
+@keyframes gomimon-boss-wobble {
+  0% { transform: translateY(5px) rotate(-5deg) scale(1.1, .9); }
+  35% { transform: rotate(6deg); }
+  70% { transform: rotate(-3deg); }
+  100% { transform: none; }
+}
+@keyframes gomimon-boss-stars {
+  0% { opacity: 0; transform: translateX(-8px); }
+  25%, 70% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(8px); }
+}
+@keyframes gomimon-boss-nibble {
+  40% { transform: translateX(-9px) rotate(-3deg); }
+  80% { transform: scale(1.08); }
+  100% { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gomimon-boss-pet { display: none !important; }
+  .gomimon-boss-target { animation: gomi-fade-out .15s forwards !important; }
+}
+
+/* Make the post itself read as the boss, including an ineffective first hit. */
+.gomimon-boss-opponent { outline: 2px solid #b34f57 !important; outline-offset: -2px; }
+.gomimon-boss-health {
+  position: absolute; box-sizing: border-box; display: grid; grid-template-columns: 1fr auto;
+  gap: 7px 12px; padding: 10px 12px; border: 2px solid #b76266; border-radius: 5px;
+  background: #2d2232; color: #fff2df; box-shadow: 0 4px 0 #30162744;
+  font: bold 12px/1.1 monospace; letter-spacing: 1px; z-index: 4;
+}
+.gomimon-boss-level { color: #e5a398; }
+.gomimon-boss-health-track { grid-column: 1 / -1; height: 10px; background: #120f1a; border: 1px solid #7c4a55; overflow: hidden; }
+.gomimon-boss-health-track i { display: block; width: 100%; height: 100%; background: linear-gradient(#f18b81 0 35%, #cb4a58 35%); transform-origin: left; }
+.gomimon-boss-damage {
+  position: absolute; left: -58px; top: 10px; padding: 4px 7px; z-index: 5;
+  font: bold 13px/1 monospace; letter-spacing: 1px; color: #ffe5a7;
+  background: #453143; border: 1px solid #a77669; border-radius: 3px; opacity: 0;
+}
+.gomimon-boss-pet[data-phase="bonk"] .gomimon-boss-damage { animation: gomimon-boss-blocked .45s both; }
+.gomimon-boss-pet[data-phase="slash"] .gomimon-boss-health-track i { animation: gomimon-boss-drain .55s both; }
+.gomimon-boss-pet[data-phase="proud"] .gomimon-boss-health-track i,
+.gomimon-boss-pet[data-phase="leave"] .gomimon-boss-health-track i { transform: scaleX(0); }
+.gomimon-boss-pet[data-phase="proud"] .gomimon-boss-health { border-color: #6d9a76; color: #d5efba; }
+@keyframes gomimon-boss-blocked {
+  from { opacity: 1; transform: translateY(8px) scale(.9); }
+  60% { opacity: 1; }
+  to { opacity: 0; transform: translateY(-20px) scale(1); }
+}
+@keyframes gomimon-boss-drain { 0%, 40% { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+
+.gomimon-boss-fighter { position: absolute; inset: 0; z-index: 2; }
+.gomimon-boss-sword {
+  position: absolute; left: 5px; top: -48px; width: 52px; height: 140px;
+  overflow: visible; z-index: 3; transform-origin: 26px 120px;
+  transform: rotate(-20deg); filter: drop-shadow(2px 3px 0 #263e4033);
+}
+/* The first hit is unarmed. Draw the sword only after that hit fails. */
+.gomimon-boss-sword { opacity: 0; }
+.gomimon-boss-pet[data-phase="idea"] .gomimon-boss-sword { animation: gomimon-boss-draw .45s both; }
+.gomimon-boss-pet[data-phase="slash"] .gomimon-boss-sword { animation: gomimon-boss-finisher .55s both; }
+.gomimon-boss-pet[data-phase="proud"] .gomimon-boss-sword,
+.gomimon-boss-pet[data-phase="leave"] .gomimon-boss-sword { opacity: 1; transform: rotate(-20deg); }
+.gomimon-boss-pet[data-phase="slash"] .gomimon-boss-impact { animation: gomimon-boss-impact .33s .22s forwards; }
+.gomimon-boss-pet[data-phase="slash"] .gomimon-boss-damage { animation: gomimon-boss-blocked .33s .22s forwards; }
+.gomimon-boss-shards { position: absolute; z-index: 3; }
+.gomimon-boss-shards i {
+  position: absolute; width: 22px; height: 15px; border: 1px solid #b76266;
+  background: #fff2df; opacity: 0;
+}
+.gomimon-boss-pet[data-phase="slash"] .gomimon-boss-shards i { animation: gomimon-boss-shatter .33s .22s forwards; }
+@keyframes gomimon-boss-draw {
+  from { opacity: 0; transform: translateY(35px) rotate(60deg) scale(.3); }
+  50% { opacity: 1; }
+  to { opacity: 1; transform: rotate(30deg); }
+}
+@keyframes gomimon-boss-finisher {
+  0% { opacity: 1; transform: rotate(30deg); }
+  30% { opacity: 1; transform: rotate(55deg); }
+  45% { opacity: 1; transform: rotate(-95deg); }
+  100% { opacity: 1; transform: rotate(-65deg); }
+}
+@keyframes gomimon-boss-destroy {
+  0%, 40% { opacity: 1; transform: none; filter: none; }
+  50% { opacity: 1; transform: scale(1.025) rotate(-1deg); filter: brightness(1.5); }
+  70% { opacity: .7; transform: translateY(8px) scale(1.04) rotate(2deg); }
+  100% { opacity: 0; transform: translateY(24px) scale(1.08) rotate(3deg); filter: blur(3px); }
+}
+@keyframes gomimon-boss-shatter {
+  from { opacity: 1; transform: scale(.5); }
+  50% { opacity: 1; }
+  to { opacity: 0; transform: translate(var(--shard-x), var(--shard-y)) rotate(100deg); }
+}
+
+/* Tiny helpers: a three-pet delivery crew with one hungry accomplice. */
+.gomimon-helpers-pet { transform: translate(-50%, -50%); isolation: isolate; }
+.gomimon-helpers-pet .gomimon-meal-character {
+  position: absolute; left: -50%; top: -50%; width: 200%; height: 200%;
+  max-width: none; object-fit: contain; z-index: 2;
+}
+.gomimon-helpers-crew { position: absolute; left: -140px; top: 70px; width: 115px; height: 75px; opacity: 0; z-index: 3; }
+.gomimon-helpers-pet .gomimon-helper {
+  position: absolute; top: -10px; width: 72px; height: 72px; max-width: none;
+  object-fit: contain; filter: none;
+}
+.gomimon-helpers-cargo {
+  position: absolute; left: 0; top: -5px; width: 100px; height: 30px;
+  box-sizing: border-box; padding: 3px; overflow: hidden;
+  border: 2px solid #5d8b77; border-radius: 3px; background: #f1fae7;
+  color: #436052; font: 5px/1.4 monospace; box-shadow: 0 3px #416b5533; opacity: 0;
+}
+.gomimon-helpers-crumb {
+  position: absolute; left: 35px; top: -4px; width: 12px; height: 10px;
+  border: 1px solid #5d8b77; background: #f1fae7; opacity: 0; z-index: 4;
+}
+.gomimon-helpers-target {
+  transform-origin: var(--gomi-mouth-x) var(--gomi-mouth-y) !important;
+  animation: gomimon-heist-steal .6s ease-in forwards !important;
+  pointer-events: none !important; will-change: transform, opacity;
+}
+.gomimon-helpers-pet[data-phase="arrive"] .gomimon-meal-character { animation: gomimon-magic-appear .35s both; }
+.gomimon-helpers-pet[data-phase="collect"] .gomimon-helpers-crew { animation: gomimon-helpers-appear .6s both; }
+.gomimon-helpers-pet[data-phase="carry"] .gomimon-helpers-crew { animation: gomimon-helpers-carry .8s linear both; }
+.gomimon-helpers-pet[data-phase="carry"] .gomimon-helper { animation: gomimon-helpers-step .2s infinite alternate; animation-delay: var(--step-delay); }
+.gomimon-helpers-pet[data-phase="carry"] .gomimon-helpers-cargo { opacity: 1; }
+.gomimon-helpers-pet[data-phase="sneak"] .gomimon-helpers-crew,
+.gomimon-helpers-pet[data-phase="deliver"] .gomimon-helpers-crew,
+.gomimon-helpers-pet[data-phase="celebrate"] .gomimon-helpers-crew,
+.gomimon-helpers-pet[data-phase="leave"] .gomimon-helpers-crew { opacity: 1; transform: translateX(80px); }
+.gomimon-helpers-pet[data-phase="sneak"] .gomimon-helpers-cargo {
+  opacity: 1; clip-path: polygon(0 0, 30% 0, 30% 35%, 45% 35%, 45% 0, 100% 0, 100% 100%, 0 100%);
+}
+.gomimon-helpers-pet[data-phase="sneak"] .gomimon-helpers-crumb { animation: gomimon-helpers-steal .5s both; }
+.gomimon-helpers-pet[data-phase="sneak"] .gomimon-helper:nth-child(2) { animation: gomimon-helpers-hop .5s both; }
+.gomimon-helpers-pet[data-phase="deliver"] .gomimon-helpers-cargo { animation: gomimon-helpers-deliver .45s both; }
+.gomimon-helpers-pet[data-phase="deliver"] .gomimon-meal-character { animation: gomimon-dining-lunge .45s both; }
+.gomimon-helpers-pet[data-phase="celebrate"] .gomimon-helper { animation: gomimon-helpers-hop .4s both; }
+.gomimon-helpers-pet[data-phase="celebrate"] .gomimon-meal-character { animation: gomimon-vacuum-gulp .4s both; }
+.gomimon-helpers-pet[data-phase="leave"] { animation: gomimon-dining-leave .35s both; }
+@keyframes gomimon-helpers-appear { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: none; } }
+@keyframes gomimon-helpers-carry { from { opacity: 1; transform: translateX(0); } to { opacity: 1; transform: translateX(80px); } }
+@keyframes gomimon-helpers-step { to { transform: translateY(-3px) rotate(4deg); } }
+@keyframes gomimon-helpers-steal {
+  0% { opacity: 1; transform: none; }
+  55% { opacity: 1; transform: translate(10px, 32px) scale(.8); }
+  100% { opacity: 0; transform: translate(10px, 36px) scale(.1); }
+}
+@keyframes gomimon-helpers-hop { 45% { transform: translateY(-9px); } }
+@keyframes gomimon-helpers-deliver {
+  0% { opacity: 1; transform: none; }
+  65% { opacity: 1; transform: translate(50px, -24px) scale(.5); }
+  100% { opacity: 0; transform: translate(70px, -20px) scale(.01); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gomimon-helpers-pet { display: none !important; }
+  .gomimon-helpers-target { animation: gomi-fade-out .15s forwards !important; }
+}
+
+/* A folded post takes a looping flight into Gomi's mouth. */
+.gomimon-airplane-pet { transform: translate(-50%, -50%); isolation: isolate; }
+.gomimon-airplane-pet .gomimon-meal-character {
+  position: absolute; left: -50%; top: -50%; width: 200%; height: 200%;
+  max-width: none; object-fit: contain; z-index: 2;
+}
+.gomimon-airplane {
+  position: absolute; left: -98px; top: 62px; width: 64px; height: 36px;
+  opacity: 0; z-index: 3; filter: drop-shadow(0 3px 1px #21493830);
+}
+.gomimon-airplane::before, .gomimon-airplane-wing {
+  content: ''; position: absolute; inset: 0; background: #fafcf0;
+  clip-path: polygon(0 0, 100% 45%, 22% 100%, 30% 55%);
+}
+.gomimon-airplane-wing { background: #87b9a8; clip-path: polygon(0 0, 100% 45%, 30% 55%, 22% 100%, 19% 40%); }
+.gomimon-airplane-target {
+  transform-origin: var(--gomi-mouth-x) var(--gomi-mouth-y) !important;
+  animation: gomimon-airplane-fold .6s ease-in forwards !important;
+  pointer-events: none !important; will-change: transform, opacity;
+}
+.gomimon-airplane-pet[data-phase="arrive"] .gomimon-meal-character { animation: gomimon-magic-appear .35s both; }
+.gomimon-airplane-pet[data-phase="launch"] .gomimon-airplane { animation: gomimon-airplane-flight 1.35s linear both; }
+.gomimon-airplane-pet[data-phase="catch"] .gomimon-airplane { animation: gomimon-airplane-catch .3s ease-in both; }
+.gomimon-airplane-pet[data-phase="catch"] .gomimon-meal-character { animation: gomimon-dining-lunge .45s both; }
+.gomimon-airplane-pet[data-phase="gulp"] .gomimon-meal-character { animation: gomimon-vacuum-gulp .35s both; }
+.gomimon-airplane-pet[data-phase="leave"] { animation: gomimon-dining-leave .35s both; }
+@keyframes gomimon-airplane-fold {
+  0% { transform: none; opacity: 1; clip-path: inset(0); }
+  45% { transform: scale(.55) rotate(-7deg); opacity: 1; clip-path: polygon(0 0,100% 0,80% 100%,20% 100%); }
+  90% { transform: scale(.08,.025) rotate(-10deg); opacity: 1; }
+  100% { transform: scale(.08,.025); opacity: 0; }
+}
+@keyframes gomimon-airplane-flight {
+  0% { opacity: 1; transform: translate(0,0) rotate(-15deg); }
+  20% { opacity: 1; transform: translate(38px,-75px) rotate(-45deg); }
+  40% { opacity: 1; transform: translate(100px,-115px) rotate(0deg); }
+  60% { opacity: 1; transform: translate(148px,-65px) rotate(85deg); }
+  80% { opacity: 1; transform: translate(96px,-10px) rotate(190deg); }
+  100% { opacity: 1; transform: translate(65px,-28px) rotate(345deg); }
+}
+@keyframes gomimon-airplane-catch {
+  from { opacity: 1; transform: translate(65px,-28px) rotate(-15deg); }
+  to { opacity: 0; transform: translate(126px,-2px) rotate(15deg) scale(.01); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gomimon-airplane-pet { display: none !important; }
+  .gomimon-airplane-target { animation: gomi-fade-out .15s forwards !important; }
+}
+
+/* Finish the heist's exit with the same soft handoff as other meal scenes. */
+.gomimon-heist-pet[data-phase="escape"] { animation: gomimon-meal-fade-out .35s .35s forwards; }
+@keyframes gomimon-meal-fade-out { to { opacity: 0; } }
+
+/* Lay a snare, hide in tall grass, and wait for the catch. */
+.gomimon-ambush-grass { position:absolute; left:-12px; top:57px; width:144px; height:56px; z-index:4; }
+.gomimon-ambush-grass i { position:absolute; bottom:0; left:calc(var(--blade) * 11px); width:22px; height:52px; background:#427d48; clip-path:polygon(0 100%, 12% 0, 48% 50%, 83% 13%, 100% 100%); transform:rotate(-8deg); }
+.gomimon-ambush-grass i:nth-child(2n) { height:41px; background:#6b9d4b; transform:rotate(9deg); }
+.gomimon-ambush-trap { position:absolute; left:-64px; top:103px; width:70px; height:24px; border:4px solid #be995b; border-radius:50%; opacity:0; transform:scale(.2); }
+.gomimon-ambush-pet[data-phase="set"] .gomimon-ambush-trap { animation:gomimon-ambush-lay .7s both; }
+.gomimon-ambush-pet[data-phase="hide"] .gomimon-ambush-trap { opacity:1; transform:none; }
+.gomimon-ambush-net { position:absolute; box-sizing:border-box; border:3px solid #be995b; border-radius:12px; background:repeating-linear-gradient(45deg,transparent 0 23px,#a17c4580 24px 26px),repeating-linear-gradient(-45deg,transparent 0 23px,#a17c4580 24px 26px); opacity:0; pointer-events:none; }
+.gomimon-ambush-pet[data-phase="caught"] .gomimon-ambush-net { animation:gomimon-ambush-net .25s both; }
+.gomimon-ambush-pet[data-phase="leap"] .gomimon-ambush-net { opacity:1; }
+.gomimon-ambush-pet[data-phase="leap"] .gomimon-ambush-grass { animation:gomimon-ambush-rustle .3s both; }
+.gomimon-ambush-caught { animation:gomimon-ambush-rustle .25s 2 !important; }
+@keyframes gomimon-ambush-set { 50% { transform:translate(-28px,12px) rotate(-15deg); } }
+@keyframes gomimon-ambush-hide { to { transform:translateY(80px); } }
+@keyframes gomimon-ambush-lay { to { opacity:1; transform:none; } }
+@keyframes gomimon-ambush-net { from { opacity:0; transform:scale(1.12); } to { opacity:1; transform:none; } }
+@keyframes gomimon-ambush-rustle { 25% { transform:translateX(-3px) rotate(-1deg); } 75% { transform:translateX(3px) rotate(1deg); } }
+
+.gomimon-ambush-grass i:nth-child(3n) { height:60px; background:#568f47; transform:rotate(-15deg); }
+.gomimon-ambush-grass i:nth-child(4n) { height:35px; background:#83ad55; }

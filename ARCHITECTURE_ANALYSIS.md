@@ -1,17 +1,20 @@
 # GomiMon Architecture & Codebase Analysis
 
+> This document describes the current implementation. The pet/evolution sections below remain useful product context; the shared detector architecture in sections 1A–1D is authoritative for lifecycle, API, privacy, and deployment behavior.
+
 ## Executive Summary
-GomiMon is a **Chrome Extension (Manifest V3)** that implements a Tamagotchi-like virtual pet game. The pet "eats" AI-generated content from social media feeds, and players manage its hunger and glitch metrics while it evolves based on diet.
+GomiMon is a **Chrome Extension (Manifest V3)** with a local virtual pet and an authenticated Reddit/X detector service. The detector sends selected platform text to the GomiMon API, which forwards it to TypeSafe and returns typed probabilities. Filtering is client-side and is driven by stable platform identity, the current content revision, current settings, and cached scores; feeding is an independent cosmetic/progress effect.
 
 ---
 
 ## 1. WEBAPP STRUCTURE & ORGANIZATION
 
 ### Architecture Type
-- **Browser Extension** (not a traditional webapp)
+- **Browser Extension plus authenticated API** (not a traditional webapp)
 - **Manifest V3** - Modern Chrome extension standard
-- **Client-side only** - All logic and storage local to browser
-- **No backend** - Completely peer-to-peer, no server communication
+- **Local feed policy** - DOM extraction, identity, scheduling, hiding, and pet presentation run in the tab
+- **Background broker** - The service worker owns authentication, cross-tab concurrency/rate budgets, score cache, and request correlation
+- **Server-backed inference** - The API owns TypeSafe credentials, account quota, server throttling, hashed metadata, and the 24-hour server cache
 
 ### Key Components
 
@@ -31,8 +34,14 @@ Gomimon/
 │   └── content.css            # Purge animations
 │
 ├── Web Integration
-│   ├── content.js             # Website interaction script
-│   └── content.css            # Post glitch-out animations
+│   ├── reddit-detector.js     # Structured Reddit DOM adapter
+│   ├── detector/              # Revision, store, policy, scheduler, renderer
+│   ├── content.js             # Composition root for the tab detector
+│   ├── detector-broker.js     # Service-worker score broker/cache
+│   └── content.css            # Reversible detector presentation
+
+├── Detector API
+│   └── server/                # Authenticated Express API and TypeSafe adapter
 │
 ├── Audio System
 │   ├── offscreen.html         # Audio playback container
@@ -48,6 +57,87 @@ Gomimon/
     ├── constants.js           # Shared game configuration
     └── Documentation files
 ```
+
+## 1A. Shared detector ownership and lifecycle
+
+The detector is intentionally split into small classic scripts for the content
+side and one ES module for the service-worker broker. `content.js` is only the
+composition root; it does not perform unrestricted DOM extraction or make
+policy decisions inside render callbacks.
+
+| Component | Owns | Does not own |
+| --- | --- | --- |
+| Reddit / X adapters | Stable identity, structured extraction, mount/recycle discovery | Requests, policy, pet progress |
+| Post store | Immutable snapshots, revision-scoped scores, views, tab overrides | DOM mutation or HTTP |
+| Tab scheduler | Viewport priority, bounded queue, dwell/retry timing | Classification decisions |
+| Background broker | Authenticated transport, shared concurrency/rate budget, score cache, coalescing | Platform DOM or hide/show policy |
+| Policy evaluator | Scores/preferences to hide/show reasons | Requests or pet mutations |
+| Renderer | Reversible collapse panels/placeholders and diagnostics UI | Scheduling or reward accounting |
+| Pet effect path | Existing progress/animation after a qualifying hide or explicit feed | Filter eligibility |
+
+Each record is keyed by `reddit-{post|comment}-{thingid/fullname/permalink}`
+and carries an immutable revision hash of the canonical assessment input. A
+response is applied only when its item key and revision still match. Detached
+views are cleaned up after five minutes (maximum 500 records), while reusable
+score cache entries are independent of DOM lifetime.
+
+Automatic mode scans visible and nearby posts/comments after a dwell period;
+category filters remain feed-post-only, and local explicit ad matches do not need
+the API. Pending, unsupported, insufficient, and failed items stay visible.
+The tab-level Show override survives rerenders and SPA navigation until reload
+or tab closure. A score cache hit can filter a remounted item even when the
+network quota is exhausted.
+
+### X adapter and platform contract
+
+`platforms.js` is the shared registry for IDs, names, hosts, and AI word minimums. `enabledPlatforms` is stored with shared settings. Onboarding persists Hatch → platforms → diet → complete; no existing-user onboarding migration is required. X activates only at `/home` when For You or Following is selected, and cancels/detaches on navigation or disabling.
+
+`x-detector.js` uses the displayed status ID, excludes nested quote cards as items, and separates `text` from `quotedText`. X requires 10 authored words; Reddit 30. Category checks can use quotes below this minimum. Rendered expansion changes the revision. Unknown layouts remain visible. Automatic feed effects deduplicate by platform/item identity across repeated appearances and tabs.
+
+`/v1/analyze` accepts `platform: "reddit" | "x"` (omission defaults to Reddit) and optional `quotedText`. The background validates the platform against the sender tab. Revisions and both caches include platform and quoted context under `social-detector-v3` / `social-classifier-v2`. Existing sensitivity, request limits, and the 100/day account quota are shared. No X API or X-specific database table is used. Diagnostics include platform and never raw text or quotes.
+
+## 1B. Request protocol and failure handling
+
+The content side sends `protocolVersion`, `operationId`, `itemKey`, `revision`,
+priority, and requested judgments. Responses are explicit `complete`,
+`deferred`, or `error` results and carry operation/revision/request IDs. A
+20-second content watchdog cancels a stalled operation. The broker allows two
+in-flight HTTP analyses and at most 25 dispatches per minute across tabs,
+coalesces identical requests, and defers rather than treating capacity as a
+failure.
+
+The API uses a five-second TypeSafe attempt timeout, at most one retry with a
+one-second capped backoff, and a 12-second overall TypeSafe deadline. HTTP
+requests have an 18-second deadline. Authentication, throttle, quota, and
+transient failures carry structured retry/reset metadata. Expired server cache
+rows are updated on conflict instead of being permanently blocked by an
+insert-only conflict clause.
+
+## 1C. Diagnostics and privacy
+
+Content diagnostics retain a bounded ring of 200 events and expose item key,
+revision prefix, operation/request IDs, extraction method/completeness,
+character/word counts, queue wait, request duration, cache state, and policy
+reason. They never log post text, credentials, or authorization headers. The
+service-worker broker stores only numeric scores and model/rubric metadata in a
+session/service/revision-scoped cache (24 hours, 1,000 entries, approximately
+2 MB); it never stores post text.
+
+For a live tab, inspect the page console for `[GomiMon Detector]` events. The
+read-only `GET_DETECTOR_DIAGNOSTICS` message returns the current record,
+scheduler, and event snapshot for tests/debugging. Inspect the service worker
+for transport IDs and broker events, and inspect the API with the commands in
+`server/README.md`.
+
+## 1D. Release sequence
+
+Deploy the API deadline/error/cache bundle first, verify `/healthz` and one
+authenticated analysis, then package/reload the extension and refresh Reddit and X
+tabs so old content scripts are replaced. Production server changes use the
+GoldenTechLabs workflow in `deploy/README.md`: back up `/srv/gomimon`, restart
+`gomimon-detector.service`, run health/log checks, and retain the prior bundle
+for rollback. Do not change Caddy or production quotas as part of detector
+refactors.
 
 ### UI Organization
 - **Minimal popup-based UI**: 300x400px window
@@ -66,6 +156,7 @@ DEFAULT_STATS = {
   glitch: 0,                // 0-100, increases with feeding
   level: 1,                 // Currently unused (future feature)
   evolution: 'egg',         // Current pet form
+  petName: '',              // User-selected companion name
   feedCount: 0,             // Lifetime feedings
   diet: {
     text: 0,                // Text-based posts fed
@@ -73,24 +164,28 @@ DEFAULT_STATS = {
     post: 0                 // Generic posts fed
   },
   lastUpdate: timestamp,    // Last modification time
-  schemaVersion: 1          // For future migrations
+  schemaVersion: 2          // Naming/leaderboard migration
 }
 ```
+
+### Naming and leaderboard
+
+Hatching requires a locally validated `petName`. Existing hatched pets without one receive a naming prompt without losing progress. After Google sign-in, the API reserves a case-insensitive unique name following deterministic checks and a Jev all-ages Noul judgment.
+
+Leaderboard participation is explicit. PostgreSQL stores private profiles, lifetime totals, and idempotent meal events. The public API exposes only rank, name, evolution, and meal count. Weekly ranks use events received since Monday 00:00 UTC; all-time ranks include a one-time import of local `feedCount`. The extension queues meal events by account and retries outside the durable local feed transaction.
 
 ### Pet Evolution System
 
 **Stages:**
 1. **Egg** (feedCount 0-9): Starting form, animated sprite
-2. **Baby-Gomi** (feedCount 10-49): Hatched form, more animated
-3. **Final Forms** (feedCount 50+): Diet-based evolution
-   - **Typo-ling** (>50% text diet): Glitchy typography creature
-   - **Muta-Pixel** (>50% image diet): Surreal AI-art creature
-   - **Classic-Gomi** (balanced diet): Friendly trash monster
-   - **Null-Sprite** (starvation): Sad pixelated ghost
+2. **Baby-Gomi** (feedCount 10-99): Hatched form, more animated
+3. **Bubble-Gomi** (feedCount 100-999): Mint slime with idle, eating, celebration, and sleep animations
+4. **Nimbus-Gomi** (feedCount 1,000+): Animated adult with a bubble crest and curled tail
 
-**Evolution Logic** (`background.js:293-324`)
-- Automatic calculation on each feed
-- Based on feed count thresholds and diet ratios
+**Evolution Logic** (feed-logic.js)
+- Shared manual, automatic, and category feeding progression
+- Total meal thresholds: hatch at 10 (or onboarding), Bubble at 100, Nimbus at 1,000
+- One stage per meal; existing legacy adult forms remain valid and unchanged
 - Triggers evolution notifications with sound
 
 ### Pet States (Non-Evolution)
@@ -104,8 +199,8 @@ DEFAULT_STATS = {
 ```javascript
 PET_SPRITES = {
   egg: {
-    idle: 'sprites/animated/egg.gif',
-    eat: 'sprites/animated/egg.gif',
+    idle: 'sprites/animated/egg1_idle.gif',
+    eat: 'sprites/animated/egg1_idle.gif',
     crashed: 'sprites/animated/crashed.gif',
     starved: 'sprites/animated/starved.gif'
   },
@@ -563,7 +658,8 @@ GLITCH_CRASH_THRESHOLD = 100          // Crash state
 
 // Evolution
 EGG_TO_BABY_FEEDS = 10
-BABY_TO_ADULT_FEEDS = 50
+BABY_TO_BUBBLE_FEEDS = 100
+BUBBLE_TO_ADULT_FEEDS = 1000
 DIET_DOMINANCE_THRESHOLD = 0.5        // 50% threshold
 
 // Rate Limiting
@@ -685,4 +781,3 @@ ANIMATION_DURATION = {
 8. **Testing**: Create game-specific tests in `tests/unit/scholar.test.js`
 
 The architecture is well-designed for extension, with clear separation of concerns and established patterns for state management, validation, and error handling.
-

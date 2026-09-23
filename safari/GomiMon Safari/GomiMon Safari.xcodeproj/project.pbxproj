@@ -1,0 +1,1131 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FCEB4FE93063381B000E49F3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEB4FE83063381B000E49F3 /* AppDelegate.swift */; };
+		FCEB4FEB3063381B000E49F3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEB4FEA3063381B000E49F3 /* SceneDelegate.swift */; };
+		FCEB4FEE3063381B000E49F3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FCEB4FEC3063381B000E49F3 /* LaunchScreen.storyboard */; };
+		FCEB4FF13063381B000E49F3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FCEB4FEF3063381B000E49F3 /* Main.storyboard */; };
+		FCEB4FFA3063381B000E49F3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEB4FF93063381B000E49F3 /* AppDelegate.swift */; };
+		FCEB4FFD3063381B000E49F3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FCEB4FFB3063381B000E49F3 /* Main.storyboard */; };
+		FCEB50043063381B000E49F3 /* GomiMon Safari Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FCEB50033063381B000E49F3 /* GomiMon Safari Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FCEB500E3063381B000E49F3 /* GomiMon Safari Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FCEB500D3063381B000E49F3 /* GomiMon Safari Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FCEB50133063381B000E49F3 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = FCEB4FD83063381A000E49F3 /* Main.html */; };
+		FCEB50143063381B000E49F3 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = FCEB4FD83063381A000E49F3 /* Main.html */; };
+		FCEB50153063381B000E49F3 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = FCEB4FDA3063381A000E49F3 /* Icon.png */; };
+		FCEB50163063381B000E49F3 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = FCEB4FDA3063381A000E49F3 /* Icon.png */; };
+		FCEB50173063381B000E49F3 /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = FCEB4FDB3063381A000E49F3 /* Style.css */; };
+		FCEB50183063381B000E49F3 /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = FCEB4FDB3063381A000E49F3 /* Style.css */; };
+		FCEB50193063381B000E49F3 /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB4FDC3063381A000E49F3 /* Script.js */; };
+		FCEB501A3063381B000E49F3 /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB4FDC3063381A000E49F3 /* Script.js */; };
+		FCEB501B3063381B000E49F3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEB4FDD3063381A000E49F3 /* ViewController.swift */; };
+		FCEB501C3063381B000E49F3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEB4FDD3063381A000E49F3 /* ViewController.swift */; };
+		FCEB501D3063381B000E49F3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FCEB4FDE3063381B000E49F3 /* Assets.xcassets */; };
+		FCEB501E3063381B000E49F3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FCEB4FDE3063381B000E49F3 /* Assets.xcassets */; };
+		FCEB501F3063381B000E49F3 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEB4FE03063381B000E49F3 /* SafariWebExtensionHandler.swift */; };
+		FCEB50203063381B000E49F3 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEB4FE03063381B000E49F3 /* SafariWebExtensionHandler.swift */; };
+		FCEB504E3063381B000E49F3 /* constants.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50323063381B000E49F3 /* constants.js */; };
+		FCEB504F3063381B000E49F3 /* popup.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50333063381B000E49F3 /* popup.js */; };
+		FCEB50503063381B000E49F3 /* content.css in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50343063381B000E49F3 /* content.css */; };
+		FCEB50513063381B000E49F3 /* minigames in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50353063381B000E49F3 /* minigames */; };
+		FCEB50523063381B000E49F3 /* offscreen.html in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50363063381B000E49F3 /* offscreen.html */; };
+		FCEB50533063381B000E49F3 /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50373063381B000E49F3 /* background.js */; };
+		FCEB50543063381B000E49F3 /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50383063381B000E49F3 /* popup.html */; };
+		FCEB50553063381B000E49F3 /* popup-onboarding.css in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50393063381B000E49F3 /* popup-onboarding.css */; };
+		FCEB50563063381B000E49F3 /* platforms.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB503A3063381B000E49F3 /* platforms.js */; };
+		FCEB50573063381B000E49F3 /* popup-settings.css in Resources */ = {isa = PBXBuildFile; fileRef = FCEB503B3063381B000E49F3 /* popup-settings.css */; };
+		FCEB50583063381B000E49F3 /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = FCEB503C3063381B000E49F3 /* sounds */; };
+		FCEB50593063381B000E49F3 /* x-detector.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB503D3063381B000E49F3 /* x-detector.js */; };
+		FCEB505A3063381B000E49F3 /* feed-logic.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB503E3063381B000E49F3 /* feed-logic.js */; };
+		FCEB505B3063381B000E49F3 /* reddit-detector.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB503F3063381B000E49F3 /* reddit-detector.js */; };
+		FCEB505C3063381B000E49F3 /* detector in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50403063381B000E49F3 /* detector */; };
+		FCEB505D3063381B000E49F3 /* detector-broker.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50413063381B000E49F3 /* detector-broker.js */; };
+		FCEB505E3063381B000E49F3 /* safari-background.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50423063381B000E49F3 /* safari-background.js */; };
+		FCEB505F3063381B000E49F3 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50433063381B000E49F3 /* icons */; };
+		FCEB50603063381B000E49F3 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50443063381B000E49F3 /* manifest.json */; };
+		FCEB50613063381B000E49F3 /* popup-console.css in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50453063381B000E49F3 /* popup-console.css */; };
+		FCEB50623063381B000E49F3 /* offscreen.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50463063381B000E49F3 /* offscreen.js */; };
+		FCEB50633063381B000E49F3 /* sprites in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50473063381B000E49F3 /* sprites */; };
+		FCEB50643063381B000E49F3 /* content.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50483063381B000E49F3 /* content.js */; };
+		FCEB50653063381B000E49F3 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50493063381B000E49F3 /* assets */; };
+		FCEB50663063381B000E49F3 /* slop-history.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB504A3063381B000E49F3 /* slop-history.js */; };
+		FCEB50673063381B000E49F3 /* safari-auth.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB504B3063381B000E49F3 /* safari-auth.js */; };
+		FCEB50683063381B000E49F3 /* privacy.html in Resources */ = {isa = PBXBuildFile; fileRef = FCEB504C3063381B000E49F3 /* privacy.html */; };
+		FCEB50693063381B000E49F3 /* popup-device.css in Resources */ = {isa = PBXBuildFile; fileRef = FCEB504D3063381B000E49F3 /* popup-device.css */; };
+		FCEB506A3063381B000E49F3 /* constants.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50323063381B000E49F3 /* constants.js */; };
+		FCEB506B3063381B000E49F3 /* popup.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50333063381B000E49F3 /* popup.js */; };
+		FCEB506C3063381B000E49F3 /* content.css in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50343063381B000E49F3 /* content.css */; };
+		FCEB506D3063381B000E49F3 /* minigames in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50353063381B000E49F3 /* minigames */; };
+		FCEB506E3063381B000E49F3 /* offscreen.html in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50363063381B000E49F3 /* offscreen.html */; };
+		FCEB506F3063381B000E49F3 /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50373063381B000E49F3 /* background.js */; };
+		FCEB50703063381B000E49F3 /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50383063381B000E49F3 /* popup.html */; };
+		FCEB50713063381B000E49F3 /* popup-onboarding.css in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50393063381B000E49F3 /* popup-onboarding.css */; };
+		FCEB50723063381B000E49F3 /* platforms.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB503A3063381B000E49F3 /* platforms.js */; };
+		FCEB50733063381B000E49F3 /* popup-settings.css in Resources */ = {isa = PBXBuildFile; fileRef = FCEB503B3063381B000E49F3 /* popup-settings.css */; };
+		FCEB50743063381B000E49F3 /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = FCEB503C3063381B000E49F3 /* sounds */; };
+		FCEB50753063381B000E49F3 /* x-detector.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB503D3063381B000E49F3 /* x-detector.js */; };
+		FCEB50763063381B000E49F3 /* feed-logic.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB503E3063381B000E49F3 /* feed-logic.js */; };
+		FCEB50773063381B000E49F3 /* reddit-detector.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB503F3063381B000E49F3 /* reddit-detector.js */; };
+		FCEB50783063381B000E49F3 /* detector in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50403063381B000E49F3 /* detector */; };
+		FCEB50793063381B000E49F3 /* detector-broker.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50413063381B000E49F3 /* detector-broker.js */; };
+		FCEB507A3063381B000E49F3 /* safari-background.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50423063381B000E49F3 /* safari-background.js */; };
+		FCEB507B3063381B000E49F3 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50433063381B000E49F3 /* icons */; };
+		FCEB507C3063381B000E49F3 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50443063381B000E49F3 /* manifest.json */; };
+		FCEB507D3063381B000E49F3 /* popup-console.css in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50453063381B000E49F3 /* popup-console.css */; };
+		FCEB507E3063381B000E49F3 /* offscreen.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50463063381B000E49F3 /* offscreen.js */; };
+		FCEB507F3063381B000E49F3 /* sprites in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50473063381B000E49F3 /* sprites */; };
+		FCEB50803063381B000E49F3 /* content.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50483063381B000E49F3 /* content.js */; };
+		FCEB50813063381B000E49F3 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = FCEB50493063381B000E49F3 /* assets */; };
+		FCEB50823063381B000E49F3 /* slop-history.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB504A3063381B000E49F3 /* slop-history.js */; };
+		FCEB50833063381B000E49F3 /* safari-auth.js in Resources */ = {isa = PBXBuildFile; fileRef = FCEB504B3063381B000E49F3 /* safari-auth.js */; };
+		FCEB50843063381B000E49F3 /* privacy.html in Resources */ = {isa = PBXBuildFile; fileRef = FCEB504C3063381B000E49F3 /* privacy.html */; };
+		FCEB50853063381B000E49F3 /* popup-device.css in Resources */ = {isa = PBXBuildFile; fileRef = FCEB504D3063381B000E49F3 /* popup-device.css */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FCEB50053063381B000E49F3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FCEB4FD23063381A000E49F3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FCEB50023063381B000E49F3;
+			remoteInfo = "GomiMon Safari Extension (iOS)";
+		};
+		FCEB500F3063381B000E49F3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FCEB4FD23063381A000E49F3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FCEB500C3063381B000E49F3;
+			remoteInfo = "GomiMon Safari Extension (macOS)";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FCEB50263063381B000E49F3 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				FCEB50043063381B000E49F3 /* GomiMon Safari Extension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCEB502D3063381B000E49F3 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				FCEB500E3063381B000E49F3 /* GomiMon Safari Extension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		FCEB4FD93063381A000E49F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/Main.html; sourceTree = "<group>"; };
+		FCEB4FDA3063381A000E49F3 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		FCEB4FDB3063381A000E49F3 /* Style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = Style.css; sourceTree = "<group>"; };
+		FCEB4FDC3063381A000E49F3 /* Script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Script.js; sourceTree = "<group>"; };
+		FCEB4FDD3063381A000E49F3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		FCEB4FDE3063381B000E49F3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FCEB4FE03063381B000E49F3 /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
+		FCEB4FE53063381B000E49F3 /* GomiMon Safari.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GomiMon Safari.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCEB4FE83063381B000E49F3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		FCEB4FEA3063381B000E49F3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		FCEB4FED3063381B000E49F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		FCEB4FF03063381B000E49F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		FCEB4FF23063381B000E49F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FCEB4FF73063381B000E49F3 /* GomiMon Safari.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GomiMon Safari.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCEB4FF93063381B000E49F3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		FCEB4FFC3063381B000E49F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		FCEB4FFE3063381B000E49F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FCEB50033063381B000E49F3 /* GomiMon Safari Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "GomiMon Safari Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCEB50083063381B000E49F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FCEB500D3063381B000E49F3 /* GomiMon Safari Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "GomiMon Safari Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCEB50123063381B000E49F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FCEB50323063381B000E49F3 /* constants.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = constants.js; path = "../../../dist/gomimon-safari/constants.js"; sourceTree = "<group>"; };
+		FCEB50333063381B000E49F3 /* popup.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = popup.js; path = "../../../dist/gomimon-safari/popup.js"; sourceTree = "<group>"; };
+		FCEB50343063381B000E49F3 /* content.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = content.css; path = "../../../dist/gomimon-safari/content.css"; sourceTree = "<group>"; };
+		FCEB50353063381B000E49F3 /* minigames */ = {isa = PBXFileReference; lastKnownFileType = folder; name = minigames; path = "../../../dist/gomimon-safari/minigames"; sourceTree = "<group>"; };
+		FCEB50363063381B000E49F3 /* offscreen.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = offscreen.html; path = "../../../dist/gomimon-safari/offscreen.html"; sourceTree = "<group>"; };
+		FCEB50373063381B000E49F3 /* background.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = background.js; path = "../../../dist/gomimon-safari/background.js"; sourceTree = "<group>"; };
+		FCEB50383063381B000E49F3 /* popup.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = popup.html; path = "../../../dist/gomimon-safari/popup.html"; sourceTree = "<group>"; };
+		FCEB50393063381B000E49F3 /* popup-onboarding.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = "popup-onboarding.css"; path = "../../../dist/gomimon-safari/popup-onboarding.css"; sourceTree = "<group>"; };
+		FCEB503A3063381B000E49F3 /* platforms.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = platforms.js; path = "../../../dist/gomimon-safari/platforms.js"; sourceTree = "<group>"; };
+		FCEB503B3063381B000E49F3 /* popup-settings.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = "popup-settings.css"; path = "../../../dist/gomimon-safari/popup-settings.css"; sourceTree = "<group>"; };
+		FCEB503C3063381B000E49F3 /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sounds; path = "../../../dist/gomimon-safari/sounds"; sourceTree = "<group>"; };
+		FCEB503D3063381B000E49F3 /* x-detector.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "x-detector.js"; path = "../../../dist/gomimon-safari/x-detector.js"; sourceTree = "<group>"; };
+		FCEB503E3063381B000E49F3 /* feed-logic.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "feed-logic.js"; path = "../../../dist/gomimon-safari/feed-logic.js"; sourceTree = "<group>"; };
+		FCEB503F3063381B000E49F3 /* reddit-detector.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "reddit-detector.js"; path = "../../../dist/gomimon-safari/reddit-detector.js"; sourceTree = "<group>"; };
+		FCEB50403063381B000E49F3 /* detector */ = {isa = PBXFileReference; lastKnownFileType = folder; name = detector; path = "../../../dist/gomimon-safari/detector"; sourceTree = "<group>"; };
+		FCEB50413063381B000E49F3 /* detector-broker.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "detector-broker.js"; path = "../../../dist/gomimon-safari/detector-broker.js"; sourceTree = "<group>"; };
+		FCEB50423063381B000E49F3 /* safari-background.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "safari-background.js"; path = "../../../dist/gomimon-safari/safari-background.js"; sourceTree = "<group>"; };
+		FCEB50433063381B000E49F3 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = "../../../dist/gomimon-safari/icons"; sourceTree = "<group>"; };
+		FCEB50443063381B000E49F3 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = manifest.json; path = "../../../dist/gomimon-safari/manifest.json"; sourceTree = "<group>"; };
+		FCEB50453063381B000E49F3 /* popup-console.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = "popup-console.css"; path = "../../../dist/gomimon-safari/popup-console.css"; sourceTree = "<group>"; };
+		FCEB50463063381B000E49F3 /* offscreen.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = offscreen.js; path = "../../../dist/gomimon-safari/offscreen.js"; sourceTree = "<group>"; };
+		FCEB50473063381B000E49F3 /* sprites */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sprites; path = "../../../dist/gomimon-safari/sprites"; sourceTree = "<group>"; };
+		FCEB50483063381B000E49F3 /* content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = content.js; path = "../../../dist/gomimon-safari/content.js"; sourceTree = "<group>"; };
+		FCEB50493063381B000E49F3 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = "../../../dist/gomimon-safari/assets"; sourceTree = "<group>"; };
+		FCEB504A3063381B000E49F3 /* slop-history.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "slop-history.js"; path = "../../../dist/gomimon-safari/slop-history.js"; sourceTree = "<group>"; };
+		FCEB504B3063381B000E49F3 /* safari-auth.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "safari-auth.js"; path = "../../../dist/gomimon-safari/safari-auth.js"; sourceTree = "<group>"; };
+		FCEB504C3063381B000E49F3 /* privacy.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = privacy.html; path = "../../../dist/gomimon-safari/privacy.html"; sourceTree = "<group>"; };
+		FCEB504D3063381B000E49F3 /* popup-device.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = "popup-device.css"; path = "../../../dist/gomimon-safari/popup-device.css"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FCEB4FE23063381B000E49F3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCEB4FF43063381B000E49F3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCEB50003063381B000E49F3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCEB500A3063381B000E49F3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FCEB4FD13063381A000E49F3 = {
+			isa = PBXGroup;
+			children = (
+				FCEB4FD63063381A000E49F3 /* Shared (App) */,
+				FCEB4FDF3063381B000E49F3 /* Shared (Extension) */,
+				FCEB4FE73063381B000E49F3 /* iOS (App) */,
+				FCEB4FF83063381B000E49F3 /* macOS (App) */,
+				FCEB50073063381B000E49F3 /* iOS (Extension) */,
+				FCEB50113063381B000E49F3 /* macOS (Extension) */,
+				FCEB4FE63063381B000E49F3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FCEB4FD63063381A000E49F3 /* Shared (App) */ = {
+			isa = PBXGroup;
+			children = (
+				FCEB4FDD3063381A000E49F3 /* ViewController.swift */,
+				FCEB4FDE3063381B000E49F3 /* Assets.xcassets */,
+				FCEB4FD73063381A000E49F3 /* Resources */,
+			);
+			path = "Shared (App)";
+			sourceTree = "<group>";
+		};
+		FCEB4FD73063381A000E49F3 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				FCEB4FD83063381A000E49F3 /* Main.html */,
+				FCEB4FDA3063381A000E49F3 /* Icon.png */,
+				FCEB4FDB3063381A000E49F3 /* Style.css */,
+				FCEB4FDC3063381A000E49F3 /* Script.js */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		FCEB4FDF3063381B000E49F3 /* Shared (Extension) */ = {
+			isa = PBXGroup;
+			children = (
+				FCEB50313063381B000E49F3 /* Resources */,
+				FCEB4FE03063381B000E49F3 /* SafariWebExtensionHandler.swift */,
+			);
+			path = "Shared (Extension)";
+			sourceTree = "<group>";
+		};
+		FCEB4FE63063381B000E49F3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FCEB4FE53063381B000E49F3 /* GomiMon Safari.app */,
+				FCEB4FF73063381B000E49F3 /* GomiMon Safari.app */,
+				FCEB50033063381B000E49F3 /* GomiMon Safari Extension.appex */,
+				FCEB500D3063381B000E49F3 /* GomiMon Safari Extension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FCEB4FE73063381B000E49F3 /* iOS (App) */ = {
+			isa = PBXGroup;
+			children = (
+				FCEB4FE83063381B000E49F3 /* AppDelegate.swift */,
+				FCEB4FEA3063381B000E49F3 /* SceneDelegate.swift */,
+				FCEB4FEC3063381B000E49F3 /* LaunchScreen.storyboard */,
+				FCEB4FEF3063381B000E49F3 /* Main.storyboard */,
+				FCEB4FF23063381B000E49F3 /* Info.plist */,
+			);
+			path = "iOS (App)";
+			sourceTree = "<group>";
+		};
+		FCEB4FF83063381B000E49F3 /* macOS (App) */ = {
+			isa = PBXGroup;
+			children = (
+				FCEB4FF93063381B000E49F3 /* AppDelegate.swift */,
+				FCEB4FFB3063381B000E49F3 /* Main.storyboard */,
+				FCEB4FFE3063381B000E49F3 /* Info.plist */,
+			);
+			path = "macOS (App)";
+			sourceTree = "<group>";
+		};
+		FCEB50073063381B000E49F3 /* iOS (Extension) */ = {
+			isa = PBXGroup;
+			children = (
+				FCEB50083063381B000E49F3 /* Info.plist */,
+			);
+			path = "iOS (Extension)";
+			sourceTree = "<group>";
+		};
+		FCEB50113063381B000E49F3 /* macOS (Extension) */ = {
+			isa = PBXGroup;
+			children = (
+				FCEB50123063381B000E49F3 /* Info.plist */,
+			);
+			path = "macOS (Extension)";
+			sourceTree = "<group>";
+		};
+		FCEB50313063381B000E49F3 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				FCEB50323063381B000E49F3 /* constants.js */,
+				FCEB50333063381B000E49F3 /* popup.js */,
+				FCEB50343063381B000E49F3 /* content.css */,
+				FCEB50353063381B000E49F3 /* minigames */,
+				FCEB50363063381B000E49F3 /* offscreen.html */,
+				FCEB50373063381B000E49F3 /* background.js */,
+				FCEB50383063381B000E49F3 /* popup.html */,
+				FCEB50393063381B000E49F3 /* popup-onboarding.css */,
+				FCEB503A3063381B000E49F3 /* platforms.js */,
+				FCEB503B3063381B000E49F3 /* popup-settings.css */,
+				FCEB503C3063381B000E49F3 /* sounds */,
+				FCEB503D3063381B000E49F3 /* x-detector.js */,
+				FCEB503E3063381B000E49F3 /* feed-logic.js */,
+				FCEB503F3063381B000E49F3 /* reddit-detector.js */,
+				FCEB50403063381B000E49F3 /* detector */,
+				FCEB50413063381B000E49F3 /* detector-broker.js */,
+				FCEB50423063381B000E49F3 /* safari-background.js */,
+				FCEB50433063381B000E49F3 /* icons */,
+				FCEB50443063381B000E49F3 /* manifest.json */,
+				FCEB50453063381B000E49F3 /* popup-console.css */,
+				FCEB50463063381B000E49F3 /* offscreen.js */,
+				FCEB50473063381B000E49F3 /* sprites */,
+				FCEB50483063381B000E49F3 /* content.js */,
+				FCEB50493063381B000E49F3 /* assets */,
+				FCEB504A3063381B000E49F3 /* slop-history.js */,
+				FCEB504B3063381B000E49F3 /* safari-auth.js */,
+				FCEB504C3063381B000E49F3 /* privacy.html */,
+				FCEB504D3063381B000E49F3 /* popup-device.css */,
+			);
+			name = Resources;
+			path = "Shared (Extension)";
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FCEB4FE43063381B000E49F3 /* GomiMon Safari (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCEB50273063381B000E49F3 /* Build configuration list for PBXNativeTarget "GomiMon Safari (iOS)" */;
+			buildPhases = (
+				FCEB4FE13063381B000E49F3 /* Sources */,
+				FCEB4FE23063381B000E49F3 /* Frameworks */,
+				FCEB4FE33063381B000E49F3 /* Resources */,
+				FCEB50263063381B000E49F3 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FCEB50063063381B000E49F3 /* PBXTargetDependency */,
+			);
+			name = "GomiMon Safari (iOS)";
+			productName = "GomiMon Safari (iOS)";
+			productReference = FCEB4FE53063381B000E49F3 /* GomiMon Safari.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FCEB4FF63063381B000E49F3 /* GomiMon Safari (macOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCEB502E3063381B000E49F3 /* Build configuration list for PBXNativeTarget "GomiMon Safari (macOS)" */;
+			buildPhases = (
+				FCEB4FF33063381B000E49F3 /* Sources */,
+				FCEB4FF43063381B000E49F3 /* Frameworks */,
+				FCEB4FF53063381B000E49F3 /* Resources */,
+				FCEB502D3063381B000E49F3 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FCEB50103063381B000E49F3 /* PBXTargetDependency */,
+			);
+			name = "GomiMon Safari (macOS)";
+			productName = "GomiMon Safari (macOS)";
+			productReference = FCEB4FF73063381B000E49F3 /* GomiMon Safari.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FCEB50023063381B000E49F3 /* GomiMon Safari Extension (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCEB50233063381B000E49F3 /* Build configuration list for PBXNativeTarget "GomiMon Safari Extension (iOS)" */;
+			buildPhases = (
+				FCEB4FFF3063381B000E49F3 /* Sources */,
+				FCEB50003063381B000E49F3 /* Frameworks */,
+				FCEB50013063381B000E49F3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "GomiMon Safari Extension (iOS)";
+			productName = "GomiMon Safari Extension (iOS)";
+			productReference = FCEB50033063381B000E49F3 /* GomiMon Safari Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		FCEB500C3063381B000E49F3 /* GomiMon Safari Extension (macOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCEB502A3063381B000E49F3 /* Build configuration list for PBXNativeTarget "GomiMon Safari Extension (macOS)" */;
+			buildPhases = (
+				FCEB50093063381B000E49F3 /* Sources */,
+				FCEB500A3063381B000E49F3 /* Frameworks */,
+				FCEB500B3063381B000E49F3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "GomiMon Safari Extension (macOS)";
+			productName = "GomiMon Safari Extension (macOS)";
+			productReference = FCEB500D3063381B000E49F3 /* GomiMon Safari Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FCEB4FD23063381A000E49F3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2660;
+				LastUpgradeCheck = 2660;
+				TargetAttributes = {
+					FCEB4FE43063381B000E49F3 = {
+						CreatedOnToolsVersion = 26.6;
+					};
+					FCEB4FF63063381B000E49F3 = {
+						CreatedOnToolsVersion = 26.6;
+					};
+					FCEB50023063381B000E49F3 = {
+						CreatedOnToolsVersion = 26.6;
+					};
+					FCEB500C3063381B000E49F3 = {
+						CreatedOnToolsVersion = 26.6;
+					};
+				};
+			};
+			buildConfigurationList = FCEB4FD53063381A000E49F3 /* Build configuration list for PBXProject "GomiMon Safari" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = FCEB4FD13063381A000E49F3;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = FCEB4FE63063381B000E49F3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FCEB4FE43063381B000E49F3 /* GomiMon Safari (iOS) */,
+				FCEB4FF63063381B000E49F3 /* GomiMon Safari (macOS) */,
+				FCEB50023063381B000E49F3 /* GomiMon Safari Extension (iOS) */,
+				FCEB500C3063381B000E49F3 /* GomiMon Safari Extension (macOS) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FCEB4FE33063381B000E49F3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FCEB50153063381B000E49F3 /* Icon.png in Resources */,
+				FCEB4FEE3063381B000E49F3 /* LaunchScreen.storyboard in Resources */,
+				FCEB50133063381B000E49F3 /* Main.html in Resources */,
+				FCEB50193063381B000E49F3 /* Script.js in Resources */,
+				FCEB501D3063381B000E49F3 /* Assets.xcassets in Resources */,
+				FCEB4FF13063381B000E49F3 /* Main.storyboard in Resources */,
+				FCEB50173063381B000E49F3 /* Style.css in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCEB4FF53063381B000E49F3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FCEB50163063381B000E49F3 /* Icon.png in Resources */,
+				FCEB50183063381B000E49F3 /* Style.css in Resources */,
+				FCEB4FFD3063381B000E49F3 /* Main.storyboard in Resources */,
+				FCEB501A3063381B000E49F3 /* Script.js in Resources */,
+				FCEB501E3063381B000E49F3 /* Assets.xcassets in Resources */,
+				FCEB50143063381B000E49F3 /* Main.html in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCEB50013063381B000E49F3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FCEB50853063381B000E49F3 /* popup-device.css in Resources */,
+				FCEB50833063381B000E49F3 /* safari-auth.js in Resources */,
+				FCEB50803063381B000E49F3 /* content.js in Resources */,
+				FCEB507A3063381B000E49F3 /* safari-background.js in Resources */,
+				FCEB50703063381B000E49F3 /* popup.html in Resources */,
+				FCEB506C3063381B000E49F3 /* content.css in Resources */,
+				FCEB507B3063381B000E49F3 /* icons in Resources */,
+				FCEB507E3063381B000E49F3 /* offscreen.js in Resources */,
+				FCEB507F3063381B000E49F3 /* sprites in Resources */,
+				FCEB507D3063381B000E49F3 /* popup-console.css in Resources */,
+				FCEB50783063381B000E49F3 /* detector in Resources */,
+				FCEB50843063381B000E49F3 /* privacy.html in Resources */,
+				FCEB50813063381B000E49F3 /* assets in Resources */,
+				FCEB506A3063381B000E49F3 /* constants.js in Resources */,
+				FCEB507C3063381B000E49F3 /* manifest.json in Resources */,
+				FCEB506B3063381B000E49F3 /* popup.js in Resources */,
+				FCEB50773063381B000E49F3 /* reddit-detector.js in Resources */,
+				FCEB506E3063381B000E49F3 /* offscreen.html in Resources */,
+				FCEB50743063381B000E49F3 /* sounds in Resources */,
+				FCEB50733063381B000E49F3 /* popup-settings.css in Resources */,
+				FCEB50793063381B000E49F3 /* detector-broker.js in Resources */,
+				FCEB50823063381B000E49F3 /* slop-history.js in Resources */,
+				FCEB506F3063381B000E49F3 /* background.js in Resources */,
+				FCEB50723063381B000E49F3 /* platforms.js in Resources */,
+				FCEB506D3063381B000E49F3 /* minigames in Resources */,
+				FCEB50713063381B000E49F3 /* popup-onboarding.css in Resources */,
+				FCEB50753063381B000E49F3 /* x-detector.js in Resources */,
+				FCEB50763063381B000E49F3 /* feed-logic.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCEB500B3063381B000E49F3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FCEB50693063381B000E49F3 /* popup-device.css in Resources */,
+				FCEB50673063381B000E49F3 /* safari-auth.js in Resources */,
+				FCEB50643063381B000E49F3 /* content.js in Resources */,
+				FCEB505E3063381B000E49F3 /* safari-background.js in Resources */,
+				FCEB50543063381B000E49F3 /* popup.html in Resources */,
+				FCEB50503063381B000E49F3 /* content.css in Resources */,
+				FCEB505F3063381B000E49F3 /* icons in Resources */,
+				FCEB50623063381B000E49F3 /* offscreen.js in Resources */,
+				FCEB50633063381B000E49F3 /* sprites in Resources */,
+				FCEB50613063381B000E49F3 /* popup-console.css in Resources */,
+				FCEB505C3063381B000E49F3 /* detector in Resources */,
+				FCEB50683063381B000E49F3 /* privacy.html in Resources */,
+				FCEB50653063381B000E49F3 /* assets in Resources */,
+				FCEB504E3063381B000E49F3 /* constants.js in Resources */,
+				FCEB50603063381B000E49F3 /* manifest.json in Resources */,
+				FCEB504F3063381B000E49F3 /* popup.js in Resources */,
+				FCEB505B3063381B000E49F3 /* reddit-detector.js in Resources */,
+				FCEB50523063381B000E49F3 /* offscreen.html in Resources */,
+				FCEB50583063381B000E49F3 /* sounds in Resources */,
+				FCEB50573063381B000E49F3 /* popup-settings.css in Resources */,
+				FCEB505D3063381B000E49F3 /* detector-broker.js in Resources */,
+				FCEB50663063381B000E49F3 /* slop-history.js in Resources */,
+				FCEB50533063381B000E49F3 /* background.js in Resources */,
+				FCEB50563063381B000E49F3 /* platforms.js in Resources */,
+				FCEB50513063381B000E49F3 /* minigames in Resources */,
+				FCEB50553063381B000E49F3 /* popup-onboarding.css in Resources */,
+				FCEB50593063381B000E49F3 /* x-detector.js in Resources */,
+				FCEB505A3063381B000E49F3 /* feed-logic.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FCEB4FE13063381B000E49F3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FCEB501B3063381B000E49F3 /* ViewController.swift in Sources */,
+				FCEB4FE93063381B000E49F3 /* AppDelegate.swift in Sources */,
+				FCEB4FEB3063381B000E49F3 /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCEB4FF33063381B000E49F3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FCEB501C3063381B000E49F3 /* ViewController.swift in Sources */,
+				FCEB4FFA3063381B000E49F3 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCEB4FFF3063381B000E49F3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FCEB501F3063381B000E49F3 /* SafariWebExtensionHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCEB50093063381B000E49F3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FCEB50203063381B000E49F3 /* SafariWebExtensionHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FCEB50063063381B000E49F3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FCEB50023063381B000E49F3 /* GomiMon Safari Extension (iOS) */;
+			targetProxy = FCEB50053063381B000E49F3 /* PBXContainerItemProxy */;
+		};
+		FCEB50103063381B000E49F3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FCEB500C3063381B000E49F3 /* GomiMon Safari Extension (macOS) */;
+			targetProxy = FCEB500F3063381B000E49F3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		FCEB4FD83063381A000E49F3 /* Main.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FCEB4FD93063381A000E49F3 /* Base */,
+			);
+			name = Main.html;
+			sourceTree = "<group>";
+		};
+		FCEB4FEC3063381B000E49F3 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FCEB4FED3063381B000E49F3 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		FCEB4FEF3063381B000E49F3 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FCEB4FF03063381B000E49F3 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		FCEB4FFB3063381B000E49F3 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FCEB4FFC3063381B000E49F3 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		FCEB50213063381B000E49F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		FCEB50223063381B000E49F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		FCEB50243063381B000E49F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 72UJTW8297;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "GomiMon Safari Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.goldentechlabs.gomimon.safari.Extension;
+				PRODUCT_NAME = "GomiMon Safari Extension";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FCEB50253063381B000E49F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 72UJTW8297;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "GomiMon Safari Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.goldentechlabs.gomimon.safari.Extension;
+				PRODUCT_NAME = "GomiMon Safari Extension";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FCEB50283063381B000E49F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 72UJTW8297;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "GomiMon Safari";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.goldentechlabs.gomimon.safari;
+				PRODUCT_NAME = "GomiMon Safari";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FCEB50293063381B000E49F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 72UJTW8297;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "GomiMon Safari";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.goldentechlabs.gomimon.safari;
+				PRODUCT_NAME = "GomiMon Safari";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FCEB502B3063381B000E49F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 72UJTW8297;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "GomiMon Safari Extension";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.goldentechlabs.gomimon.safari.Extension;
+				PRODUCT_NAME = "GomiMon Safari Extension";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FCEB502C3063381B000E49F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 72UJTW8297;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "GomiMon Safari Extension";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.goldentechlabs.gomimon.safari.Extension;
+				PRODUCT_NAME = "GomiMon Safari Extension";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		FCEB502F3063381B000E49F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 72UJTW8297;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "GomiMon Safari";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.goldentechlabs.gomimon.safari;
+				PRODUCT_NAME = "GomiMon Safari";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FCEB50303063381B000E49F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 72UJTW8297;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "GomiMon Safari";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.goldentechlabs.gomimon.safari;
+				PRODUCT_NAME = "GomiMon Safari";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FCEB4FD53063381A000E49F3 /* Build configuration list for PBXProject "GomiMon Safari" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCEB50213063381B000E49F3 /* Debug */,
+				FCEB50223063381B000E49F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCEB50233063381B000E49F3 /* Build configuration list for PBXNativeTarget "GomiMon Safari Extension (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCEB50243063381B000E49F3 /* Debug */,
+				FCEB50253063381B000E49F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCEB50273063381B000E49F3 /* Build configuration list for PBXNativeTarget "GomiMon Safari (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCEB50283063381B000E49F3 /* Debug */,
+				FCEB50293063381B000E49F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCEB502A3063381B000E49F3 /* Build configuration list for PBXNativeTarget "GomiMon Safari Extension (macOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCEB502B3063381B000E49F3 /* Debug */,
+				FCEB502C3063381B000E49F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCEB502E3063381B000E49F3 /* Build configuration list for PBXNativeTarget "GomiMon Safari (macOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCEB502F3063381B000E49F3 /* Debug */,
+				FCEB50303063381B000E49F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FCEB4FD23063381A000E49F3 /* Project object */;
+}

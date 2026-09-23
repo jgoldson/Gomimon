@@ -1,0 +1,14 @@
+[Unit]
+Description=Reconcile GomiMon Stripe sandbox subscriptions
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=gomimon
+WorkingDirectory=/srv/gomimon/server
+EnvironmentFile=/etc/gomimon-test.env
+ExecStart=/usr/bin/node reconcile-billing.js
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true

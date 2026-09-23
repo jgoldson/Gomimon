@@ -4,147 +4,1171 @@
   <meta charset="UTF-8">
   <title>GomiMon</title>
   <style>
+    :root {
+      --ink: #17142f;
+      --ink-deep: #111027;
+      --plum: #30285f;
+      --lilac: #9196f2;
+      --cream: #fff3d6;
+      --muted: #c9c6e5;
+      --line: rgba(255, 243, 214, 0.24);
+      --panel: rgba(255, 255, 255, 0.09);
+      --coral: #ff687d;
+      --coral-soft: #ff9aac;
+      --mint: #5fe0d0;
+      --yellow: #ffd978;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
     body {
-      width: 300px;
-      height: 400px;
+      width: 360px;
+      min-height: 640px;
       margin: 0;
-      padding: 20px;
-      font-family: 'Courier New', monospace;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #fff;
+      padding: 18px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      color: var(--cream);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 92% 1%, rgba(95, 224, 208, 0.22), transparent 28%),
+        radial-gradient(circle at 4% 47%, rgba(255, 104, 125, 0.16), transparent 26%),
+        linear-gradient(160deg, var(--ink-deep) 0%, var(--ink) 43%, #4c4394 100%);
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      content: "";
+      opacity: 0.18;
+      background-image: radial-gradient(rgba(255, 243, 214, 0.45) 0.7px, transparent 0.7px);
+      background-size: 13px 13px;
+      mask-image: linear-gradient(to bottom, black, transparent 72%);
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus-visible,
+    select:focus-visible {
+      outline: 2px solid var(--mint);
+      outline-offset: 3px;
     }
 
     .container {
+      position: relative;
+      z-index: 1;
       display: flex;
       flex-direction: column;
+      min-height: 604px;
+      gap: 14px;
+    }
+
+    .topbar {
+      display: flex;
       align-items: center;
-      height: 100%;
+      justify-content: space-between;
+      min-height: 42px;
+    }
+
+    .wordmark {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      color: var(--ink);
+      font-family: Rockwell, "Courier New", monospace;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: -0.15em;
+      border: 2px solid var(--cream);
+      border-radius: 10px 10px 10px 3px;
+      background: var(--coral);
+      box-shadow: 4px 4px 0 rgba(17, 16, 39, 0.32);
+    }
+
+    .brand-name,
+    .pet-state,
+    .metric-label,
+    .detector-title,
+    .detector-experiment,
+    .habitat-label,
+    .habitat-signal,
+    .metric-foot,
+    .habitat-caption {
+      font-family: Rockwell, "Courier New", monospace;
+    }
+
+    .brand-name {
+      display: block;
+      color: var(--cream);
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -0.07em;
+    }
+
+    .brand-kicker {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .pet-state {
+      display: inline-flex;
+      align-items: center;
+      max-width: 116px;
+      gap: 7px;
+      padding: 8px 10px;
+      overflow: hidden;
+      color: var(--cream);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+      white-space: nowrap;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .state-dot {
+      width: 7px;
+      height: 7px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: var(--mint);
+      box-shadow: 0 0 0 3px rgba(95, 224, 208, 0.14), 0 0 12px var(--mint);
+    }
+
+    .settings-button {
+      display: inline-grid;
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
+      place-items: center;
+      padding: 0;
+      color: var(--cream);
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      border: 1px solid var(--line);
+      border-radius: 12px 12px 5px 12px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.1);
+      transition: transform 0.16s ease, background 0.16s ease;
+    }
+
+    .settings-button:hover {
+      background: rgba(95, 224, 208, 0.17);
+      transform: translateY(-1px);
+    }
+
+    .settings-button[aria-expanded="true"] {
+      color: var(--ink);
+      border-color: var(--mint);
+      background: var(--mint);
     }
 
     .pet-container {
-      width: 200px;
-      height: 200px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      position: relative;
+      height: 228px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 243, 214, 0.34);
+      border-radius: 22px;
+      background:
+        linear-gradient(145deg, rgba(145, 150, 242, 0.17), rgba(255, 255, 255, 0.02)),
+        rgba(22, 18, 52, 0.4);
+      box-shadow: 0 18px 34px rgba(10, 7, 25, 0.24), inset 0 1px rgba(255, 255, 255, 0.12);
+    }
+
+    .pet-container::before {
+      position: absolute;
+      inset: 11px;
+      pointer-events: none;
+      content: "";
+      border: 1px solid rgba(255, 243, 214, 0.15);
+      border-radius: 16px;
+    }
+
+    .habitat-grid {
+      position: absolute;
+      inset: 0;
+      opacity: 0.42;
+      background-image:
+        linear-gradient(rgba(255, 243, 214, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 243, 214, 0.06) 1px, transparent 1px),
+        radial-gradient(circle at 50% 54%, rgba(145, 150, 242, 0.28), transparent 34%);
+      background-size: 28px 28px, 28px 28px, auto;
+      mask-image: linear-gradient(to bottom, black, transparent 92%);
+    }
+
+    .habitat-grid::after {
+      position: absolute;
+      top: 45px;
+      right: 42px;
+      width: 4px;
+      height: 4px;
+      content: "";
+      border-radius: 50%;
+      background: var(--coral-soft);
+      box-shadow: -91px 24px 0 1px var(--mint), 42px 92px 0 0 var(--yellow), -116px 112px 0 -1px var(--cream);
+    }
+
+    .habitat-label,
+    .habitat-signal {
+      position: absolute;
+      top: 18px;
+      z-index: 2;
+      color: var(--muted);
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+    }
+
+    .habitat-label {
+      left: 19px;
+    }
+
+    .habitat-signal {
+      right: 19px;
+      color: var(--mint);
+    }
+
+    .habitat-signal::before {
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      margin-right: 5px;
+      vertical-align: 1px;
+      content: "";
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 8px currentColor;
     }
 
     .pet-sprite {
-      width: 100%;
-      height: 100%;
+      position: absolute;
+      inset: 36px 30px 34px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
+    .pet-sprite::before {
+      position: absolute;
+      width: 132px;
+      height: 132px;
+      content: "";
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(145, 150, 242, 0.44), rgba(95, 224, 208, 0.08) 48%, transparent 72%);
+      filter: blur(4px);
+    }
+
     .pet-sprite img {
-      max-width: 100%;
-      max-height: 100%;
+      position: relative;
+      z-index: 1;
+      width: 152px;
+      height: 152px;
       object-fit: contain;
-      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+      image-rendering: pixelated;
+      filter: drop-shadow(0 9px 12px rgba(8, 6, 22, 0.5));
+      transition: transform 0.3s ease, filter 0.3s ease;
     }
 
-    .pet-name {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 20px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    .pet-sprite:hover img {
+      transform: translateY(-2px) scale(1.04);
+      filter: drop-shadow(0 12px 15px rgba(8, 6, 22, 0.55));
     }
 
-    .stats {
-      width: 100%;
-      margin-bottom: 10px;
+    .pet-container.is-hatching .pet-sprite img {
+      animation: egg-crack 0.76s cubic-bezier(0.22, 0.75, 0.35, 1) both;
     }
 
-    .stat-label {
+    .pet-container.is-hatching::after {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      content: "";
+      background: radial-gradient(circle at 50% 56%, rgba(95, 224, 208, 0.92), rgba(145, 150, 242, 0.34) 28%, transparent 60%);
+      animation: hatch-flash 0.76s ease-out both;
+    }
+
+    @keyframes egg-crack {
+      0%, 25% { transform: translateX(0) scale(1); }
+      34% { transform: translateX(-7px) rotate(-4deg) scale(1.03); }
+      44% { transform: translateX(8px) rotate(5deg) scale(1.05); }
+      58% { transform: translateX(-5px) rotate(-3deg) scale(1.08); }
+      75% { transform: translateY(-13px) scale(1.15); filter: brightness(1.55) drop-shadow(0 0 22px var(--mint)); }
+      100% { transform: translateY(-4px) scale(1.06); filter: brightness(1.25) drop-shadow(0 0 16px var(--mint)); }
+    }
+
+    @keyframes hatch-flash {
+      0%, 42% { opacity: 0; }
+      70% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    .habitat-caption {
+      position: absolute;
+      right: 19px;
+      bottom: 16px;
+      left: 19px;
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      margin-bottom: 5px;
-      font-size: 14px;
-      font-weight: bold;
+      color: rgba(255, 243, 214, 0.64);
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
     }
 
-    .stat-bar {
-      width: 100%;
-      height: 25px;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 12px;
+    .habitat-caption span:last-child {
+      color: var(--coral-soft);
+      text-align: right;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric-card {
+      position: relative;
+      min-height: 108px;
+      padding: 13px;
       overflow: hidden;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.09);
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.07);
+    }
+
+    .metric-card::after {
+      position: absolute;
+      right: -23px;
+      bottom: -28px;
+      width: 80px;
+      height: 80px;
+      content: "";
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .metric-heading {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+    }
+
+    .metric-value {
+      color: var(--cream);
+      font-family: Rockwell, "Courier New", monospace;
+      font-size: 21px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .meter-track {
+      position: relative;
+      z-index: 1;
+      height: 10px;
+      margin-top: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 243, 214, 0.17);
+      border-radius: 999px;
+      background: rgba(10, 8, 26, 0.44);
     }
 
     .stat-fill {
       height: 100%;
+      min-width: 4px;
+      border-radius: inherit;
       transition: width 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: bold;
     }
 
     .hunger-fill {
-      background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+      background: linear-gradient(90deg, #e58bea 0%, var(--coral) 100%);
+      box-shadow: 0 0 12px rgba(255, 104, 125, 0.36);
     }
 
     .glitch-fill {
-      background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+      background: linear-gradient(90deg, var(--mint) 0%, #6ba8ff 100%);
+      box-shadow: 0 0 12px rgba(95, 224, 208, 0.32);
     }
 
-    .info {
-      margin-top: auto;
-      text-align: center;
-      font-size: 12px;
-      opacity: 0.8;
+    .metric-foot {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 11px;
+      color: rgba(255, 243, 214, 0.54);
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
     }
 
-    .reboot-button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #ff4444;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-family: 'Courier New', monospace;
-      font-size: 16px;
-      font-weight: bold;
+    .hunger-card .metric-foot span:last-child {
+      color: var(--coral-soft);
+    }
+
+    .glitch-card .metric-foot span:last-child {
+      color: var(--mint);
+    }
+
+    .detector-section {
+      width: 100%;
+      padding: 16px;
+      border: 1px solid rgba(255, 243, 214, 0.28);
+      border-radius: 20px;
+      background: linear-gradient(145deg, rgba(47, 40, 95, 0.78), rgba(17, 16, 39, 0.64));
+      box-shadow: 0 14px 25px rgba(12, 8, 30, 0.18), inset 0 1px rgba(255, 255, 255, 0.1);
+    }
+
+    .detector-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .detector-close-button {
+      width: auto;
+      height: auto;
+      margin-left: auto;
+      padding: 5px 8px;
+      color: var(--muted);
+      font-family: Rockwell, "Courier New", monospace;
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
       cursor: pointer;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .detector-close-button:hover {
+      color: var(--cream);
+      border-color: rgba(95, 224, 208, 0.48);
+    }
+
+    .detector-title {
+      color: var(--cream);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .detector-title::before {
+      display: inline-grid;
+      width: 17px;
+      height: 17px;
+      margin-right: 6px;
+      place-items: center;
+      color: var(--ink);
+      font-family: ui-sans-serif, sans-serif;
+      font-size: 10px;
+      font-weight: 900;
+      content: "✦";
+      vertical-align: -2px;
+      border-radius: 5px 5px 5px 2px;
+      background: var(--mint);
+    }
+
+    .detector-experiment {
+      flex: 0 0 auto;
+      padding: 5px 7px;
+      color: var(--mint);
+      font-size: 7px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      border: 1px solid rgba(95, 224, 208, 0.38);
+      border-radius: 999px;
+    }
+
+    .detector-status {
+      min-height: 37px;
+      margin: 12px 0 11px;
+      padding: 9px 10px;
+      overflow-wrap: anywhere;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.42;
+      border: 1px solid rgba(255, 243, 214, 0.12);
+      border-radius: 11px;
+      background: rgba(10, 8, 26, 0.28);
+    }
+
+    .detector-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .detector-onboarding {
+      margin: 10px 0 14px;
+      padding: 14px;
+      border: 1px solid rgba(95, 224, 208, 0.42);
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(95, 224, 208, 0.14), transparent 42%),
+        linear-gradient(145deg, rgba(49, 43, 102, 0.94), rgba(17, 16, 39, 0.86));
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.12), 0 10px 20px rgba(12, 8, 30, 0.16);
+    }
+
+    .detector-onboarding-kicker {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--mint);
+      font-family: Rockwell, "Courier New", monospace;
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .detector-onboarding-kicker span:last-child {
+      display: grid;
+      width: 22px;
+      height: 22px;
+      place-items: center;
+      color: var(--ink);
+      font-family: ui-sans-serif, sans-serif;
+      font-size: 11px;
+      border-radius: 7px 7px 7px 2px;
+      background: var(--mint);
+    }
+
+    .detector-onboarding-title {
+      margin: 9px 0 6px;
+      color: var(--cream);
+      font-family: Rockwell, "Courier New", monospace;
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.045em;
+    }
+
+    .detector-onboarding-copy {
+      margin: 0;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.45;
+    }
+
+    .onboarding-creature {
+      display: flex;
+      justify-content: center;
+      height: 76px;
+      margin: 2px 0 -3px;
+    }
+
+    .onboarding-creature img {
+      width: 88px;
+      height: 88px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 6px 12px rgba(8, 6, 22, 0.45));
+    }
+
+    .onboarding-notice {
+      margin: 11px 0 0;
+      padding: 8px 9px;
+      color: var(--coral-soft);
+      font-size: 9px;
+      font-weight: 800;
+      line-height: 1.35;
+      border: 1px solid rgba(255, 104, 125, 0.5);
+      border-radius: 9px;
+      background: rgba(255, 104, 125, 0.1);
+    }
+
+    .onboarding-tap-cue {
+      display: block;
+      margin-top: -7px;
+      color: var(--mint);
+      font-family: Rockwell, "Courier New", monospace;
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .onboarding-tap-cue::before,
+    .onboarding-tap-cue::after {
+      display: inline-block;
+      margin: 0 7px;
+      content: "✦";
+      color: var(--coral-soft);
+    }
+
+    /* The diet screen is a game moment, not the full detector settings form. */
+    body.is-onboarding-diet .detector-section {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    body.is-onboarding-diet .detector-header,
+    body.is-onboarding-diet .detector-status,
+    body.is-onboarding-diet #detectorSignInButton,
+    body.is-onboarding-diet .detector-onboarding,
+    body.is-onboarding-diet .detector-text-button,
+    body.is-onboarding-diet .detector-hide-preview,
+    body.is-onboarding-diet .detector-strength-control,
+    body.is-onboarding-diet .detector-strength-help,
+    body.is-onboarding-diet .detector-category-note,
+    body.is-onboarding-diet .detector-disclosure {
+      display: none !important;
+    }
+
+    body.is-onboarding-diet .detector-category-controls {
+      gap: 10px;
+      margin: 0;
+      padding: 12px;
+      border-color: rgba(95, 224, 208, 0.38);
+      background: linear-gradient(145deg, rgba(47, 40, 95, 0.72), rgba(17, 16, 39, 0.55));
+    }
+
+    body.is-onboarding-diet .detector-category-heading {
+      font-size: 14px;
+    }
+
+    body.is-onboarding-diet .detector-category-heading::after {
+      display: block;
+      margin-top: 4px;
+      color: var(--coral-soft);
+      font-family: Inter, ui-sans-serif, sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0;
+      content: "Choose at least one category to continue.";
+    }
+
+    body.is-onboarding-diet .detector-category-lede,
+    body.is-onboarding-diet .detector-filter-summary {
       display: none;
     }
 
-    .reboot-button:hover {
-      background: #ff6666;
+    .detector-steps {
+      display: grid;
+      gap: 9px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
     }
 
-    .reboot-button:focus {
-      outline: 2px solid #ffffff;
+    .detector-step {
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr);
+      align-items: start;
+      gap: 8px;
+    }
+
+    .detector-step-number {
+      display: grid;
+      width: 24px;
+      height: 24px;
+      place-items: center;
+      color: var(--ink);
+      font-family: Rockwell, "Courier New", monospace;
+      font-size: 11px;
+      font-weight: 900;
+      border-radius: 8px;
+      background: var(--mint);
+    }
+
+    .detector-step strong {
+      display: block;
+      margin-top: 1px;
+      color: var(--cream);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .detector-step small {
+      display: block;
+      margin-top: 2px;
+      color: rgba(255, 243, 214, 0.62);
+      font-size: 9px;
+      line-height: 1.35;
+    }
+
+    .detector-onboarding-note {
+      margin-top: 13px;
+      padding: 8px 9px;
+      color: rgba(255, 243, 214, 0.72);
+      font-size: 9px;
+      line-height: 1.4;
+      border-left: 2px solid var(--coral-soft);
+      border-radius: 0 8px 8px 0;
+      background: rgba(255, 104, 125, 0.09);
+    }
+
+    .detector-onboarding-note strong {
+      color: var(--coral-soft);
+    }
+
+    .detector-text-button {
+      display: block;
+      margin: 0 0 9px auto;
+      padding: 0;
+      color: var(--mint);
+      font-size: 9px;
+      font-weight: 800;
+      cursor: pointer;
+      border: 0;
+      background: transparent;
+    }
+
+    .detector-text-button:hover {
+      color: #9af5e9;
+      text-decoration: underline;
+    }
+
+    .detector-category-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 4px 0 14px;
+      padding: 13px;
+      border: 1px solid rgba(95, 224, 208, 0.28);
+      border-radius: 16px;
+      background: rgba(10, 8, 26, 0.27);
+    }
+
+    .detector-category-heading {
+      color: var(--cream);
+      font-family: Rockwell, "Courier New", monospace;
+      font-size: 16px;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+    }
+
+    .detector-category-lede {
+      margin: -5px 0 0;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.42;
+    }
+
+    .detector-filter-summary {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: -3px 0 0;
+      color: rgba(255, 243, 214, 0.58);
+      font-size: 9px;
+      line-height: 1.35;
+    }
+
+    .detector-filter-summary::before {
+      width: 6px;
+      height: 6px;
+      flex: 0 0 auto;
+      content: "";
+      border-radius: 50%;
+      background: var(--coral-soft);
+      box-shadow: 0 0 0 3px rgba(255, 104, 125, 0.12);
+    }
+
+    .detector-filter-summary.is-active {
+      color: rgba(255, 243, 214, 0.78);
+    }
+
+    .detector-filter-summary.is-active::before {
+      background: var(--mint);
+      box-shadow: 0 0 0 3px rgba(95, 224, 208, 0.12), 0 0 10px rgba(95, 224, 208, 0.45);
+    }
+
+    .detector-category-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .detector-filter-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: 23px minmax(0, 1fr) 20px;
+      align-items: center;
+      min-height: 42px;
+      gap: 7px;
+      min-width: 0;
+      padding: 7px 8px;
+      color: var(--muted);
+      cursor: pointer;
+      border: 1px solid rgba(255, 243, 214, 0.18);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.045);
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .detector-filter-card:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255, 243, 214, 0.4);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .detector-filter-card:focus-within {
+      outline: 2px solid var(--mint);
       outline-offset: 2px;
     }
 
-    .diet-breakdown {
-      font-size: 10px;
-      margin-top: 3px;
-      opacity: 0.8;
+    .detector-filter-card:has(input:checked) {
+      border-color: var(--mint);
+      background: rgba(95, 224, 208, 0.13);
+      box-shadow: inset 0 0 0 1px rgba(95, 224, 208, 0.16);
     }
 
-    .feed-count, .diet-value {
-      font-weight: bold;
+    .detector-filter-card input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .detector-filter-icon {
+      display: grid;
+      width: 23px;
+      height: 23px;
+      place-items: center;
+      color: var(--cream);
+      font-family: Rockwell, "Courier New", monospace;
+      font-size: 11px;
+      font-weight: 900;
+      border: 1px solid rgba(255, 243, 214, 0.18);
+      border-radius: 7px;
+      background: rgba(10, 8, 26, 0.36);
+    }
+
+    .detector-filter-label {
+      min-width: 0;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.15;
+    }
+
+    .detector-filter-check {
+      display: grid;
+      width: 20px;
+      height: 20px;
+      place-items: center;
+      color: transparent;
+      font-family: ui-sans-serif, sans-serif;
+      font-size: 12px;
+      font-weight: 900;
+      border: 1px solid rgba(255, 243, 214, 0.28);
+      border-radius: 6px;
+      background: rgba(10, 8, 26, 0.26);
+    }
+
+    .detector-filter-card:has(input:checked) .detector-filter-icon {
+      color: var(--ink);
+      border-color: var(--mint);
+      background: var(--mint);
+    }
+
+    .detector-filter-card:has(input:checked) .detector-filter-label {
+      color: var(--cream);
+      font-weight: 800;
+    }
+
+    .detector-filter-card:has(input:checked) .detector-filter-check {
+      color: var(--ink);
+      border-color: var(--mint);
+      background: var(--mint);
+    }
+
+    .detector-hide-preview {
+      padding: 11px;
+      border: 1px solid rgba(255, 104, 125, 0.4);
+      border-radius: 13px;
+      background: linear-gradient(145deg, rgba(101, 28, 66, 0.28), rgba(255, 104, 125, 0.06));
+    }
+
+    .detector-hide-preview-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--coral-soft);
+      font-family: Rockwell, "Courier New", monospace;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.01em;
+    }
+
+    .detector-hide-preview-header span:first-child {
+      display: grid;
+      width: 20px;
+      height: 20px;
+      place-items: center;
+      color: var(--coral-soft);
+      font-family: ui-sans-serif, sans-serif;
+      font-size: 13px;
+      border: 1px solid rgba(255, 104, 125, 0.55);
+      border-radius: 50%;
+    }
+
+    .detector-hide-preview p {
+      margin: 6px 0 9px;
+      color: rgba(255, 243, 214, 0.64);
+      font-size: 9px;
+      line-height: 1.35;
+    }
+
+    .detector-preview-post {
+      display: grid;
+      grid-template-columns: 25px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 7px;
+      padding: 7px;
+      border: 1px solid rgba(255, 243, 214, 0.16);
+      border-radius: 9px;
+      background: rgba(10, 8, 26, 0.34);
+    }
+
+    .detector-preview-avatar {
+      width: 25px;
+      height: 25px;
+      border-radius: 7px;
+      background: linear-gradient(145deg, rgba(145, 150, 242, 0.7), rgba(95, 224, 208, 0.38));
+    }
+
+    .detector-preview-lines {
+      display: grid;
+      gap: 4px;
+    }
+
+    .detector-preview-lines span {
+      display: block;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(201, 198, 229, 0.5);
+    }
+
+    .detector-preview-lines span:first-child {
+      width: 82%;
+    }
+
+    .detector-preview-lines span:last-child {
+      width: 56%;
+    }
+
+    .detector-preview-badge {
+      padding: 5px 6px;
+      color: var(--ink);
+      font-size: 7px;
+      font-weight: 900;
+      line-height: 1;
+      white-space: nowrap;
+      border-radius: 999px;
+      background: var(--coral-soft);
+    }
+
+    .detector-preview-caption {
+      margin: 7px 0 0;
+      color: rgba(255, 243, 214, 0.48);
+      font-size: 8px;
+      font-style: italic;
+    }
+
+    .detector-strength-help {
+      grid-column: 1 / -1;
+      margin: -3px 0 0;
+      color: rgba(255, 243, 214, 0.52);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0;
+      line-height: 1.35;
+    }
+
+    .detector-category-note {
+      margin: -3px 0 0;
+      color: rgba(255, 243, 214, 0.52);
+      font-size: 9px;
+      line-height: 1.35;
+    }
+
+    .detector-control {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 158px;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-family: Rockwell, "Courier New", monospace;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+    }
+
+    .detector-control select {
+      width: 100%;
+      min-width: 0;
+      padding: 8px 9px;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      border: 0;
+      border-radius: 8px;
+      background: var(--cream);
+    }
+
+    .detector-button {
+      display: inline-flex;
+      width: 100%;
+      min-height: 35px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 8px;
+      padding: 8px 12px;
+      color: var(--cream);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      border: 1px solid rgba(255, 243, 214, 0.64);
+      border-radius: 10px;
+      background: rgba(255, 243, 214, 0.1);
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .detector-button:hover {
+      transform: translateY(-1px);
+      border-color: var(--cream);
+      background: rgba(255, 243, 214, 0.18);
+    }
+
+    .detector-button:active {
+      transform: translateY(0);
+    }
+
+    .detector-primary {
+      color: var(--ink);
+      border-color: var(--mint);
+      background: var(--mint);
+    }
+
+    .detector-primary:hover {
+      border-color: #8ff0e3;
+      background: #8ff0e3;
+    }
+
+    .detector-button.danger {
+      margin-top: 0;
+      color: var(--coral-soft);
+      border-color: rgba(255, 104, 125, 0.46);
+      background: rgba(255, 104, 125, 0.08);
+    }
+
+    .detector-disclosure {
+      margin-top: 13px;
+      color: rgba(255, 243, 214, 0.56);
+      font-size: 9px;
+      line-height: 1.45;
+    }
+
+    .reboot-button {
+      display: none;
+      width: 100%;
+      min-height: 36px;
+      padding: 9px 14px;
+      color: var(--ink);
+      font-family: Rockwell, "Courier New", monospace;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      border: 0;
+      border-radius: 10px;
+      background: var(--coral);
+      box-shadow: 0 5px 0 rgba(255, 243, 214, 0.18);
+    }
+
+    .reboot-button:hover {
+      background: #ff7d90;
+    }
+
+    .info {
+      min-height: 29px;
+      padding-top: 10px;
+      color: rgba(255, 243, 214, 0.62);
+      font-size: 10px;
+      line-height: 1.35;
+      text-align: center;
+      border-top: 1px solid rgba(255, 243, 214, 0.13);
+    }
+
+    .feed-count,
+    .diet-value {
+      color: var(--cream);
+      font-weight: 800;
+    }
+
+    .diet-breakdown {
+      margin-top: 3px;
+      color: rgba(255, 243, 214, 0.46);
+      font-family: Rockwell, "Courier New", monospace;
+      font-size: 9px;
     }
 
     .crashed {
-      background: #000080;
-      color: #ffffff;
-      border-color: #0000ff;
+      border-color: rgba(255, 104, 125, 0.8);
+      background: linear-gradient(145deg, rgba(101, 28, 66, 0.76), rgba(17, 16, 39, 0.8));
       animation: bsod-flicker 0.5s ease-in-out;
     }
 
     .crashed .pet-sprite img {
       animation: glitch 0.3s infinite;
-      filter: hue-rotate(180deg) contrast(200%);
+      filter: hue-rotate(180deg) contrast(200%) drop-shadow(0 9px 12px rgba(8, 6, 22, 0.5));
     }
 
     @keyframes glitch {
@@ -162,103 +1186,913 @@
       40%, 60% { opacity: 0.9; }
     }
 
-    .pet-sprite img {
-      transition: transform 0.3s ease;
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    /* Settings use a flat list; the playful cards belong to diet onboarding. */
+    .is-settings-open .detector-section {
+      padding: 4px 0 0;
+      border: 0;
+      border-radius: 0;
+      background: none;
+      box-shadow: none;
     }
 
-    .pet-sprite:hover img {
-      transform: scale(1.05);
+    .is-settings-open .detector-experiment {
+      padding: 0;
+      border: 0;
+      font-size: 6px;
     }
 
-    .minigames-section {
-      width: 100%;
-      margin-top: 15px;
+    .is-settings-open .detector-close-button {
+      min-height: 30px;
+      padding: 7px 10px;
+      color: var(--cream);
+      font-size: 10px;
     }
 
-    .minigame-button {
-      width: 100%;
-      padding: 10px;
-      background: rgba(0, 255, 136, 0.2);
-      color: #00ff88;
-      border: 2px solid #00ff88;
-      border-radius: 8px;
-      font-family: 'Courier New', monospace;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.2s;
+    .is-settings-open .detector-status {
+      min-height: 0;
+      margin: 10px 0 0;
+      padding: 0 0 12px;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      background: none;
+    }
+
+    .is-settings-open .detector-category-controls {
+      gap: 10px;
+      margin: 10px 0 16px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: none;
+    }
+
+    .is-settings-open .detector-category-heading {
+      font-size: 18px;
+    }
+
+    .is-settings-open .detector-category-grid {
+      gap: 0 16px;
+    }
+
+    .is-settings-open .detector-filter-card {
+      grid-template-columns: minmax(0, 1fr) 18px;
+      gap: 6px;
+      min-height: 44px;
+      padding: 8px 2px;
+      border: 0;
+      border-bottom: 1px solid rgba(255, 243, 214, 0.14);
+      border-radius: 0;
+      background: none;
+      box-shadow: none;
+      transition: background 0.18s ease;
+    }
+
+    .is-settings-open .detector-filter-card:has(input:checked) {
+      border-color: rgba(255, 243, 214, 0.14);
+      background: none;
+      box-shadow: none;
+    }
+
+    .is-settings-open .detector-filter-card:hover {
+      transform: none;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .is-settings-open .detector-filter-icon,
+    .is-settings-open .detector-hide-preview {
+      display: none;
+    }
+
+    .is-settings-open .detector-filter-label {
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .is-settings-open .detector-filter-check {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      font-size: 11px;
+    }
+
+    .is-settings-open .detector-strength-control {
+      margin-top: 6px;
+    }
+
+    .is-settings-open .detector-control {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 158px);
+      font-family: inherit;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .is-settings-open .detector-control select {
+      color: var(--cream);
+      border: 1px solid var(--line);
+      background: var(--ink);
+    }
+
+    .is-settings-open .detector-controls {
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .is-settings-open #detectorSignOutButton,
+    .is-settings-open #detectorDeleteButton {
+      justify-content: flex-start;
+      min-height: 32px;
+      margin: 0;
+      padding: 5px 0;
+      border: 0;
+      border-radius: 0;
+      background: none;
+      font-size: 10px;
+      letter-spacing: 0;
+    }
+
+    .is-settings-open #detectorSignOutButton:hover,
+    .is-settings-open #detectorDeleteButton:hover {
+      transform: none;
+      text-decoration: underline;
+    }
+
+    .is-settings-open .debug-detector-toggle {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
+      gap: 8px;
+      margin: 12px 0;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.45;
+      cursor: pointer;
+    }
+
+    .is-settings-open .debug-detector-toggle input {
+      margin: 1px 0 0;
+      accent-color: var(--mint);
+    }
+
+    .is-settings-open #settingsDebugTools {
+      padding: 12px 0;
+      border: 0;
+      border-top: 1px solid var(--line);
+      border-radius: 0;
+      background: none;
+      box-shadow: none;
+      text-align: left;
+    }
+
+
+    .topbar {
+      gap: 12px;
+    }
+
+    .wordmark {
+      min-width: 0;
+    }
+
+    .brand-mark {
+      flex: 0 0 auto;
+      box-shadow: none;
+    }
+
+    .brand-kicker {
+      font-size: 7px;
+      letter-spacing: 0.14em;
+      line-height: 1.3;
+    }
+
+    .topbar .settings-button {
+      width: 38px;
+      height: 38px;
+      min-height: 38px;
+      margin: 0 0 0 auto;
+      padding: 0;
+      border-radius: 10px;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .topbar .detector-close-button {
+      font-family: inherit;
+      font-size: 10px;
+      letter-spacing: 0;
+    }
+
+    .pet-container .pet-state {
+      position: absolute;
+      top: 16px;
+      left: 0;
+      right: 0;
       justify-content: center;
+      max-width: none;
+      padding: 0;
+      border: 0;
+      background: none;
+      font-size: 10px;
+    }
+
+    .is-home .pet-container {
+      height: 230px;
+      border: 0;
+      border-radius: 0;
+      background: radial-gradient(ellipse at center, rgba(145, 150, 242, 0.12), transparent 70%);
+      box-shadow: none;
+    }
+
+    .is-home .pet-container::before,
+    .is-home .habitat-grid {
+      display: none;
+    }
+
+    .is-home .pet-container.crashed {
+      background: radial-gradient(ellipse at center, rgba(255, 104, 125, 0.25), transparent 70%);
+    }
+
+    .habitat-caption {
+      justify-content: center;
+      bottom: 12px;
+      font-family: inherit;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .habitat-caption span:last-child {
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .is-home .stats-grid {
+      gap: 24px;
+      padding: 16px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .is-home .metric-card {
+      min-height: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: none;
+      box-shadow: none;
+    }
+
+    .is-home .metric-card::after,
+    .is-home .metric-foot span:first-child {
+      display: none;
+    }
+
+    .is-home .metric-label {
+      font-family: inherit;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .is-home .meter-track {
+      height: 6px;
+      margin-top: 12px;
+      border: 0;
+    }
+
+    .is-home .metric-foot {
+      margin-top: 8px;
+      font-family: inherit;
+      font-size: 8px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .is-home #infoText {
+      text-align: left;
+    }
+
+    .onboarding-name-field {
+      display: grid;
+      gap: 7px;
+      margin-top: 14px;
+      text-align: left;
+    }
+
+    .onboarding-name-field label,
+    .profile-settings-title {
+      color: var(--muted);
+      font-family: Rockwell, "Courier New", monospace;
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .onboarding-name-field input,
+    .profile-name-input {
+      width: 100%;
+      min-height: 42px;
+      padding: 9px 12px;
+      color: var(--cream);
+      font: 800 14px/1.2 Inter, ui-sans-serif, system-ui, sans-serif;
+      border: 1px solid rgba(255, 243, 214, 0.35);
+      border-radius: 10px;
+      background: rgba(17, 16, 39, 0.58);
+    }
+
+    .onboarding-name-field input:focus,
+    .profile-name-input:focus {
+      border-color: var(--mint);
+      outline: 2px solid rgba(95, 224, 208, 0.2);
+    }
+
+    .name-help,
+    .profile-settings-copy,
+    .leaderboard-disclosure {
+      margin: 0;
+      color: rgba(255, 243, 214, 0.58);
+      font-size: 9px;
+      line-height: 1.45;
+    }
+
+    .leaderboard-launch {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 0;
+      color: var(--cream);
+      font: 900 11px/1 Rockwell, "Courier New", monospace;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      background: transparent;
+    }
+
+    .leaderboard-launch::after {
+      content: "→";
+      margin-left: auto;
+      color: var(--yellow);
+      font-size: 16px;
+    }
+
+    .leaderboard-launch:hover {
+      color: var(--yellow);
+    }
+
+    .leaderboard-section {
+      display: grid;
+      gap: 14px;
+    }
+
+    .leaderboard-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .leaderboard-kicker {
+      color: var(--yellow);
+      font: 900 8px/1 Rockwell, "Courier New", monospace;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .leaderboard-title {
+      margin: 6px 0 0;
+      color: var(--cream);
+      font: 900 25px/0.95 Rockwell, "Courier New", monospace;
+      letter-spacing: -0.05em;
+    }
+
+    .leaderboard-close {
+      width: auto;
+      min-height: 32px;
+      margin: 0;
+      padding: 6px 10px;
+    }
+
+    .leaderboard-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(17, 16, 39, 0.44);
+    }
+
+    .leaderboard-tab {
+      min-height: 32px;
+      color: var(--muted);
+      font: 800 10px/1 Inter, ui-sans-serif, system-ui, sans-serif;
+      cursor: pointer;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+    }
+
+    .leaderboard-tab[aria-selected="true"] {
+      color: var(--ink);
+      background: var(--yellow);
+    }
+
+    .leaderboard-status {
+      min-height: 16px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.4;
+    }
+
+    .leaderboard-list {
+      display: grid;
+      gap: 6px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .leaderboard-row {
+      display: grid;
+      grid-template-columns: 30px 34px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 8px;
+      min-height: 46px;
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 243, 214, 0.14);
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.055);
+    }
+
+    .leaderboard-row.is-top-three {
+      border-color: rgba(255, 217, 120, 0.35);
+      background: linear-gradient(90deg, rgba(255, 217, 120, 0.12), rgba(255, 255, 255, 0.045));
+    }
+
+    .leaderboard-rank {
+      color: var(--yellow);
+      font: 900 14px/1 Rockwell, "Courier New", monospace;
+      text-align: center;
+    }
+
+    .leaderboard-sprite {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      image-rendering: pixelated;
+    }
+
+    .leaderboard-name {
+      overflow: hidden;
+      color: var(--cream);
+      font-size: 11px;
+      font-weight: 800;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .leaderboard-species {
+      display: block;
+      margin-top: 2px;
+      color: rgba(255, 243, 214, 0.48);
+      font-size: 8px;
+      font-weight: 600;
+    }
+
+    .leaderboard-meals {
+      color: var(--mint);
+      font: 900 11px/1 Rockwell, "Courier New", monospace;
+      white-space: nowrap;
+    }
+
+    .leaderboard-me {
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    .leaderboard-me .leaderboard-row {
+      border-color: var(--mint);
+      box-shadow: 0 0 0 2px rgba(95, 224, 208, 0.08);
+    }
+
+    .profile-settings {
+      display: grid;
+      gap: 9px;
+      margin: 0 0 16px;
+      padding: 14px 0 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .profile-name-actions {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       gap: 8px;
     }
 
-    .minigame-button:hover {
-      background: rgba(0, 255, 136, 0.3);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 255, 136, 0.3);
+    .profile-name-actions .detector-button {
+      width: auto;
+      min-width: 64px;
+      margin: 0;
     }
 
-    .minigame-button:active {
-      transform: translateY(0);
+    .profile-status {
+      min-height: 14px;
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.4;
     }
-
-    .minigame-button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      background: rgba(255, 107, 107, 0.2);
-      border-color: #ff6b6b;
-      color: #ff6b6b;
-    }
+    .platform-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .platform-option { display: flex; align-items: center; gap: 10px; padding: 18px; border: 1px solid var(--mint, #84e7bb); border-radius: 12px; cursor: pointer; }
+    .platform-option input { width: 18px; height: 18px; accent-color: var(--mint, #84e7bb); }
+    .platform-option:has(input:checked) { background: rgba(132, 231, 187, .12); }
+    .platform-controls[hidden] { display: none; }
+    .is-onboarding-platforms .detector-section { display: block; }
   </style>
+  <link rel="stylesheet" href="popup-console.css">
+  <link rel="stylesheet" href="popup-onboarding.css">
+  <link rel="stylesheet" href="popup-settings.css">
+  <link rel="stylesheet" href="popup-device.css">
 </head>
-<body>
-  <div class="container">
-    <div class="pet-name" id="petName">GomiMon</div>
+<body class="device-shell">
+  <div class="device-trim" aria-hidden="true"><i class="device-screw top-left"></i><i class="device-screw top-right"></i><i class="device-screw bottom-left"></i><i class="device-screw bottom-right"></i><i class="device-grip left-grip"></i><i class="device-grip right-grip"></i></div>
+  <main class="container">
+    <header class="topbar">
+      <div class="wordmark">
+        <span class="brand-mark" aria-hidden="true">GM</span>
+        <div>
+          <span class="brand-name">GomiMon</span>
+          <span class="brand-kicker">Social media slop companion</span>
+        </div>
+      </div>
+      <button class="settings-button" id="settingsButton" type="button" aria-label="Open settings" aria-controls="detectorSection" aria-expanded="false" hidden>⚙</button>
+      <button class="settings-button detector-close-button" id="settingsCloseButton" type="button" hidden>Done</button>
+      <button class="settings-button detector-close-button" id="historyClose" type="button" hidden>Back</button>
+      <button class="settings-button detector-close-button" id="leaderboardClose" type="button" hidden>Back</button>
+    </header>
 
-    <div class="pet-container" id="petContainer">
+    <nav id="onboardingProgress" class="onboarding-progress" aria-label="Setup progress" hidden>
+      <ol>
+        <li data-step="hatch"><span class="step-number">1</span><span>Hatch</span></li>
+        <li data-step="platforms"><span class="step-number">2</span><span>Platforms</span></li>
+        <li data-step="diet"><span class="step-number">3</span><span>Diet</span></li>
+        <li data-step="account"><span class="step-number">4</span><span>Account</span></li>
+      </ol>
+    </nav>
+    <section id="onboardingFlow" class="setup-flow" aria-labelledby="onboardingTitle" hidden>
+      <div class="setup-display">
+        <h1 id="onboardingTitle" tabindex="-1">Your egg is ready to hatch.</h1>
+        <p id="onboardingCopy" role="status" aria-live="polite">Name your companion, then tap to meet them.</p>
+        <div class="setup-art" id="onboardingCreature" aria-hidden="true">
+          <img id="onboardingCreatureSprite" src="assets/onboarding-egg.png" alt="">
+          <div class="hatch-scene">
+            <span class="hatch-glow"></span>
+            <img class="hatch-baby" src="sprites/animated/baby1_idle.gif" alt="">
+            <div class="hatch-shell">
+              <img class="hatch-half hatch-top" src="assets/onboarding-egg.png" alt="">
+              <img class="hatch-half hatch-bottom" src="assets/onboarding-egg.png" alt="">
+              <svg class="hatch-crack" viewBox="0 0 102 102"><path d="M30 50 L40 45 L49 55 L59 46 L72 51" /></svg>
+            </div>
+            <span class="hatch-spark" style="--x:-70px;--y:-48px;--r:35deg"></span>
+            <span class="hatch-spark" style="--x:65px;--y:-55px;--r:70deg"></span>
+            <span class="hatch-spark" style="--x:-92px;--y:4px;--r:-30deg"></span>
+            <span class="hatch-spark" style="--x:88px;--y:12px;--r:45deg"></span>
+            <span class="hatch-spark" style="--x:10px;--y:-70px;--r:20deg"></span>
+          </div>
+          <img class="setup-bowl" src="assets/feed-bowl.png" alt="">
+          <div class="setup-platform-bubbles"><span class="platform-logo reddit-logo">r/</span><span class="platform-logo x-logo">𝕏</span></div>
+        </div>
+      </div>
+      <div class="onboarding-name-field" id="onboardingNameField">
+        <label for="onboardingPetName">Name your GomiMon</label>
+        <input id="onboardingPetName" type="text" minlength="2" maxlength="24" autocomplete="off" spellcheck="false" placeholder="Trash Panda" aria-describedby="onboardingNameHelp">
+        <p class="name-help" id="onboardingNameHelp">2–24 characters. You can change it later.</p>
+      </div>
+      <p class="onboarding-notice" id="onboardingNotice" role="alert" hidden></p>
+    </section>
+    <section class="setup-account" id="onboardingAccount" aria-labelledby="accountTitle" hidden>
+      <h2 id="accountTitle">Create your account</h2>
+      <p>Connect your account to check posts and reserve your GomiMon’s name.</p>
+      <ul class="account-benefits">
+        <li><span aria-hidden="true">♡</span>Reserve your GomiMon’s name</li>
+        <li><span aria-hidden="true">♜</span>Join the meal leaderboard when you’re ready</li>
+      </ul>
+      <button id="onboardingApple" class="google-button" type="button" hidden>Continue with Apple</button>
+      <button id="onboardingGoogle" class="google-button" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M21.6 12.23c0-.71-.06-1.39-.18-2.05H12v3.88h5.38a4.6 4.6 0 0 1-2 3.01v2.5h3.24c1.9-1.75 2.98-4.33 2.98-7.34z"/><path fill="#34A853" d="M12 22c2.7 0 4.96-.9 6.62-2.43l-3.24-2.5c-.9.6-2.04.96-3.38.96-2.61 0-4.82-1.76-5.61-4.13H3.05v2.59A10 10 0 0 0 12 22z"/><path fill="#FBBC05" d="M6.39 13.9A6 6 0 0 1 6.08 12c0-.66.11-1.3.31-1.9V7.51H3.05A10 10 0 0 0 2 12c0 1.61.38 3.14 1.05 4.49z"/><path fill="#EA4335" d="M12 5.97c1.47 0 2.79.51 3.82 1.51l2.87-2.87A9.6 9.6 0 0 0 12 2a10 10 0 0 0-8.95 5.51l3.34 2.59A6 6 0 0 1 12 5.97z"/></svg>
+        <span>Continue with Google</span>
+      </button>
+      <button id="onboardingLocal" class="detector-button" type="button" hidden>Continue without an account</button>
+      <p class="account-returning">Already have an account? Use the same sign-in provider.</p>
+      <p id="onboardingAccountStatus" class="onboarding-notice" role="status" hidden></p>
+      <p class="account-privacy">Text you check is sent through GomiMon to TypeSafe.<br><a href="privacy.html" target="_blank" rel="noopener">Privacy</a></p>
+    </section>
+    <section id="safariConsent" class="safari-consent" aria-labelledby="safariConsentTitle" hidden>
+      <h2 id="safariConsentTitle">Allow text processing?</h2>
+      <p>GomiMon sends selected Reddit or X post text, titles, comments, and quoted context to the GomiMon service and TypeSafe to estimate AI use and content categories. A name you reserve publicly is also sent to TypeSafe for moderation. Images and videos are not analyzed. GomiMon does not retain raw post text.</p>
+      <p>You can decline and keep your local pet, manual feeding, and local ad filtering. Withdraw permission here in Settings at any time.</p>
+      <p id="safariConsentStatus" role="status"></p>
+      <button id="allowAI" class="detector-button detector-primary" type="button">Allow text processing</button>
+      <button id="declineAI" class="detector-button" type="button">Not now</button>
+      <button id="withdrawAI" class="detector-button" type="button" hidden>Withdraw permission</button>
+      <a href="privacy.html" target="_blank" rel="noopener">Privacy details</a>
+    </section>
+    <div class="console-habitat" id="consoleHabitat">
+    <section class="pet-container" id="petContainer" aria-label="GomiMon habitat">
+      <div class="habitat-grid" aria-hidden="true"></div>
+      <div class="pet-state" aria-live="polite">
+        <span class="state-dot" aria-hidden="true"></span>
+        <span id="petName">Egg</span>
+      </div>
       <div class="pet-sprite" id="petSprite">
         <img src="sprites/egg.svg" alt="Egg" />
       </div>
+      <div class="habitat-caption" aria-hidden="true">
+        <span>Feed a little slop. Watch them grow.</span>
+      </div>
+    </section>
+
+    <section class="stats-grid" aria-label="GomiMon vitality">
+      <article class="metric-card hunger-card" role="group" aria-labelledby="hunger-label">
+        <div class="metric-heading">
+          <span class="metric-label" id="hunger-label">HUNGER</span>
+          <span class="metric-value" id="hungerValue" aria-live="polite">100</span>
+        </div>
+        <div class="meter-track">
+          <div class="stat-fill hunger-fill" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-labelledby="hunger-label" id="hungerBar" style="width: 100%;"></div>
+        </div>
+        <div class="metric-foot"><span>APPETITE</span><span id="hungerState">READY TO EAT</span></div>
+      </article>
+
+      <article class="metric-card glitch-card" role="group" aria-labelledby="glitch-label">
+        <div class="metric-heading">
+          <span class="metric-label" id="glitch-label">GLITCH</span>
+          <span class="metric-value" id="glitchValue" aria-live="polite">0</span>
+        </div>
+        <div class="meter-track">
+          <div class="stat-fill glitch-fill" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-labelledby="glitch-label" id="glitchBar" style="width: 0%;"></div>
+        </div>
+        <div class="metric-foot"><span>STABILITY</span><span id="glitchState">ALL CLEAR</span></div>
+      </article>
+    </section>
+
     </div>
 
-    <div class="stats" role="group" aria-labelledby="hunger-label">
-      <div class="stat-label">
-        <span id="hunger-label">HUNGER</span>
-        <span id="hungerValue" aria-live="polite">100</span>
+    <section id="historySection" class="history-section" aria-labelledby="historyTitle" hidden>
+      <div class="history-screen">
+        <h2 id="historyTitle">Slop history</h2>
+        <div class="history-total"><strong id="historyTotal">0</strong><span>Slop<br>consumed</span></div>
+        <h3>Recent meals</h3>
+        <p id="historyStatus" role="status"></p>
+        <ol id="historyList" class="history-list"></ol>
+        <p class="history-note">Saved on this device · Latest 100 meals</p>
       </div>
-      <div class="stat-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-labelledby="hunger-label" id="hungerBar" style="width: 100%;">
-        <div class="stat-fill hunger-fill">
-          <span id="hungerPercent"></span>
+      <button id="historyClear" class="history-button history-clear" type="button">Clear history</button>
+    </section>
+    <section class="leaderboard-section" id="leaderboardSection" aria-labelledby="leaderboardTitle" hidden>
+      <div class="leaderboard-header">
+        <div>
+          <div class="leaderboard-kicker">Meal hall of fame</div>
+          <h2 class="leaderboard-title" id="leaderboardTitle">Top GomiMons</h2>
         </div>
       </div>
-    </div>
-
-    <div class="stats" role="group" aria-labelledby="glitch-label">
-      <div class="stat-label">
-        <span id="glitch-label">GLITCH-O-METER</span>
-        <span id="glitchValue" aria-live="polite">0</span>
+      <div class="leaderboard-tabs" role="tablist" aria-label="Leaderboard period">
+        <button class="leaderboard-tab" id="leaderboardWeekly" type="button" role="tab" aria-selected="true">This week</button>
+        <button class="leaderboard-tab" id="leaderboardAllTime" type="button" role="tab" aria-selected="false">All time</button>
       </div>
-      <div class="stat-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-labelledby="glitch-label" id="glitchBar" style="width: 0%;">
-        <div class="stat-fill glitch-fill">
-          <span id="glitchPercent"></span>
+      <div class="leaderboard-screen">
+      <div class="leaderboard-status" id="leaderboardStatus" role="status">Loading standings…</div>
+      <ol class="leaderboard-list" id="leaderboardList"></ol>
+      <div class="leaderboard-me" id="leaderboardMe" hidden></div>
+      </div>
+      <button class="detector-button detector-primary" id="leaderboardJoin" type="button">Join leaderboard</button>
+      <button class="detector-button danger" id="leaderboardLeave" type="button" hidden>Leave leaderboard</button>
+      <p class="leaderboard-disclosure">Joining publishes only your GomiMon’s name, evolution, and meal total. Leaving hides the profile while preserving its progress and reserved name.</p>
+    </section>
+
+    <section class="detector-section" id="detectorSection" aria-labelledby="detector-title">
+      <div class="detector-header">
+        <div class="detector-title" id="detector-title">AI detector</div>
+        <span class="detector-experiment">EXPERIMENTAL</span>
+        <p class="settings-tagline">Make yourself at home.</p>
+      </div>
+      <div class="detector-status" id="detectorStatus" aria-live="polite">Sign in to check posts on your selected platforms.</div>
+      <button class="detector-button detector-primary" id="detectorAppleSignIn" type="button" hidden>Sign in with Apple</button>
+      <button class="detector-button detector-primary" id="detectorSignInButton" type="button">Sign in with Google</button>
+      <section id="safariAccountSettings" hidden aria-label="Linked sign-in providers">
+        <p id="safariProviders"></p>
+        <button id="linkApple" class="detector-button" type="button">Link Apple</button>
+        <button id="linkGoogle" class="detector-button" type="button">Link Google</button>
+      </section>
+      <section class="billing-settings" id="billingSettings" aria-labelledby="billingTitle" hidden>
+        <div class="billing-heading"><h2 id="billingTitle">Your plan</h2><span id="billingPlan">Free</span></div>
+        <p id="billingDescription"></p>
+        <div class="billing-actions">
+          <button class="detector-button detector-primary" id="billingUpgrade" type="button" hidden>Upgrade · $9.99/month</button>
+          <button class="detector-button" id="billingManage" type="button" hidden>Manage billing</button>
+          <button class="detector-button" id="billingRefresh" type="button" hidden>Refresh plan</button>
+        </div>
+        <p id="billingStatus" role="status" aria-live="polite"></p>
+      </section>
+      <section class="profile-settings" id="profileSettings" hidden aria-labelledby="profileSettingsTitle">
+        <div class="profile-settings-title" id="profileSettingsTitle">Your GomiMon</div>
+        <p class="profile-settings-copy">Your reserved pet name is public only while you’re on the leaderboard.</p>
+        <div class="profile-name-actions">
+          <input class="profile-name-input" id="profileNameInput" type="text" minlength="2" maxlength="24" autocomplete="off" spellcheck="false" aria-label="GomiMon name">
+          <button class="detector-button" id="profileNameSave" type="button">Save</button>
+        </div>
+        <div class="profile-status" id="profileStatus" role="status"></div>
+      </section>
+      <section id="platformControls" class="platform-controls" aria-label="Platforms" hidden>
+        <h2 class="settings-platform-title">Platforms</h2>
+        <div id="platformOptions" class="platform-options" role="group" aria-label="Enabled platforms"></div>
+        <p id="platformNotice" class="onboarding-notice" role="alert" hidden>Choose at least one platform.</p>
+        <p class="detector-disclosure">Text selected for analysis on enabled platforms is sent through GomiMon to TypeSafe. X support covers For You and Following.</p>
+      </section>
+      <div class="detector-onboarding" id="detectorOnboarding" aria-labelledby="detectorOnboardingTitle">
+        <div class="detector-onboarding-kicker">
+          <span>FIRST VISIT</span>
+          <span aria-hidden="true">✦</span>
+        </div>
+        <h2 class="detector-onboarding-title" id="detectorOnboardingTitle">Quieter feeds, on your terms.</h2>
+        <p class="detector-onboarding-copy">Choose what you don't want in your feed. GomiMon checks items as you browse and hides matches; anything you leave unchecked stays visible.</p>
+        <ol class="detector-steps">
+          <li class="detector-step">
+            <span class="detector-step-number" aria-hidden="true">1</span>
+            <span><strong>Pick filters</strong><small>Choose the topics, ads, or patterns you want out.</small></span>
+          </li>
+          <li class="detector-step">
+            <span class="detector-step-number" aria-hidden="true">2</span>
+            <span><strong>Browse your feeds</strong><small>Automatic mode checks posts as they enter your feed.</small></span>
+          </li>
+          <li class="detector-step">
+            <span class="detector-step-number" aria-hidden="true">3</span>
+            <span><strong>Matching items disappear</strong><small>You can restore any item from its GomiMon panel.</small></span>
+          </li>
+        </ol>
+        <div class="detector-onboarding-note"><strong>Your choice stays in control.</strong> Filters are saved instantly and can be changed any time.</div>
+        <button class="detector-button detector-primary" id="detectorOnboardingDismiss" type="button">Got it — choose filters</button>
+      </div>
+      <div class="detector-category-controls" id="detectorCategoryControls">
+        <div class="detector-category-heading">Feed filters</div>
+        <p class="detector-category-lede">Hide posts that match your checked filters. Changes save automatically.</p>
+        <div class="detector-filter-summary" id="detectorFilterSummary" aria-live="polite">No filters selected — nothing is hidden.</div>
+        <div class="detector-category-grid" role="group" aria-label="Content filters">
+          <label class="detector-filter-card">
+            <input type="checkbox" data-detector-category="ads">
+            <span class="detector-filter-icon" aria-hidden="true">▣</span>
+            <span class="detector-filter-label">Ads</span>
+            <span class="detector-filter-check" aria-hidden="true">✓</span>
+          </label>
+          <label class="detector-filter-card">
+            <input type="checkbox" data-detector-category="politics">
+            <span class="detector-filter-icon" aria-hidden="true">◎</span>
+            <span class="detector-filter-label">Politics</span>
+            <span class="detector-filter-check" aria-hidden="true">✓</span>
+          </label>
+          <label class="detector-filter-card">
+            <input type="checkbox" data-detector-category="promotions">
+            <span class="detector-filter-icon" aria-hidden="true">↗</span>
+            <span class="detector-filter-label">Promotions</span>
+            <span class="detector-filter-check" aria-hidden="true">✓</span>
+          </label>
+          <label class="detector-filter-card">
+            <input type="checkbox" data-detector-category="ragebait">
+            <span class="detector-filter-icon" aria-hidden="true">!</span>
+            <span class="detector-filter-label">Ragebait</span>
+            <span class="detector-filter-check" aria-hidden="true">✓</span>
+          </label>
+          <label class="detector-filter-card">
+            <input type="checkbox" data-detector-category="celebrity_gossip">
+            <span class="detector-filter-icon" aria-hidden="true">✦</span>
+            <span class="detector-filter-label">Celebrity gossip</span>
+            <span class="detector-filter-check" aria-hidden="true">✓</span>
+          </label>
+          <label class="detector-filter-card">
+            <input type="checkbox" data-detector-category="sports">
+            <span class="detector-filter-icon" aria-hidden="true">◉</span>
+            <span class="detector-filter-label">Sports</span>
+            <span class="detector-filter-check" aria-hidden="true">✓</span>
+          </label>
+          <label class="detector-filter-card">
+            <input type="checkbox" data-detector-category="crypto">
+            <span class="detector-filter-icon" aria-hidden="true">₿</span>
+            <span class="detector-filter-label">Crypto</span>
+            <span class="detector-filter-check" aria-hidden="true">✓</span>
+          </label>
+          <label class="detector-filter-card">
+            <input type="checkbox" data-detector-category="ai_content">
+            <span class="detector-filter-icon" aria-hidden="true">AI</span>
+            <span class="detector-filter-label">AI content</span>
+            <span class="detector-filter-check" aria-hidden="true">✓</span>
+          </label>
+        </div>
+        <div class="detector-hide-preview" aria-hidden="true">
+          <div class="detector-hide-preview-header"><span>⊘</span><span>What gets hidden</span></div>
+          <p>Posts matching your selected filters are removed from the feed. GomiMon leaves everything else alone.</p>
+          <div class="detector-preview-post">
+            <span class="detector-preview-avatar"></span>
+            <span class="detector-preview-lines"><span></span><span></span></span>
+            <span class="detector-preview-badge">Blocked from your feed</span>
+          </div>
+          <p class="detector-preview-caption">Example only — the real post stays reversible.</p>
+        </div>
+        <div class="feeding-preference">
+          <label for="showEatingAnimations">
+            <span>Show eating animations</span>
+            <input id="showEatingAnimations" type="checkbox" role="switch" checked aria-describedby="eatingAnimationsHelp">
+          </label>
+          <p id="eatingAnimationsHelp">On: watch your GomiMon eat posts before they disappear. Off: posts disappear immediately. Your GomiMon still gets fed either way.</p>
+        </div>
+        <div class="detector-control detector-strength-control">
+          <label for="detectorCategoryStrength">Filter strength</label>
+          <select id="detectorCategoryStrength">
+            <option value="conservative">Conservative</option>
+            <option value="balanced" selected>Balanced</option>
+            <option value="aggressive">Aggressive</option>
+          </select>
+        </div>
+        <div class="detector-strength-help">Balanced hides matches at 80% or higher. Conservative requires 90%. Aggressive catches more, but may hide borderline posts.</div>
+        <div class="detector-category-note">These filters run automatically. Ads are detected locally; semantic filters use experimental TypeSafe estimates and require sign-in.</div>
+      </div>
+      <button class="detector-text-button" id="detectorOnboardingOpen" type="button" hidden>How does hiding work?</button>
+      <details class="settings-disclosure" id="settingsDetectorOptions" hidden>
+        <summary>Detector options</summary>
+      <div class="detector-controls" id="detectorControls" hidden>
+        <div class="detector-control">
+          <label for="detectorMode">Mode</label>
+          <select id="detectorMode">
+            <option value="manual">Manual: check and feed</option>
+            <option value="automatic">Automatic: check and feed (experimental)</option>
+          </select>
+        </div>
+        <div class="detector-control">
+          <label for="detectorSensitivity">Auto sensitivity</label>
+          <select id="detectorSensitivity">
+            <option value="strict">Strict (95%)</option>
+            <option value="balanced" selected>Balanced (90%)</option>
+            <option value="relaxed">Relaxed (80%)</option>
+          </select>
         </div>
       </div>
+      </details>
+      <details class="settings-disclosure" id="settingsAdvanced" hidden>
+        <summary>Account &amp; advanced</summary>
+        <button class="detector-button" id="detectorSignOutButton" type="button">Sign out</button>
+        <button class="detector-button danger" id="detectorDeleteButton" type="button">Delete detector account</button>
+      <label class="debug-detector-toggle" id="detectorDebugControl">
+        <input id="detectorDebug" type="checkbox">
+        <span>Show AI labels and confidence on Reddit comments</span>
+      </label>
+      <details class="info" id="settingsDebugTools">
+        <summary>Debug tools</summary>
+        <label class="detector-control" for="debugPetForm">Pet form
+          <select id="debugPetForm" aria-describedby="debugPetFormHelp"></select>
+        </label>
+        <p id="debugPetFormHelp">Switch forms for testing. Meal count stays the same; normal evolution resumes when feeding. Crashed or starving pets still show their emergency state.</p>
+        <p id="debugPetFormStatus" role="status"></p>
+        <p>Restart filter setup and hatching. Resets pet progress and filters; keeps your sign-in.</p>
+        <button class="detector-button" id="resetOnboarding" type="button">Reset onboarding</button>
+        <p id="resetStatus" role="status"></p>
+      </details>
+      </details>
+      <div class="detector-disclosure">Text you check on enabled platforms is sent through the GomiMon service to TypeSafe. Results are experimental estimates; GomiMon stores your pet progress locally. <a class="settings-privacy-link" href="privacy.html" target="_blank" rel="noopener">Privacy</a></div>
+    </section>
+
+    <div id="onboardingActions">
+      <button class="detector-button detector-primary" id="onboardingNext" type="button" disabled>Hatch my egg</button>
+      <span class="onboarding-tap-cue" id="onboardingTapCue">Tap to crack</span>
     </div>
+    <footer id="onboardingFooter" class="setup-footer" hidden><span class="speaker" aria-hidden="true"></span><p>A little companion<br>for a less sloppy feed.</p><span class="speaker" aria-hidden="true"></span></footer>
+    <button class="reboot-button" id="rebootButton" type="button">REBOOT PET</button>
 
-    <button class="reboot-button" id="rebootButton">REBOOT</button>
+    <button class="leaderboard-launch" id="leaderboardOpen" type="button">
+      <span aria-hidden="true">⌁</span>
+      <span>View meal leaderboard</span>
+    </button>
 
-    <div class="minigames-section">
-      <button class="minigame-button" id="playSlopScholarButton">
-        <span>🎓</span>
-        <span>Play Slop Scholar</span>
+    <section class="feed-summary" id="feedSummary" aria-label="Slop removed" hidden>
+      <button class="slop-counter" id="historyOpen" type="button" aria-label="View slop history">
+        <span class="slop-counter-label">Slop <span>removed</span></span>
+        <strong id="feedCount">0</strong><span aria-hidden="true">→</span>
       </button>
-    </div>
-
-    <div class="info" id="infoText">
-      Right-click on posts to feed your GomiMon!
-    </div>
-  </div>
+    </section>
+    <div class="info" id="infoText" role="status" hidden></div>
+    <footer class="console-footer" id="consoleFooter" hidden>
+      <span class="speaker" aria-hidden="true"></span>
+      <p>Feed a little slop.<br>Watch them grow.</p>
+      <span class="speaker" aria-hidden="true"></span>
+    </footer>
+  </main>
 
   <script src="popup.js" type="module"></script>
 </body>
