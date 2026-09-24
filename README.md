@@ -1,336 +1,77 @@
 # GomiMon 👾
 
-A virtual pet browser extension that "eats" AI-generated "slop" from your social media feeds!
+GomiMon is a virtual pet that eats posts from your social feeds. You choose what it eats: feed a post yourself, or opt into filters that check Reddit and X and hide matching posts. The changes affect only your view of the page. AI authorship labels are experimental estimates, not proof that a person used AI.
 
-## 🎉 Status: Core pet loop complete; Reddit and X detector in beta
+This repository contains the Chromium extension (version **0.4.0**), a Safari Web Extension, an iPhone browser prototype, the detector API, and a static website. The Chrome Web Store listing is still a draft; the Safari app has not been submitted to the App Store.
 
-GomiMon is now **fully functional** with all planned features:
+## Get started
 
-### ✅ Core Features (Milestones 1 & 2)
-- ✓ Virtual pet system with hunger and glitch mechanics
-- ✓ Right-click context menu feeding
-- ✓ Advanced glitch-out animation for removed posts
-- ✓ Smart post detection for Twitter/X, Reddit, Facebook
-- ✓ Reddit posts/comments and X home-feed AI-likelihood detector (experimental)
-- ✓ Automatic hunger depletion timer (every 15 minutes)
-- ✓ Badge notifications when hungry
+### Chromium browsers
 
-### ✅ Polish & Effects (Milestone 3)
-- ✓ Beautiful SVG pixel art sprites for all evolution stages
-- ✓ Sound effects (gulp on feed, chime on evolution)
-- ✓ Toolbar icon wiggle animation
-- ✓ Crash state with Blue Screen of Death effect
-- ✓ Starved state with pixelated Null-Sprite
-- ✓ Reboot button with animations
+1. In Chrome, Edge, or Brave, open the extensions page and enable Developer mode.
+2. Choose **Load unpacked** and select this repository's root directory. For a packaged development build, run `npm run package:extension` and load `dist/gomimon-extension` instead.
+3. Open the toolbar popup. Name and hatch your pet, select Reddit, X, or both, choose its diet, and review the account step.
+4. Browse a supported feed. Right-click a post and select **Feed to GomiMon** to feed it manually. Sign in with Google if you want server-backed AI or topic checks.
 
-### ✅ Evolution System (Milestone 4)
-- ✓ Four-stage evolution system (Egg → Baby → Bubble-Gomi → Nimbus-Gomi)
-- ✓ Diet-based evolution paths (Text/Image/Balanced)
-- ✓ Evolution notifications with sound
-- ✓ Four unique final evolutions:
-  - **Typo-ling** (text-heavy diet) 📝
-  - **Muta-Pixel** (image-heavy diet) 🎨
-  - **Classic-Gomi** (balanced diet) 🗑️
-  - **Null-Sprite** (neglect) 💀
-- ✓ Diet tracking and statistics display
-- ✓ Custom GomiMon names chosen during hatching
-- ✓ Opt-in weekly and all-time meal leaderboards
+The production store package uses a different extension identity from the development build. Run `npm run package:store` and `npm run verify:store` before preparing a store upload; see [store/README.md](store/README.md) for the current draft and release checklist.
 
-## 🎮 Quick Start
+### Safari and iPhone
 
-1. **Install**: Load unpacked extension in Chrome
-2. **Browse**: Visit Twitter, Reddit, or Facebook
-3. **Feed**: Right-click on AI slop → "Feed to GomiMon 👾"
-4. **Evolve**: Hatch, grow into Bubble-Gomi at 100 meals, and reach Nimbus-Gomi at 1,000!
+- **Safari on Mac, iPhone, or iPad:** Run `npm run package:safari`, then open the Xcode project under `safari/`. Enable the extension and grant website access in Safari. Safari supports Google and Apple sign-in; it asks for consent before remote text checks. Read [safari/README.md](safari/README.md) for signing, activation, and current verification limits.
+- **Standalone iPhone prototype:** Open `ios/GomiMon.xcodeproj` and run the GomiMon scheme. This is a SwiftUI app with an embedded browser, separate from the Safari extension. Its pet progress and settings stay on that phone. Read [ios/README.md](ios/README.md).
 
-Open GomiMon to hatch your pet, choose Reddit, X, or both, and choose one shared diet. Settings lets you change the selected platforms later; at least one is required. Signed-in users can choose Manual or Automatic AI checks. X support covers only **For You and Following**. Reddit posts and comments keep their existing support. Ads are recognized locally from explicit page markers; semantic categories use TypeSafe.
+## How feeding works
 
-AI checks require **10 authored words on X** or **30 on Reddit**. Quoted posts provide category context but never contribute to the author's AI word minimum. Images/video are not analyzed. The labels remain experimental; allowing shorter X posts does not establish accuracy on them.
+| Action | What happens |
+| --- | --- |
+| Manual feed | You select a post. GomiMon removes it from your local view, adds one meal and 20 hunger, and adds 5 glitch. |
+| Automatic feed | A selected filter matches a visible feed item. GomiMon hides it locally and adds a meal and 20 hunger, without adding glitch. |
+| Show post | Restores an automatically hidden post and exempts it for the current page session. |
 
-## Installation
+Hunger falls by 1 every 15 minutes. At zero the pet starves; at 100 glitch it crashes and needs a reboot. The pet starts as an egg, becomes Baby-Gomi after 10 meals, Bubble-Gomi at 100, and Nimbus-Gomi at 1,000. Older diet-based forms remain supported for existing pets. The popup shows a local **Slop history** of the latest 100 meals; clearing it leaves the meal total and pet progress intact. Pet progress is local to each browser profile or app installation.
 
-### Safari (Mac, iPhone, iPad)
+GomiMon's automatic detector runs on Reddit posts and comments and on the X **For You** and **Following** home feeds. It does not cover X profiles, search, post-detail threads, messages, or custom lists. Manual right-click feeding is also available on other pages where the browser exposes the context menu, though automatic detection is limited to Reddit and X.
 
-The Safari app and extension are in `safari/`. Run `npm run package:safari`, then open the Xcode project. See [Safari build, activation, and sign-in instructions](safari/README.md).
+### Choose a diet
 
-### Chrome/Edge/Brave
+- **AI content:** An opt-in authorship filter. Manual mode lets you request checks; Automatic mode checks eligible feed items. The AI sensitivity settings are Strict (95%), Balanced (90%), and Relaxed (80%).
+- **Topics:** Politics, Promotions, Ragebait, Celebrity gossip, Sports, and Crypto use separate TypeSafe judgments. Their filter strengths are Conservative (90%), Balanced (80%), and Aggressive (70%).
+- **Ads:** Explicit Reddit promoted markers and verified X Ad headers are recognized locally. This filter does not send post text to the detector service.
 
-1. Open your browser and go to extensions page:
-   - Chrome: `chrome://extensions`
-   - Edge: `edge://extensions`
-   - Brave: `brave://extensions`
+Unchecked categories remain visible. AI checks need at least 30 words of the author's own text on Reddit or 10 on X; shorter text can still be assessed for selected topics. Quoted text can provide topic context but does not count toward the AI word minimum. Images and video are not analyzed. When checks fail or are uncertain, GomiMon leaves the post visible.
 
-2. Enable "Developer mode" (toggle in top right)
+## Account, privacy, and leaderboard
 
-3. Click "Load unpacked"
+Google sign-in on Chromium, or Google/Apple sign-in in Safari, enables remote checks and an optional public leaderboard. The extension sends selected Reddit or X text and relevant quoted context to the GomiMon API, which calls TypeSafe. The API keeps credentials server-side and does not retain raw post text. It stores account and session records, usage counters, and hashed analysis metadata. The local extension cache keeps scores for up to 24 hours; sign-out and account deletion clear it. See [PRIVACY.md](PRIVACY.md) for consent, retention, account deletion, and billing details.
 
-4. Select the `Gomimon` folder
+Free accounts receive 1,000 successful checks per UTC day. The proposed Plus tier is $9.99/month for 10,000 checks per day, but billing is sandbox-only and disabled in production; the public site marks it **Coming soon**.
 
-5. The GomiMon icon should appear in your toolbar!
+Anyone can view the top 20 weekly or all-time GomiMons. Joining is optional and publishes the pet name, evolution, meal count, and rank. Names are reserved and checked for all-ages appropriateness. Leaving hides the profile while preserving its reserved name and score. Browser and iPhone pet progress do not sync through the account.
 
-## 📊 Features Overview
+## Repository map
 
-### The Pet System
-- **Hunger Meter**: Depletes 1 point every 15 minutes
-- **Glitch-O-Meter**: Increases 5 points per feed (crash at 100!)
-- **Evolution Stages**: Egg (0-9) → Baby (10-99) → Bubble-Gomi (100-999) → Nimbus-Gomi (1,000+)
-- **Diet Tracking**: Text, Image, and Post statistics
-- **Custom Name**: Name your GomiMon while hatching; signed-in names can be globally reserved
+| Path | Purpose |
+| --- | --- |
+| `background.js`, `content.js`, `popup.*` | Extension service worker, feed integration, and pet UI |
+| `detector/`, `detector-broker.js`, `reddit-detector.js`, `x-detector.js` | Feed extraction, filtering policy, scheduling, rendering, and score cache |
+| `server/` | Express API, TypeSafe calls, authentication, quotas, leaderboard, and sandbox billing |
+| `safari/` | Safari containing apps and extension projects |
+| `ios/` | Standalone SwiftUI/WKWebView prototype |
+| `website/` | Static marketing site and public leaderboard |
+| `scripts/`, `store/`, `deploy/` | Packaging, store assets, and deployment instructions |
 
-### Meal Leaderboard
+## Develop and verify
 
-- Anyone can browse the top 20 weekly or all-time GomiMons from the popup
-- Joining is optional and publishes only the pet name, evolution, and meal count
-- Existing local meals are imported once into all-time standings; weekly standings count new server-recorded meals
-- Names pass local format checks and a TypeSafe Jev all-ages appropriateness check before reservation
-- Leaving hides the profile while preserving its score and reserved name
+Install dependencies in the repository root and in `server/` with `npm install`. Configure the API from `server/.env.example`; keep actual credentials in ignored `.env` files. The detector service uses PostgreSQL and listens on `127.0.0.1:8090` by default. See [server/README.md](server/README.md) and [deploy/README.md](deploy/README.md).
 
-### The Feeding Loop
-1. Spot AI-generated content on social media
-2. Right-click and select "Feed to GomiMon 👾"
-3. Watch the post glitch out and disappear
-4. Hear satisfying sound effect
-5. See toolbar icon wiggle
-6. Check pet's updated stats
-
-### The Reddit and X Detector
-
-- Uses TypeSafe's Jev model to estimate whether text was mostly generated by AI
-- Labels are High AI likelihood, Low AI likelihood, Uncertain, or Not enough text; the raw TypeSafe probability is shown in the panel for debugging
-- Analyzes rendered Reddit titles/bodies/comments and X authored text; images and video are not assessed
-- Keeps the TypeSafe API key on the server and stores only hashed content metadata
-- Automatic meals increase hunger and evolution progress without adding glitch; manual meals keep the existing glitch rules
-
-### Content Filters
-
-- Optional filters for Politics, Ads, Promotions, Ragebait, Celebrity gossip, Sports, and Crypto
-- The first-use popup explains that checked filters hide matching feed posts while unchecked posts stay visible; the explanation can be reopened from the selector
-- Conservative (90%), Balanced (80%), and Aggressive (70%) category strengths, with Balanced as the default
-- X matches show a category label and Show post button; Reddit feed matches are hidden. Disabling a platform restores its automatic hides and removes its detector controls. Explicit right-click feeding remains available.
-- Reddit's promoted marker and verified X Ad headers are checked locally. Semantic category checks use batched TypeSafe judgments and require detector sign-in; short titles can still be categorized
-
-### Evolution Paths
-
-Baby-Gomi evolves into **Bubble-Gomi at 100 total meals**, then into the animated
-adult **Nimbus-Gomi at 1,000**. All food types count toward these milestones.
-Existing Typo-ling, Muta-Pixel, Classic-Gomi, and Null-Sprite pets are preserved.
-
-### Risk vs Reward
-
-- **Feed too little**: Pet starves (Hunger = 0) → Null-Sprite state
-- **Feed too much**: Pet crashes (Glitch = 100) → Must reboot
-- **Sweet spot**: Feed in small bursts, manage both meters
-
-## 📁 Complete File Structure
-
-```
-Gomimon/
-├── manifest.json          # Extension config with all permissions
-├── background.js          # Service worker (timers, storage, logic)
-├── popup.html            # Pet UI with animations
-├── popup.js              # Pet display and stats
-├── reddit-detector.js    # Structured Reddit post/comment extraction
-├── detector/             # Revision-safe store, policy, scheduler, renderer
-├── detector-broker.js    # Shared background analysis/cache broker
-├── content.js            # Reddit detector composition root
-├── content.css           # Glitch and detector styles
-├── offscreen.html        # Audio playback document
-├── offscreen.js          # Sound effect player
-├── sprites/              # SVG pixel art
-│   ├── egg.svg
-│   ├── baby.svg
-│   ├── typo-ling.svg
-│   ├── muta-pixel.svg
-│   ├── classic-gomi.svg
-│   ├── starved.svg
-│   └── crashed.svg
-├── sounds/               # Generated sound effects
-│   ├── gulp.wav
-│   └── evolve.wav
-├── icons/                # Extension icons
-│   ├── icon16.png
-│   ├── icon48.png
-│   └── icon128.png
-├── generate_icons.py     # Icon generator
-├── generate_sounds.py    # Sound generator
-├── GomiMon GDD.txt       # Original design document
-├── README.md             # This file
-└── USER_GUIDE.md         # Comprehensive user guide
-```
-
-## 🎨 Visual Features
-
-- **Pixel Art Sprites**: Hand-crafted SVG sprites for each evolution
-- **Glitch Animation**: Multi-stage CSS animation with color shifts
-- **BSOD Effect**: Blue screen crash state with authentic glitch
-- **Smooth Transitions**: All stat changes animate smoothly
-- **Hover Effects**: Interactive sprite scaling
-- **Badge Notifications**: "!" appears when pet is hungry
-
-## 🔊 Audio Features
-
-- **Gulp Sound**: Descending tone when feeding (0.3s)
-- **Evolution Sound**: Ascending arpeggio on evolution (0.5s)
-- **Offscreen Audio**: Proper Manifest V3 audio handling
-- **Respect User Preferences**: Works with system audio settings
-
-## 🌐 Supported Websites
-
-Currently optimized for:
-- **Twitter/X**: `<article>` detection
-- **Reddit**: `shreddit-post` and data-testid detection
-- **Facebook**: Story and article role detection
-- **Generic**: Works on any site with fallback detection
-
-## 🔧 Advanced Features
-
-### Smart Post Detection
-The extension intelligently finds the parent post container by:
-1. Using click coordinates
-2. Traversing DOM tree
-3. Checking for platform-specific markers
-4. Validating element size
-5. Falling back gracefully
-
-### Stats Persistence
-- All stats saved in `chrome.storage.local`
-- Survives browser restarts
-- Pet progress remains local. Selected Reddit or X text is sent to the GomiMon detector service and TypeSafe so it can be assessed.
-- Detector accounts and hashed result metadata are stored by the detector service; raw post text is not retained there.
-- Signed-in leaderboard profiles, idempotent meal events, and hashed name-moderation decisions are stored by the service. Public standings contain only pet names, evolutions, and meal totals.
-
-### Performance
-- Minimal CPU usage
-- Timers only run when needed
-- CSS animations hardware-accelerated
-- Sound effects cached
-
-## 📖 Documentation
-
-- **[USER_GUIDE.md](USER_GUIDE.md)**: Complete user guide with strategies
-- **[PRIVACY.md](PRIVACY.md)**: Detector data handling and account controls
-- **GomiMon GDD.txt**: Original game design document
-- **This README**: Technical overview and quick start
-
-## Development
-
-### Testing
-
-```bash
-npm test
+```sh
+npm test -- --runInBand
 npm run test:detector
+npm run test:website
+npm run test:safari
 cd server && npm test && npm run check
-npm run package:extension
 ```
 
-The extension regression tests use the production detector modules with fake
-transport and state. After packaging, go to `chrome://extensions`, reload the
-unpacked package, and refresh existing Reddit and X tabs so their content scripts
-are replaced. For deployment health checks and rollback, follow
-`deploy/README.md`.
+Run `npm run build:website` to assemble the static site and downloadable extension ZIP in `dist/website`; `npm run preview:website` serves it locally. See [website/README.md](website/README.md). Tests exercise detector logic and packaging, but live browser sign-in, site permissions, and store distribution need separate checks on the target platform.
 
-### Chrome Web Store release
-
-Run `npm run package:store` and `npm run verify:store` for the production upload. The separate development ZIP keeps its unpacked identity. See [store/README.md](store/README.md) for listing assets, privacy disclosures, live verification, and the production sign-in checklist.
-
-### Debugging
-
-- **Background Script**: Right-click extension icon → "Inspect service worker"
-- **Popup**: Right-click popup → "Inspect"
-- **Content Script**: Open DevTools on any webpage (F12)
-
-For detector failures, filter the supported page console for `[GomiMon Detector]`.
-Use `itemKey`, revision prefix, `operationId`, `requestId`, `serverRequestId`,
-state transitions, queue wait, request duration, and cache status to correlate
-one item across the tab, service worker, and API. The content side keeps a
-bounded 200-event diagnostic ring and exposes a read-only
-`GET_DETECTOR_DIAGNOSTICS` snapshot for tests/debugging. It deliberately never
-logs post text, credentials, or authorization headers. A normal request
-should end in `analysis_success`, `analysis_deferred`, or `analysis_failure`
-after `analysis_start`; a persistent start without a terminal event indicates
-a watchdog or worker problem.
-
-The service worker owns a score-only cache for 24 hours (up to 1,000 entries or
-about 2 MB). It is scoped by account, service URL, detector revision, and
-contract version. Sign-out and account deletion clear it. Cache hits are read
-before a new network/quota permit, so a previously assessed matching item can
-still be filtered while network quota is exhausted.
-
-### Regenerating Assets
-
-```bash
-# Regenerate icons (requires Pillow)
-pip install Pillow
-python3 generate_icons.py
-
-# Regenerate sounds
-python3 generate_sounds.py
-```
-
-## 🐛 Known Limitations
-
-- Post detection may not work perfectly on all sites
-- Some sites aggressively restore removed elements
-- Evolution is one-way (no reset without reinstall)
-
-## 🚀 Future Enhancements
-
-Potential additions for v0.2:
-- [ ] Cloud backup for stats
-- [ ] Achievement system
-- [ ] More evolution paths
-- [ ] Customizable timers
-- [ ] Export stats/screenshots
-- [ ] Multiple pets
-- [ ] Pet trading/sharing
-- [ ] More sound effects
-- [ ] Accessibility improvements
-- [ ] Publish detector evaluation results and tune automatic-feed thresholds
-
-## 🤝 Contributing
-
-We welcome contributions! Areas where you can help:
-- Better sprite artwork
-- Additional platform support
-- Evolution path ideas
-- Sound effect improvements
-- Bug fixes
-- Documentation improvements
-
-## 📝 Version History
-
-- **v0.4.0** - Selectable Reddit/X platforms, shared diet, X For You/Following support, separate quoted context, and platform-specific AI minimums
-- **v0.3.0** - Experimental TypeSafe Reddit detector with manual/automatic modes, Google account plumbing, quotas, and restoreable feeding
-- **v0.1.0** (Current) - Initial release with all core features
-  - All 4 milestones complete
-  - Full evolution system
-  - Sound effects
-  - Pixel art sprites
-  - Comprehensive documentation
-
-## ⚖️ License
-
-MIT License - Have fun and clean your feeds!
-
-## 🎯 Credits
-
-- Concept inspired by Tamagotchi virtual pets
-- Built with Chrome Extension Manifest V3
-- Created to combat AI content overload
-- Pixel art sprites by GomiMon project
-- Sound effects generated procedurally
-
----
-
-**Ready to start? Install GomiMon and start feeding your pet today!** 👾
-
-For detailed instructions, see **[USER_GUIDE.md](USER_GUIDE.md)**
-
-**Note**: This extension modifies your local view of web pages only. It doesn't affect other users. Selected Reddit or X text is sent to the detector service only when you sign in and request or enable analysis.
-
-### Subscriptions (Stripe sandbox)
-
-Free accounts get 1,000 checks per UTC day. GomiMon Plus provides 10,000 checks/day
-for $9.99 USD/month, with hosted Stripe Checkout and customer billing management.
-The integration is test-only and disabled by default; public pricing says Coming
-soon. See [Stripe setup, verification and operations](docs/stripe-billing.md).
+For user instructions, see [USER_GUIDE.md](USER_GUIDE.md). For the detector's prompt evaluation and its limits, see [evaluation/authorship-prompt-v3.md](evaluation/authorship-prompt-v3.md).
