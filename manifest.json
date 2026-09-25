@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "GomiMon",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "A virtual pet that eats AI slop from your feed.",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArc57xh6mjuf+N9gLQwYfsDcdZWh/Oq7R2ykCvCRIFaznVaxwNXA78NXeGhtDWKUXiAimFhhtuPGnBYzCTLEzlGI5UlQkUD9H8EpsKQlJ2W/AgMBjugQJVbbF68P0VK/xiNZi/ox60aqnFqdJEtz6Lq6B3Uu8rbOIcPWypEmPce0OAbWA3AFYBwMNUmbvq+A/7vpazxUdppNZD9DfSO8uXHHALS0b8WnbKM3kqGTc09ZK7zERlXU+EOPdxBvRhtqoCHQ0q1c/ZATsXGaCdFCSP4vNUnFGF07cmPp8CdJpVLQPYJSQZrFqETHa+yY2mlgexv50KG0g/dOn5mBq+a3G5wIDAQAB",
   "permissions": [

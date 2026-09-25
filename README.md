@@ -2,7 +2,7 @@
 
 GomiMon is a virtual pet that eats posts from your social feeds. You choose what it eats: feed a post yourself, or opt into filters that check Reddit and X and hide matching posts. The changes affect only your view of the page. AI authorship labels are experimental estimates, not proof that a person used AI.
 
-This repository contains the Chromium extension (version **0.4.0**), a Safari Web Extension, an iPhone browser prototype, the detector API, and a static website. The Chrome Web Store listing is still a draft; the Safari app has not been submitted to the App Store.
+This repository contains the Chromium extension (version **0.4.1**), a Safari Web Extension, an iPhone browser prototype, the detector API, and a static website. The Chrome Web Store listing is public; the Safari app has not been submitted to the App Store.
 
 ## Get started
 
@@ -13,7 +13,7 @@ This repository contains the Chromium extension (version **0.4.0**), a Safari We
 3. Open the toolbar popup. Name and hatch your pet, select Reddit, X, or both, choose its diet, and review the account step.
 4. Browse a supported feed. Right-click a post and select **Feed to GomiMon** to feed it manually. Sign in with Google if you want server-backed AI or topic checks.
 
-The production store package uses a different extension identity from the development build. Run `npm run package:store` and `npm run verify:store` before preparing a store upload; see [store/README.md](store/README.md) for the current draft and release checklist.
+The production store package uses a different extension identity from the development build. Run `npm run package:store` and `npm run verify:store` before preparing a store upload; see [store/README.md](store/README.md) for the release checklist.
 
 ### Safari and iPhone
 
