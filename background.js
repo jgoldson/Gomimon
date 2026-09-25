@@ -112,6 +112,7 @@ async function getDetectorSettings() {
 async function getActiveDetectorSettings() {
   const settings = await getDetectorSettings();
   const { onboardingStage } = await chrome.storage.local.get('onboardingStage');
+  if (SAFARI_RELEASE) settings.mode = settings.categories.some(category => category !== 'ads') ? 'automatic' : 'manual';
   if (!await hasAIConsent()) { settings.mode = 'manual'; settings.categories = settings.categories.filter(category => category === 'ads'); }
   return onboardingStage && onboardingStage !== 'complete'
     ? { ...settings, mode: 'manual', categories: [], enabledPlatforms: [] } : settings;

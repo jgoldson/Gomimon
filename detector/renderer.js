@@ -4,6 +4,7 @@
 
   const modules = global.GomiMonDetectorModules;
 
+
   function createRenderer({ detector, onAction, getSettings, getEvolution = () => 'baby' }) {
     // Resolve the extension root while the context is valid. Rerenders after a
     // reload must not throw halfway through building controls.
@@ -405,8 +406,27 @@
       const mouthY = Math.max(toaster ? 180 : (critic || boss) ? 165 : dining ? 110 : 90, Math.min(global.innerHeight - ((dining || toaster) ? 145 : 80),
         ambush ? Math.max(0, rect.top) + 18
           : Math.max(0, rect.top) + Math.min(rect.height, global.innerHeight) / 2));
-      overlay.style.left = `${mouthX}px`;
-      overlay.style.top = `${mouthY - 18}px`;
+      // Document coordinates let the browser scroll the scene with the post,
+      // instead of leaving a fixed overlay behind or cancelling the meal.
+      const pageX = mouthX + global.scrollX;
+      const pageY = mouthY - 18 + global.scrollY;
+      const scrollParents = [];
+      for (let parent = target.parentElement; parent; parent = parent.parentElement) {
+        if (parent !== document.scrollingElement && parent !== document.documentElement && parent !== document.body) {
+          scrollParents.push({ element: parent, x: parent.scrollLeft, y: parent.scrollTop });
+        }
+      }
+      overlay.style.position = 'absolute';
+      const followPostScroll = () => {
+        let dx = 0, dy = 0;
+        for (const parent of scrollParents) {
+          dx += parent.element.scrollLeft - parent.x;
+          dy += parent.element.scrollTop - parent.y;
+        }
+        overlay.style.left = `${pageX - dx}px`;
+        overlay.style.top = `${pageY - dy}px`;
+      };
+      followPostScroll();
       overlay.dataset.phase = 'arrive';
       if (dining) {
         const table = document.createElement('img');
@@ -693,7 +713,7 @@
         }
         overlay.appendChild(wind);
       }
-      document.body.appendChild(overlay);
+      document.documentElement.appendChild(overlay);
       const timers = [];
       const properties = ['--gomi-mouth-x', '--gomi-mouth-y', '--gomi-plate-x', '--gomi-plate-y', '--gomi-plate-scale'];
       const originalProperties = properties.map(name => [name,
@@ -708,7 +728,7 @@
       view.cancelFeed = () => {
         timers.forEach(clearTimeout);
         global.removeEventListener('resize', finish);
-        document.removeEventListener('scroll', finish, true);
+        document.removeEventListener('scroll', followPostScroll, true);
         overlay.remove();
         target.classList.remove('gomimon-vacuum-target', 'gomimon-dining-target', 'gomimon-magic-target', 'gomimon-ambush-target', 'gomimon-ambush-caught', 'gomimon-toaster-target', 'gomimon-blackhole-target', 'gomimon-popcorn-target', 'gomimon-fishing-target', 'gomimon-heist-target', 'gomimon-critic-sampled', 'gomimon-critic-target', 'gomimon-boss-target', 'gomimon-boss-opponent', 'gomimon-helpers-target', 'gomimon-airplane-target');
         for (const [name, value, priority] of originalProperties) {
@@ -726,9 +746,9 @@
         view.cancelFeed?.();
         applyVisibility(view, record, decision, null, true);
       };
-      // A fixed pet must not keep eating at stale coordinates after scrolling.
+      // Keep nested feed scrollers anchored too; scrolling never ends a meal.
       global.addEventListener('resize', finish, { once: true });
-      document.addEventListener('scroll', finish, { capture: true, once: true });
+      document.addEventListener('scroll', followPostScroll, { capture: true, passive: true });
       const later = (delay, callback) => timers.push(setTimeout(callback, delay));
       if (dining) {
         later(400, () => {

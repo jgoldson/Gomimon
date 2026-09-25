@@ -16,8 +16,8 @@ import {
 } from './constants.js';
 
 const SAFARI_RELEASE = chrome.runtime.getURL('').startsWith('safari-web-extension:');
+document.documentElement.classList.toggle('is-safari', SAFARI_RELEASE);
 let releaseConsent = false;
-let consentDismissed = false;
 let linkedProviders = [];
 function renderSafariRelease() {
   if (!SAFARI_RELEASE) return;
@@ -29,19 +29,25 @@ function renderSafariRelease() {
   document.getElementById('safariProviders').textContent = `Linked sign-ins: ${linkedProviders.join(', ') || 'loading…'}`;
   document.getElementById('linkApple').hidden = linkedProviders.includes('apple');
   document.getElementById('linkGoogle').hidden = linkedProviders.includes('google');
-  document.getElementById('safariConsent').hidden = !(settings || onboardingStage === 'account' || (onboardingStage === 'complete' && !releaseConsent && !consentDismissed));
-  document.getElementById('allowAI').hidden = releaseConsent;
-  document.getElementById('declineAI').hidden = releaseConsent;
-  document.getElementById('withdrawAI').hidden = !releaseConsent;
-  document.getElementById('safariConsentStatus').textContent = releaseConsent ? 'Permission is on.' : 'Permission is off. Remote checks and public name reservation are paused.';
-  document.getElementById('billingSettings').hidden = true;
+  const consent = document.getElementById('safariConsent');
+  // Consent belongs beside the filters, never above the habitat.
+  const parent = document.getElementById('detectorSection');
+  const before = document.getElementById('detectorOnboardingOpen');
+  if (consent.parentElement !== parent) parent.insertBefore(consent, before);
+  document.getElementById('detectorMode').closest('.detector-control').hidden = true;
+  consent.hidden = !(settings || onboardingStage === 'diet');
+  document.getElementById('aiConsentCheckbox').checked = releaseConsent;
+  document.getElementById('safariConsentStatus').textContent = '';
 }
 async function changeAIConsent(accepted) {
   try {
     const result = await callBackground({ type: 'SET_AI_CONSENT', accepted });
-    releaseConsent = result.consent; consentDismissed = !accepted;
+    releaseConsent = result.consent;
     renderSafariRelease(); await updateDetectorUI();
-  } catch (error) { document.getElementById('safariConsentStatus').textContent = error.message; }
+  } catch (error) {
+    document.getElementById('aiConsentCheckbox').checked = releaseConsent;
+    document.getElementById('safariConsentStatus').textContent = error.message;
+  }
 }
 async function linkSafariProvider(provider) {
   try {
@@ -323,10 +329,13 @@ async function advanceOnboarding() {
       await chrome.storage.local.set({ onboardingStage });
     } else if (onboardingStage === 'diet') {
       if (!elements.detectorCategoryInputs.some(input => input.checked)) {
-        const notice = document.getElementById('onboardingNotice');
-        notice.textContent = 'Choose at least one category to feed GomiMon.';
-        notice.hidden = false;
+        showOnboardingError('Choose at least one category to feed GomiMon.');
         elements.detectorCategoryInputs[0]?.focus();
+        return;
+      }
+      if (SAFARI_RELEASE && !releaseConsent) {
+        showOnboardingError('Check the text-processing permission box before continuing.');
+        document.getElementById('aiConsentCheckbox').focus();
         return;
       }
       if (!await handleDetectorSettingsChange()) return;
@@ -658,7 +667,7 @@ async function handleDetectorSettingsChange() {
       type: 'SET_DETECTOR_SETTINGS',
       settings: {
         enabledPlatforms,
-        mode: elements.detectorMode.value,
+        mode: SAFARI_RELEASE ? 'automatic' : elements.detectorMode.value,
         sensitivity: elements.detectorSensitivity.value,
         categoryStrength: elements.detectorCategoryStrength.value,
         debug: elements.detectorDebug.checked,
@@ -1084,7 +1093,9 @@ function initialize() {
   // full viewport canvas. getCurrent is undefined outside an extension tab.
   if (chrome.tabs?.getCurrent) {
     chrome.tabs.getCurrent().then(tab => {
-      document.documentElement.classList.toggle('is-extension-tab', Boolean(tab));
+      // Safari may return the active website tab from a toolbar popup. Only
+      // apply the full-page layout when this document is the tab itself.
+      document.documentElement.classList.toggle('is-extension-tab', Boolean(tab?.url && tab.url === window.location.href));
     }).catch(() => {});
   }
 
@@ -1096,9 +1107,12 @@ function initialize() {
       document.getElementById('detectorAppleSignIn').addEventListener('click', () => handleDetectorSignIn('apple'));
       document.getElementById('linkApple').addEventListener('click', () => linkSafariProvider('apple'));
       document.getElementById('linkGoogle').addEventListener('click', () => linkSafariProvider('google'));
-      document.getElementById('allowAI').addEventListener('click', () => changeAIConsent(true));
-      document.getElementById('declineAI').addEventListener('click', () => changeAIConsent(false));
-      document.getElementById('withdrawAI').addEventListener('click', () => changeAIConsent(false));
+      document.getElementById('aiConsentCheckbox').addEventListener('change', async event => {
+        const checkbox = event.currentTarget;
+        checkbox.disabled = true;
+        try { await changeAIConsent(checkbox.checked); }
+        finally { checkbox.disabled = false; }
+      });
       document.getElementById('onboardingLocal').addEventListener('click', async () => {
         await chrome.storage.local.set({ onboardingStage: 'complete', detectorOnboardingSeen: true });
         onboardingStage = 'complete'; renderDetectorSections(); await updateUI();

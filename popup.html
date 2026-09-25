@@ -1796,15 +1796,13 @@
       <p id="onboardingAccountStatus" class="onboarding-notice" role="status" hidden></p>
       <p class="account-privacy">Text you check is sent through GomiMon to TypeSafe.<br><a href="privacy.html" target="_blank" rel="noopener">Privacy</a></p>
     </section>
-    <section id="safariConsent" class="safari-consent" aria-labelledby="safariConsentTitle" hidden>
-      <h2 id="safariConsentTitle">Allow text processing?</h2>
-      <p>GomiMon sends selected Reddit or X post text, titles, comments, and quoted context to the GomiMon service and TypeSafe to estimate AI use and content categories. A name you reserve publicly is also sent to TypeSafe for moderation. Images and videos are not analyzed. GomiMon does not retain raw post text.</p>
-      <p>You can decline and keep your local pet, manual feeding, and local ad filtering. Withdraw permission here in Settings at any time.</p>
+    <section id="safariConsent" class="safari-consent" aria-label="Text processing permission" hidden>
+      <label class="consent-choice" for="aiConsentCheckbox">
+        <input id="aiConsentCheckbox" type="checkbox">
+        <span>Allow GomiMon to send Reddit/X post and comment text to TypeSafe for automatic AI and topic filtering, and public pet names for moderation.</span>
+      </label>
+      <a href="privacy.html" target="_blank" rel="noopener">Privacy policy</a>
       <p id="safariConsentStatus" role="status"></p>
-      <button id="allowAI" class="detector-button detector-primary" type="button">Allow text processing</button>
-      <button id="declineAI" class="detector-button" type="button">Not now</button>
-      <button id="withdrawAI" class="detector-button" type="button" hidden>Withdraw permission</button>
-      <a href="privacy.html" target="_blank" rel="noopener">Privacy details</a>
     </section>
     <div class="console-habitat" id="consoleHabitat">
     <section class="pet-container" id="petContainer" aria-label="GomiMon habitat">

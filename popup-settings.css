@@ -145,7 +145,16 @@ body.is-settings-open { --cream: #17263b; --muted: #46564d; --mint: #214b42; --l
 .feeding-preference input:focus-visible { outline: 3px solid #6654a5; outline-offset: 3px; }
 .feeding-preference p { margin: 8px 0 0; font: 400 12px/1.5 system-ui, sans-serif; }
 
-#safariConsent { color: #17263b; background: #fff4c8; padding: 14px; border-radius: 12px; }
-#safariConsent p { font: 12px/1.5 system-ui, sans-serif; }
-#safariConsent button, #safariAccountSettings button { margin-top: 8px; width: 100%; }
+
+
+#safariAccountSettings button { margin-top: 8px; width: 100%; }
 #onboardingApple { background: #fff; color: #111; border-color: #111; box-shadow: none; }
+
+#safariConsent { margin: 10px 0 0; padding: 12px 0 0; border: 0; border-top: 1px solid #b59a4c; border-radius: 0; background: transparent; color: #17263b; text-align: left; }
+
+#safariConsent p { margin: 7px 0; font: 11px/1.45 system-ui, sans-serif; }
+#safariConsent a { display: inline-block; margin: 5px 0 0 27px; color: #234b65; font: 600 11px/1.4 system-ui, sans-serif; }
+#safariConsentStatus:empty { display: none; }
+#safariConsent .consent-choice { display: flex; align-items: flex-start; gap: 9px; cursor: pointer; font: 500 12px/1.45 system-ui, sans-serif; }
+#aiConsentCheckbox { flex: 0 0 18px; width: 18px; height: 18px; margin: 1px 0 0; accent-color: #214b42; }
+#onboardingLocal { color: #17263b; background: #fff4c8; border: 2px solid #8b783f; }

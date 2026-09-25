@@ -62,6 +62,13 @@ body.device-shell {
 .left-grip { left: 0; }
 .right-grip { right: 0; }
 
+/* Safari needs a wider intrinsic popup canvas, without full-tab margins. */
+html.is-safari:not(.is-extension-tab),
+html.is-safari:not(.is-extension-tab) body.device-shell {
+  width: 440px;
+  min-width: 440px;
+}
+
 /* First-run and sign-in completion open this same UI in a browser tab. */
 html.is-extension-tab {
   width: 100%;

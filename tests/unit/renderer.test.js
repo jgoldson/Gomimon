@@ -440,7 +440,7 @@ test('vacuum anchors to the post and restores inline properties when cancelled',
   expect(view.element.hidden).toBe(false);
 });
 
-test.each(['scroll', 'resize'])('%s finishes vacuum early and cleans up the scene', event => {
+test.each(['resize'])('%s finishes vacuum early and cleans up the scene', event => {
   renderer.render(record, hide, { evolution: 'baby' });
   jest.advanceTimersByTime(700);
   (event === 'scroll' ? document : window).dispatchEvent(new Event(event));
@@ -490,7 +490,7 @@ test('manual meals cycle through all scenes without rerenders advancing the rota
   }
 });
 
-test.each(['restore', 'detach', 'scroll', 'resize'])('fine dining handles %s during the meal', action => {
+test.each(['restore', 'detach', 'resize'])('fine dining handles %s during the meal', action => {
   renderer.render(record, hide, { evolution: 'bubble-gomi', animation: 'dining' });
   jest.advanceTimersByTime(1800);
   if (action === 'restore') renderer.render(record, show);
@@ -544,7 +544,7 @@ test('magic covers the post before making it vanish and reveals the belly', () =
   expect(view.element.classList.contains('gomimon-magic-target')).toBe(false);
 });
 
-test.each(['restore', 'detach', 'scroll', 'resize'])('magic cleans up cloth and delayed effects on %s', action => {
+test.each(['restore', 'detach', 'resize'])('magic cleans up cloth and delayed effects on %s', action => {
   renderer.render(record, hide, { evolution: 'nimbus-gomi', animation: 'magic' });
   jest.advanceTimersByTime(1200);
   if (action === 'restore') renderer.render(record, show);
@@ -593,7 +593,7 @@ test('ambush sets a trap, hides until the catch, then bites the post and clears 
   expect(view.element.style.getPropertyValue('--gomi-mouth-y')).toBe('');
 });
 
-test.each(['restore', 'detach', 'scroll', 'resize'])('ambush clears pending effects on %s', action => {
+test.each(['restore', 'detach', 'resize'])('ambush clears pending effects on %s', action => {
   renderer.render(record, hide, { evolution: 'bubble-gomi', animation: 'ambush' });
   jest.advanceTimersByTime(1800);
   if (action === 'restore') renderer.render(record, show);
@@ -636,7 +636,7 @@ test('toaster loads the post, pops it into the air, and finishes the catch', () 
   expect(view.element.classList.contains('gomimon-toaster-target')).toBe(false);
 });
 
-test.each(['restore', 'detach', 'scroll', 'resize'])('toaster cancels timers and removes props on %s', action => {
+test.each(['restore', 'detach', 'resize'])('toaster cancels timers and removes props on %s', action => {
   renderer.render(record, hide, { evolution: 'nimbus-gomi', animation: 'toaster' });
   jest.advanceTimersByTime(2300);
   if (action === 'restore') renderer.render(record, show);
@@ -688,7 +688,7 @@ test('black hole swallows the post into the portal before the pet eats it', () =
   expect(view.element.style.getPropertyValue('--gomi-mouth-x')).toBe('');
 });
 
-test.each(['restore', 'detach', 'scroll', 'resize'])('black hole removes all effects on %s', action => {
+test.each(['restore', 'detach', 'resize'])('black hole removes all effects on %s', action => {
   renderer.render(record, hide, { evolution: 'nimbus-gomi', animation: 'blackhole' });
   jest.advanceTimersByTime(1200);
   if (action === 'restore') renderer.render(record, show);
@@ -727,7 +727,7 @@ test('movie snack pops the post, takes small bites, and tips the bucket', () => 
   expect(view.element.classList.contains('gomimon-popcorn-target')).toBe(false);
 });
 
-test.each(['restore', 'detach', 'scroll', 'resize'])('movie snack clears kernels and timers on %s', action => {
+test.each(['restore', 'detach', 'resize'])('movie snack clears kernels and timers on %s', action => {
   renderer.render(record, hide, { evolution: 'nimbus-gomi', animation: 'popcorn' });
   jest.advanceTimersByTime(2200);
   if (action === 'restore') renderer.render(record, show);
@@ -772,7 +772,7 @@ test('fishing hooks the post before reeling it in and clearing the tackle', () =
   expect(view.element.classList.contains('gomimon-fishing-target')).toBe(false);
 });
 
-test.each(['restore', 'detach', 'scroll', 'resize'])('fishing clears line, hook, and timers on %s', action => {
+test.each(['restore', 'detach', 'resize'])('fishing clears line, hook, and timers on %s', action => {
   renderer.render(record, hide, { evolution: 'nimbus-gomi', animation: 'fishing' });
   jest.advanceTimersByTime(1800);
   if (action === 'restore') renderer.render(record, show);
@@ -813,7 +813,7 @@ test('heist steals the post, struggles on the cable, then escapes', () => {
   expect(view.element.classList.contains('gomimon-heist-target')).toBe(false);
 });
 
-test.each(['restore', 'detach', 'scroll', 'resize'])('heist removes the cable and pending effects on %s', action => {
+test.each(['restore', 'detach', 'resize'])('heist removes the cable and pending effects on %s', action => {
   renderer.render(record, hide, { evolution: 'nimbus-gomi', animation: 'heist' });
   jest.advanceTimersByTime(1800);
   if (action === 'restore') renderer.render(record, show);
@@ -851,7 +851,7 @@ test('critic samples, awards five stars, then eats and restores the clipped post
   expect(view.element.classList.contains('gomimon-critic-target')).toBe(false);
 });
 
-test.each(['restore', 'detach', 'scroll', 'resize'])('critic clears the scorecard and cut corner on %s', action => {
+test.each(['restore', 'detach', 'resize'])('critic clears the scorecard and cut corner on %s', action => {
   renderer.render(record, hide, { evolution: 'nimbus-gomi', animation: 'critic' });
   jest.advanceTimersByTime(1700);
   if (action === 'restore') renderer.render(record, show);
@@ -897,7 +897,7 @@ test('boss battle blocks the unarmed charge, then the sword destroys the post', 
   expect(view.element.classList.contains('gomimon-boss-opponent')).toBe(false);
 });
 
-test.each(['restore', 'detach', 'scroll', 'resize'])('boss battle removes effects and timers on %s', action => {
+test.each(['restore', 'detach', 'resize'])('boss battle removes effects and timers on %s', action => {
   renderer.render(record, hide, { evolution: 'nimbus-gomi', animation: 'boss' });
   jest.advanceTimersByTime(2250);
   if (action === 'restore') renderer.render(record, show);
@@ -933,7 +933,7 @@ test('tiny helpers carry the post, sneak a bite, and deliver it', () => {
   expect(view.element.classList.contains('gomimon-helpers-target')).toBe(false);
 });
 
-test.each(['restore', 'detach', 'scroll', 'resize'])('tiny helpers clean up on %s', action => {
+test.each(['restore', 'detach', 'resize'])('tiny helpers clean up on %s', action => {
   renderer.render(record, hide, { evolution: 'nimbus-gomi', animation: 'helpers' });
   jest.advanceTimersByTime(1750);
   if (action === 'restore') renderer.render(record, show);
@@ -1062,7 +1062,7 @@ test('paper airplane folds the post before flying into the mouth', () => {
   expect(view.element.classList.contains('gomimon-airplane-target')).toBe(false);
 });
 
-test.each(['restore', 'detach', 'scroll', 'resize'])('paper airplane cleans up on %s', action => {
+test.each(['restore', 'detach', 'resize'])('paper airplane cleans up on %s', action => {
   renderer.render(record, hide, { evolution: 'nimbus-gomi', animation: 'airplane' });
   jest.advanceTimersByTime(1200);
   if (action === 'restore') renderer.render(record, show);
@@ -1185,4 +1185,30 @@ test('an offscreen match does not block a visible meal', () => {
   expect(view.cancelFeed).toEqual(expect.any(Function));
   expect(offscreen.view.pendingMeal).toEqual(mealPreview);
   expect(offscreen.view.element.hidden).toBe(false);
+});
+
+
+test.each(['vacuum', 'dining', 'magic', 'ambush', 'toaster', 'blackhole', 'popcorn', 'fishing', 'heist', 'critic', 'boss', 'helpers', 'airplane'])('%s stays anchored during scrolling and finishes normally', animation => {
+  const scroller = document.createElement('div');
+  view.element.before(scroller); scroller.append(view.element);
+  document.dispatchEvent(new Event('scroll'));
+  renderer.render(record, hide, { evolution: 'baby', animation });
+  const scene = document.querySelector('.gomimon-pet-overlay');
+  expect(scene.style.position).toBe('absolute');
+  const startY = parseFloat(scene.style.top), startX = parseFloat(scene.style.left);
+  for (let i = 1; i <= 5; i++) {
+    jest.advanceTimersByTime(100);
+    scroller.scrollTop = i * 40; scroller.scrollLeft = i * 5;
+    scroller.dispatchEvent(new Event('scroll'));
+    expect(scene.isConnected).toBe(true);
+    expect(parseFloat(scene.style.top)).toBe(startY - i * 40);
+    expect(parseFloat(scene.style.left)).toBe(startX - i * 5);
+    expect(view.element.hidden).toBe(false);
+  }
+  jest.advanceTimersByTime(10000);
+  expect(view.element.hidden).toBe(true);
+  expect(scene.isConnected).toBe(false);
+  renderer.render(record, show);
+  scroller.scrollTop = 500; scroller.dispatchEvent(new Event('scroll'));
+  expect(view.element.hidden).toBe(false);
 });
