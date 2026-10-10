@@ -155,6 +155,21 @@
   display: none !important;
 }
 
+.gomimon-feed-spacer {
+  display: block !important;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+  border: 0 !important;
+  max-width: 100% !important;
+  flex-shrink: 0 !important;
+  overflow-anchor: none !important;
+  pointer-events: none !important;
+}
+
+.gomimon-feed-spacer > .gomimon-filter-placeholder {
+  pointer-events: auto !important;
+}
+
 .gomimon-ai-panel {
   position: relative;
   z-index: 2;

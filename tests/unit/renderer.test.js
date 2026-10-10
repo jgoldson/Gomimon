@@ -1095,6 +1095,100 @@ function queuePost(key, top) {
 const autoHide = { action: 'hide', reason: 'category', labels: [] };
 const mealPreview = { evolution: 'baby', animation: 'vacuum' };
 
+test('finished meals reserve their height and margins without replaying or duplicating space', () => {
+  view.element.style.margin = '12px 8px';
+  renderer.render(record, hide, mealPreview);
+  expect(view.feedSpacer).toBeFalsy();
+  jest.advanceTimersByTime(2400);
+  const spacer = view.feedSpacer;
+  spacer.getBoundingClientRect = view.element.getBoundingClientRect;
+  expect(view.element.hidden).toBe(true);
+  expect(spacer.style.height).toBe('300px');
+  expect(spacer.style.marginTop).toBe('12px');
+  expect(spacer.getAttribute('aria-hidden')).toBe('true');
+  renderer.render(record, hide, mealPreview);
+  jest.advanceTimersByTime(1000);
+  expect(document.querySelectorAll('.gomimon-feed-spacer')).toHaveLength(1);
+  expect(view.feedSpacer).toBe(spacer);
+});
+
+test('space outside the viewport waits until scrolling has settled', () => {
+  renderer.render(record, hide);
+  const spacer = view.feedSpacer;
+  spacer.getBoundingClientRect = () => ({ top: innerHeight + 10, bottom: innerHeight + 310, height: 300 });
+  for (let i = 0; i < 5; i++) {
+    jest.advanceTimersByTime(200);
+    document.dispatchEvent(new Event('scroll'));
+    expect(spacer.isConnected).toBe(true);
+  }
+  jest.advanceTimersByTime(249);
+  expect(spacer.isConnected).toBe(true);
+  jest.advanceTimersByTime(1);
+  expect(spacer.isConnected).toBe(false);
+  expect(view.element.hidden).toBe(true);
+});
+
+test.each([false, true])('reclaiming space above the reader preserves the following content (nested: %s)', nested => {
+  const scroller = nested ? document.createElement('div') : document.documentElement;
+  if (nested) {
+    scroller.style.overflowY = 'auto';
+    scroller.getBoundingClientRect = () => ({ top: 50, bottom: 550, height: 500 });
+    Object.defineProperty(scroller, 'clientHeight', { value: 500 });
+    view.element.before(scroller);
+    scroller.append(view.element);
+  }
+  scroller.scrollTop = 600;
+  scroller.style.setProperty('scroll-behavior', 'smooth', 'important');
+  scroller.style.setProperty('overflow-anchor', 'auto', 'important');
+  // jsdom does not implement overflow-anchor; the browser fixture checks it.
+  const originalAnchoring = scroller.style.getPropertyValue('overflow-anchor');
+  renderer.render(record, hide);
+  const spacer = view.feedSpacer;
+  spacer.getBoundingClientRect = () => ({ top: -350, bottom: -50, height: 300 });
+  const anchor = document.createElement('article');
+  spacer.after(anchor);
+  anchor.getBoundingClientRect = () => ({ top: 700 - scroller.scrollTop - (spacer.isConnected ? 0 : 300), height: 400 });
+  const before = anchor.getBoundingClientRect().top;
+  jest.advanceTimersByTime(250);
+  expect(spacer.isConnected).toBe(false);
+  expect(anchor.getBoundingClientRect().top).toBe(before);
+  expect(scroller.scrollTop).toBe(300);
+  expect(scroller.style.getPropertyValue('scroll-behavior')).toBe('smooth');
+  expect(scroller.style.getPropertyPriority('scroll-behavior')).toBe('important');
+  expect(scroller.style.getPropertyValue('overflow-anchor')).toBe(originalAnchoring);
+  scroller.scrollTop = 0;
+  scroller.style.removeProperty('scroll-behavior');
+  scroller.style.removeProperty('overflow-anchor');
+});
+
+test.each(['restore', 'detach'])('%s removes reserved space and cancels delayed cleanup', action => {
+  renderer.render(record, hide);
+  const spacer = view.feedSpacer;
+  if (action === 'restore') renderer.render(record, show);
+  else renderer.detachView(view);
+  document.dispatchEvent(new Event('scroll'));
+  jest.runAllTimers();
+  expect(spacer.isConnected).toBe(false);
+  expect(view.element.hidden).toBe(false);
+  expect(view.feedSpacer).toBeNull();
+  expect(jest.getTimerCount()).toBe(0);
+});
+
+test('X keeps its restore control when temporary space is reclaimed', () => {
+  record.snapshot.platform = 'x';
+  renderer.render(record, hide);
+  const spacer = view.feedSpacer;
+  const placeholder = view.placeholder;
+  expect(spacer.contains(placeholder)).toBe(true);
+  expect(spacer.hasAttribute('aria-hidden')).toBe(false);
+  spacer.getBoundingClientRect = () => ({ top: innerHeight + 10, bottom: innerHeight + 310, height: 300 });
+  jest.advanceTimersByTime(250);
+  expect(placeholder.isConnected).toBe(true);
+  expect(view.element.nextElementSibling).toBe(placeholder);
+  renderer.render(record, show);
+  expect(placeholder.isConnected).toBe(false);
+});
+
 test('simultaneous matches play topmost first, fade out, then pause 250ms before the next meal', () => {
   const bottom = queuePost('bottom', 400);
   renderer.render(bottom.record, autoHide, mealPreview);

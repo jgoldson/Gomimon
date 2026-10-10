@@ -2,7 +2,7 @@
 (function attachXDetector(global) {
   'use strict';
   const ITEM = 'article[data-testid="tweet"]';
-  const OWNED = '.gomimon-ai-panel,.gomimon-post-marker,.gomimon-filter-placeholder,.gomimon-pet-overlay,.gomimon-eaten-placeholder';
+  const OWNED = '.gomimon-ai-panel,.gomimon-post-marker,.gomimon-filter-placeholder,.gomimon-feed-spacer,.gomimon-pet-overlay,.gomimon-eaten-placeholder';
   const MAX_CHARS = 8000;
   function isOwnedNode(node) { return Boolean(node?.closest?.(OWNED)); }
   function isItem(node) { return Boolean(node?.matches?.(ITEM) && !node.parentElement?.closest(ITEM)); }

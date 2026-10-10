@@ -55,6 +55,15 @@ tests/
 
 ## Running Tests
 
+### Real-browser scroll stability
+
+Open `tests/e2e/scroll-stability.html` in a browser. It runs nine layout checks
+and reports `PASS` or `FAIL` in the top-right corner. These verify that eating
+and reclaiming offscreen space keep the next post in place, including nested
+scroll containers, native scroll anchoring, smooth-scroll styles, and X's
+restore control. Unlike the jsdom tests, these checks use real layout and
+scroll positions.
+
 ### All Tests
 ```bash
 npm test

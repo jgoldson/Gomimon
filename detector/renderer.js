@@ -6,6 +6,7 @@
 
 
   function createRenderer({ detector, onAction, getSettings, getEvolution = () => 'baby' }) {
+    const document = global.document;
     // Resolve the extension root while the context is valid. Rerenders after a
     // reload must not throw halfway through building controls.
     const assetRoot = chrome.runtime.getURL('');
@@ -16,6 +17,121 @@
     let activeMeal = null;
     let mealTimer = null;
     let nextMealAt = 0;
+    const pendingSpaces = new Set();
+    let spaceTimer = null;
+
+    function scheduleSpaceCleanup() {
+      clearTimeout(spaceTimer);
+      spaceTimer = setTimeout(reclaimSpaces, 250);
+    }
+
+    function forgetSpace(view) {
+      if (!pendingSpaces.delete(view)) return;
+      if (!pendingSpaces.size) {
+        clearTimeout(spaceTimer);
+        spaceTimer = null;
+        document.removeEventListener('scroll', scheduleSpaceCleanup, true);
+        global.removeEventListener('resize', scheduleSpaceCleanup);
+        document.removeEventListener('visibilitychange', scheduleSpaceCleanup);
+      }
+    }
+
+    function removeSpace(view) {
+      // X keeps its restore control after the temporary space is reclaimed.
+      if (view.feedSpacer && view.placeholder?.parentElement === view.feedSpacer) view.feedSpacer.before(view.placeholder);
+      view.feedSpacer?.remove();
+      view.feedSpacer = null;
+      forgetSpace(view);
+    }
+
+    function spaceViewport(spacer) {
+      let top = 0, bottom = global.innerHeight;
+      let scroller = document.scrollingElement || document.documentElement;
+      let foundScroller = false;
+      for (let parent = spacer.parentElement; parent && parent !== document.body && parent !== document.documentElement; parent = parent.parentElement) {
+        const overflow = global.getComputedStyle(parent).overflowY;
+        if (!/auto|scroll|hidden|clip|overlay/.test(overflow)) continue;
+        const rect = parent.getBoundingClientRect();
+        top = Math.max(top, rect.top + parent.clientTop);
+        bottom = Math.min(bottom, rect.top + parent.clientTop + parent.clientHeight);
+        if (!foundScroller && /auto|scroll|overlay/.test(overflow)) {
+          scroller = parent;
+          foundScroller = true;
+        }
+      }
+      return { top, bottom, scroller };
+    }
+
+    function followingAnchor(spacer, scroller) {
+      // Walk out of platform wrappers, but never anchor outside this scroller.
+      for (let node = spacer; node && node !== scroller; node = node.parentElement) {
+        for (let sibling = node.nextElementSibling; sibling; sibling = sibling.nextElementSibling) {
+          const rect = sibling.getBoundingClientRect();
+          const position = global.getComputedStyle(sibling).position;
+          if (rect.height > 0 && position !== 'fixed' && position !== 'sticky' && position !== 'absolute') return sibling;
+        }
+      }
+      return null;
+    }
+
+    function reclaimSpaces() {
+      spaceTimer = null;
+      if (document.hidden) return;
+      for (const view of pendingSpaces) {
+        const spacer = view.feedSpacer;
+        if (!spacer?.isConnected || !view.target?.isConnected) {
+          removeSpace(view);
+          continue;
+        }
+        const rect = spacer.getBoundingClientRect();
+        const { top, bottom, scroller } = spaceViewport(spacer);
+        if (rect.height <= 0 || bottom <= top) continue;
+        if (rect.top >= bottom) {
+          removeSpace(view);
+        } else if (rect.bottom <= top) {
+          const anchor = followingAnchor(spacer, scroller);
+          if (!anchor) continue;
+          // Disable native anchoring for this transaction so it cannot apply
+          // the same correction again. Never animate a scroll correction.
+          const properties = ['overflow-anchor', 'scroll-behavior'];
+          const original = properties.map(name => [name, scroller.style.getPropertyValue(name), scroller.style.getPropertyPriority(name)]);
+          scroller.style.setProperty('overflow-anchor', 'none', 'important');
+          scroller.style.setProperty('scroll-behavior', 'auto', 'important');
+          const before = anchor.getBoundingClientRect().top;
+          removeSpace(view);
+          const delta = anchor.getBoundingClientRect().top - before;
+          if (delta) scroller.scrollTop += delta;
+          // Flush the correction before restoring the site's scroll behavior.
+          anchor.getBoundingClientRect();
+          for (const [name, value, priority] of original) {
+            if (value) scroller.style.setProperty(name, value, priority);
+            else scroller.style.removeProperty(name);
+          }
+        }
+      }
+    }
+
+    function reserveSpace(view, rect, style) {
+      if (!rect || rect.height <= 0 || view.feedSpacer) return;
+      const spacer = document.createElement('div');
+      spacer.className = 'gomimon-feed-spacer';
+      spacer.style.setProperty('height', `${rect.height}px`, 'important');
+      spacer.style.setProperty('width', `${rect.width}px`, 'important');
+      for (const name of ['margin-top', 'margin-right', 'margin-bottom', 'margin-left', 'grid-area', 'align-self', 'order']) {
+        spacer.style.setProperty(name, style[name], 'important');
+      }
+      view.target.after(spacer);
+      if (view.placeholder) spacer.appendChild(view.placeholder);
+      else spacer.setAttribute('aria-hidden', 'true');
+      view.feedSpacer = spacer;
+      if (!pendingSpaces.size) {
+        document.addEventListener('scroll', scheduleSpaceCleanup, { capture: true, passive: true });
+        global.addEventListener('resize', scheduleSpaceCleanup, { passive: true });
+        document.addEventListener('visibilitychange', scheduleSpaceCleanup);
+      }
+      pendingSpaces.add(view);
+      scheduleSpaceCleanup();
+    }
 
     function removeQueuedMeal(view) {
       mealQueue.delete(view);
@@ -100,6 +216,7 @@
       removeQueuedMeal(view);
       view.cancelPendingFeed?.();
       view.cancelFeed?.();
+      removeSpace(view);
       const target = view.target;
       if (!target) return;
       if (view.originalTargetState) {
@@ -984,6 +1101,10 @@
         return;
       }
       removeQueuedMeal(view);
+      const rect = !target.hidden ? target.getBoundingClientRect() : null;
+      // Computed style is live; snapshot margins before hiding the real node.
+      const style = rect ? Object.fromEntries(['margin-top', 'margin-right', 'margin-bottom', 'margin-left', 'grid-area', 'align-self', 'order']
+        .map(name => [name, global.getComputedStyle(target).getPropertyValue(name)])) : null;
       target.classList.add('gomimon-hidden-target');
       target.hidden = true;
       target.setAttribute('aria-hidden', 'true');
@@ -1008,6 +1129,7 @@
         view.placeholder?.remove();
         view.placeholder = null;
       }
+      reserveSpace(view, rect, style);
     }
 
     function labelText(label) {

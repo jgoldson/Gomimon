@@ -1,0 +1,81 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>GomiMon scroll stability regression</title>
+<link rel="stylesheet" href="../../content.css">
+<style>
+  html, body { margin: 0; }
+  .post { display: block; height: 300px; margin: 12px 0; border: 1px solid; box-sizing: border-box; }
+  .nested { height: 500px; overflow-y: auto; border: 3px solid; margin-top: 40px; }
+  #result { position: fixed; right: 0; top: 0; background: white; }
+</style>
+<pre id="result" data-status="running">Running</pre>
+<main id="fixture"></main>
+<script>window.chrome = { runtime: { getURL: () => new URL('../../', location.href).href } };</script>
+<script src="../../detector/revision.js"></script>
+<script src="../../detector/policy.js"></script>
+<script src="../../detector/renderer.js"></script>
+<script>
+  const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+  const assert = (condition, message) => { if (!condition) throw new Error(message); };
+  const close = (a, b, message) => assert(Math.abs(a - b) < 1, `${message}: ${a} vs ${b}`);
+  const results = [];
+  async function check({ nested, platform, animated, anchoring }) {
+    const fixture = document.querySelector('#fixture');
+    fixture.innerHTML = `<div class="${nested ? 'nested' : ''}">${Array.from({ length: 15 }, (_, i) => `<article class="post">Post ${i}</article>`).join('')}</div>`;
+    const feed = fixture.firstElementChild;
+    const scroller = nested ? feed : document.scrollingElement;
+    scroller.style.overflowAnchor = anchoring;
+    scroller.style.scrollBehavior = 'auto';
+    scroller.scrollTop = 0;
+    const posts = [...feed.children];
+    const target = posts[0], anchor = posts[1];
+    const view = { element: target };
+    const record = { key: 'test', contentType: 'post', snapshot: { platform, text: 'A post' }, views: new Map([['one', view]]) };
+    const renderer = GomiMonDetectorModules.renderer.createRenderer({
+      detector: { describe: () => ({}) }, getSettings: () => ({ showEatingAnimations: animated }), onAction: () => {}
+    });
+    const before = anchor.getBoundingClientRect().top;
+    renderer.render(record, { action: 'hide', reason: 'manual_feed', labels: [] }, { evolution: 'baby', animation: 'vacuum' });
+    await wait(animated ? 2450 : 50);
+    assert(target.hidden, 'Post must be hidden');
+    assert(view.feedSpacer?.isConnected, 'Visible space must remain');
+    close(anchor.getBoundingClientRect().top, before, 'Hiding must not move the next post');
+    // Moving through a live scroll must defer cleanup, even when offscreen.
+    scroller.scrollTop = 350;
+    for (let i = 0; i < 4; i++) {
+      scroller.dispatchEvent(new Event('scroll'));
+      await wait(100);
+      assert(view.feedSpacer?.isConnected, 'Scrolling must keep the space');
+    }
+    scroller.style.scrollBehavior = 'smooth';
+    const readingTop = anchor.getBoundingClientRect().top;
+    await wait(400);
+    assert(!view.feedSpacer, 'Offscreen space must be reclaimed');
+    close(anchor.getBoundingClientRect().top, readingTop, 'Cleanup must preserve reading position');
+    await wait(400);
+    close(anchor.getBoundingClientRect().top, readingTop, 'Native anchoring must not double-correct later');
+    assert(scroller.style.scrollBehavior === 'smooth', 'Restore scroll behavior');
+    assert(scroller.style.overflowAnchor === anchoring, 'Restore native anchoring');
+    if (platform === 'x') assert(view.placeholder?.querySelector('button'), 'Keep Show post control');
+    renderer.detachView(view);
+    scroller.style.scrollBehavior = 'auto';
+    scroller.scrollTop = 0;
+    scroller.style.removeProperty('overflow-anchor');
+    results.push(`PASS ${JSON.stringify({ nested, platform, animated, anchoring })}`);
+  }
+  (async () => {
+    try {
+      for (const nested of [false, true]) {
+        for (const anchoring of ['auto', 'none']) {
+          for (const platform of ['reddit', 'x']) await check({ nested, anchoring, platform, animated: false });
+        }
+      }
+      await check({ nested: false, anchoring: 'auto', platform: 'reddit', animated: true });
+      document.querySelector('#result').dataset.status = 'passed';
+    } catch (error) {
+      results.push(`FAIL ${error.stack}`);
+      document.querySelector('#result').dataset.status = 'failed';
+    }
+    document.querySelector('#result').textContent = results.join('\n');
+  })();
+</script>

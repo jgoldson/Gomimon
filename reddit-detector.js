@@ -25,6 +25,7 @@
     '.gomimon-assessment-popover',
     '.gomimon-post-marker',
     '.gomimon-filter-placeholder',
+    '.gomimon-feed-spacer',
     '.gomimon-pet-overlay',
     '.gomimon-eaten-placeholder'
   ];

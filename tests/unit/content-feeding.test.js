@@ -45,6 +45,8 @@ test('manual feeding removes an analyzed post without a placeholder or Show butt
     await jest.advanceTimersByTimeAsync(1000);
     expect(post.hidden).toBe(true);
   } finally {
+    document.body.replaceChildren();
+    await Promise.resolve();
     jest.useRealTimers();
   }
 });
