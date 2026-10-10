@@ -72,3 +72,25 @@ Production billing inspection: `BILLING_ENABLED` is unset and no Stripe secret i
 ## Bubble-Gomi icon update (2026-09-22)
 
 Uploaded the replacement 0.4.0 ZIP and saved the Bubble-Gomi store icon. The archive changes only icon PNGs (16/32/48/128) and manifest icon references relative to the tested release; newer unrelated workspace changes were deliberately excluded. ZIP integrity and unchanged non-icon file bytes were verified. Previous ZIP: `dist/gomimon-chrome-store-before-icon.zip`. At the time of this historical icon update, the draft was unsubmitted. A fresh full-source package build includes newer changes and requires separate validation.
+
+## 0.4.2 build (2026-10-10)
+
+- Manifest summary changed to "Hide ragebait, ads, and AI slop on Reddit and X. A virtual pet eats it and grows."
+- New listing description in `store/listing.md`; new screenshots, promo tile, and marquee in `store/assets/chrome/`.
+- 311 Jest tests, detector tests, server tests (3 skipped), server checks, and website tests passed. The store verifier checked 71 packaged files.
+- ZIP SHA-256: `4d0a2fe14240f3ccecf876f19dc681e4b4625aa63534bdd8044621fd114f4a39`.
+- The package includes the pending feed-animation and scroll-stability changes to `content.css`, `detector/renderer.js`, `reddit-detector.js`, and `x-detector.js`.
+- Chrome blocks extensions (including Claude in Chrome) from scripting the Web Store dashboard, so listing text and images were updated by hand.
+- Uploaded and submitted through the API on 2026-10-10; fetchStatus reported 0.4.2 PENDING_REVIEW with 0.4.1 still published.
+
+## Publishing via the Chrome Web Store API
+
+`scripts/chrome-web-store.mjs` uploads the store ZIP and submits it for review. The API cannot change the listing description or images; edit those in the dashboard. The name and summary come from `manifest.json`.
+
+One-time setup:
+
+1. In Google Cloud Console, enable the Chrome Web Store API, configure the OAuth consent screen (External, with the publisher account `forjrg@gmail.com` as a test user), and create an OAuth client of type **Desktop app**.
+2. Put the client ID and secret in `~/.config/gomimon/chrome-web-store.json` (outside the repo, mode 600).
+3. Run `npm run store:auth` and sign in as the publisher account. This saves a refresh token to the same file.
+
+Release: bump `manifest.json` version, then `npm run release:store` (tests, package, verify, upload, submit). `npm run store:status` shows review state.

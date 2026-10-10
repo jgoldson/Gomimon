@@ -2,7 +2,7 @@
 
 GomiMon is a virtual pet that eats posts from your social feeds. You choose what it eats: feed a post yourself, or opt into filters that check Reddit and X and hide matching posts. The changes affect only your view of the page. AI authorship labels are experimental estimates, not proof that a person used AI.
 
-This repository contains the Chromium extension (version **0.4.1**), a Safari Web Extension, an iPhone browser prototype, the detector API, and a static website. The Chrome Web Store listing is public; the Safari app has not been submitted to the App Store.
+This repository contains the Chromium extension (version **0.4.2**), a Safari Web Extension, an iPhone browser prototype, the detector API, and a static website. The Chrome Web Store listing is public; the Safari app has not been submitted to the App Store.
 
 ## Get started
 

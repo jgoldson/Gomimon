@@ -1,0 +1,24 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+.copy { position: absolute; left: 76px; top: 100px; width: 560px; }
+.copy h1 { margin: 24px 0 24px; }
+ul { list-style: none; margin-top: 30px; display: grid; gap: 14px; }
+li { font-size: 22px; line-height: 1.35; padding-left: 34px; position: relative; }
+li::before { content: ""; position: absolute; left: 0; top: 8px; width: 16px; height: 16px; border-radius: 4px; background: var(--pink); }
+.crop { position: absolute; right: 70px; top: 40px; width: 560px; height: 720px; overflow: hidden; border-radius: 40px; filter: drop-shadow(0 24px 34px rgba(80,60,10,.25)); }
+.crop img { width: 560px; margin-top: -20px; }
+</style></head><body><div class="stage">
+  <div class="blob" style="width:700px;height:700px;right:-220px;top:-120px;background:var(--mint)"></div>
+  <div class="copy">
+    <div class="kicker">You set the menu</div>
+    <h1>Choose what leaves your feed.</h1>
+    <p class="lede">Pick the posts GomiMon should eat, and set how cautious it should be.</p>
+    <ul>
+      <li><b>Ragebait</b>, <b>ads</b>, and <b>AI-written</b> posts</li>
+      <li>Topics like <b>politics, crypto, sports</b>, and <b>celebrity gossip</b></li>
+      <li>Change its diet anytime in Settings</li>
+    </ul>
+  </div>
+  <div class="crop"><img src="img/diet.png"></div>
+  <div class="foot" style="left:76px;bottom:34px">Marked ads are detected locally. AI and topic checks need Google sign-in.</div>
+</div></body></html>
